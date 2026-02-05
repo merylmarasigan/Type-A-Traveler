@@ -1,4 +1,7 @@
+import { config } from 'dotenv'
 import { z } from 'zod/v4'
+
+config({ path: ['.env.local', '.env'] })
 
 const envSchema = z.object({
   DATABASE_URL: z.url(),
@@ -7,13 +10,5 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']),
 })
 
-const clientEnvSchema = z.object({
-  // NOTE: Prefix client environment variables with VITE_
-  // EX: VITE_APP_NAME: z.string(),
-})
-
 // Validate server environment
 export const serverEnv = envSchema.parse(process.env)
-
-// Validate client environment
-export const clientEnv = clientEnvSchema.parse(import.meta.env)
