@@ -29,7 +29,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Type A Traveler',
       },
     ],
     links: [
@@ -49,7 +49,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="h-svh">
         <Header />
         {children}
         <TanStackDevtools

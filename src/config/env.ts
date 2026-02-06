@@ -8,6 +8,8 @@ const envSchema = z.object({
   BETTER_AUTH_URL: z.url(),
   BETTER_AUTH_SECRET: z.string(),
   NODE_ENV: z.enum(['development', 'production', 'test']),
+
+  GEONAMES_USERNAME: z.string(),
 })
 
 // Validate server environment
