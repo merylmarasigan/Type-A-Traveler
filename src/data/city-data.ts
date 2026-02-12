@@ -14,7 +14,7 @@ interface GeoNamesResult {
 }
 
 // https://www.geonames.org/export/geonames-search.html
-export const getCityData = createServerFn({ method: 'POST' })
+export const getCitiesFn = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ city: z.string() }))
   .handler(async ({ data }) => {
     const username = serverEnv.GEONAMES_USERNAME

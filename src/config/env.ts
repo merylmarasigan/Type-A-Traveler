@@ -10,6 +10,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']),
 
   GEONAMES_USERNAME: z.string(),
+  FOURSQUARE_API_KEY: z.string(),
 })
 
 // Validate server environment
