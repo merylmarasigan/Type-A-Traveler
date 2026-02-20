@@ -1,4 +1,5 @@
 import { SearchCities } from '@/components/search-cities'
+import { TypographyH1, TypographyH2 } from '@/components/ui/typography'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({ component: App })
@@ -6,12 +7,8 @@ export const Route = createFileRoute('/')({ component: App })
 function App() {
   return (
     <div className="flex flex-col items-center justify-between gap-4">
-      <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
-        Type A Traveler
-      </h1>
-      <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Enter your destination to get started.
-      </h2>
+      <TypographyH1>Type A Traveler</TypographyH1>
+      <TypographyH2>Enter your destination to get started.</TypographyH2>
 
       <SearchCities />
     </div>

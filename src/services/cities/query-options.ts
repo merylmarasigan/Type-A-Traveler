@@ -3,6 +3,6 @@ import { queryOptions } from '@tanstack/react-query'
 
 export const citiesQueryOptions = (city: string) =>
   queryOptions({
-    queryKey: ['cities'],
+    queryKey: ['cities', city],
     queryFn: () => getCitiesFn({ data: { city } }),
   })

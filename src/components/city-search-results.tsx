@@ -1,4 +1,5 @@
 import { CityData } from '@/services/cities/schema'
+import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 
 interface CitySearchResultsProps {
@@ -12,13 +13,15 @@ export function CitySearchResults({ cities }: CitySearchResultsProps) {
         <p className="text-muted-foreground font-bold text-xs">Cities</p>
       )}
       {cities.map((city, i) => (
-        <li
-          key={i}
-          className="bg-card p-2 rounded-md hover:bg-muted hover:cursor-pointer flex items-center justify-between"
-        >
-          {city.name}
-          <ArrowRight />
-        </li>
+        <Link to="/itineraries/new/$city" params={{ city: city.name }}>
+          <li
+            key={i}
+            className="bg-card p-2 rounded-md hover:bg-muted hover:cursor-pointer flex items-center justify-between"
+          >
+            {city.name}
+            <ArrowRight />
+          </li>
+        </Link>
       ))}
     </ul>
   )
