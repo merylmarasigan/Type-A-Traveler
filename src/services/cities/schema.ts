@@ -12,5 +12,5 @@ export interface GeoNamesResult {
 }
 
 export const citySearchSchema = z.object({
-  city: z.string(),
+  city: z.string('Search for a city'),
 })
