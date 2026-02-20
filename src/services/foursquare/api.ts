@@ -1,17 +1,18 @@
 import { serverEnv } from '@/config/env'
+import { FsqPlaceSearchResponse } from '@/services/foursquare/schema'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod'
 
 export const getPlacesFn = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
-      near: z.string(),
+      location: z.string(),
       query: z.string(),
     }),
   )
   .handler(async ({ data }) => {
     const res = await fetch(
-      `https://places-api.foursquare.com/places/search?query=${data.query}&near=${data.near}&sort=popularity&limit=50`,
+      `https://places-api.foursquare.com/places/search?query=${data.query}&near=${data.location}&sort=popularity&limit=50`,
       {
         headers: {
           'X-Places-Api-Version': '2025-06-17',
@@ -22,6 +23,6 @@ export const getPlacesFn = createServerFn({ method: 'GET' })
     )
     if (!res.ok) throw new Error(`Failed to fetch places for ${data.query}`)
 
-    const { results } = await res.json()
-    return results
+    const response: FsqPlaceSearchResponse = await res.json()
+    return response.results
   })
