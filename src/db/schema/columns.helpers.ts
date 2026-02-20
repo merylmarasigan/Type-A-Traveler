@@ -7,3 +7,8 @@ export const timestamps = {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 }
+
+export const startEndTimestamps = {
+  startTime: timestamp('start_time'),
+  endTime: timestamp('end_time'),
+}

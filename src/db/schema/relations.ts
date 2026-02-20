@@ -1,94 +1,78 @@
 import {
+  savedActivities,
   cityItineraries,
-  days,
-  flights,
-  itineraries,
+  itineraryDays,
+  itineraryFolders,
   lodging,
   timeSlots,
 } from '@/db/schema/app'
 import { user } from '@/db/schema/auth'
 import { relations } from 'drizzle-orm'
-import { pgTable, primaryKey, text } from 'drizzle-orm/pg-core'
 
 export const userRelations = relations(user, ({ many }) => ({
-  itineraries: many(itineraries),
-  usersToCityItineraries: many(usersToCityItineraries),
+  itineraries: many(itineraryFolders),
+  bookmarks: many(savedActivities),
 }))
 
-export const itinerariesRelations = relations(itineraries, ({ one, many }) => ({
-  author: one(user, {
-    fields: [itineraries.authorId],
-    references: [user.id],
+export const itinerariesRelations = relations(
+  itineraryFolders,
+  ({ one, many }) => ({
+    author: one(user, {
+      fields: [itineraryFolders.authorId],
+      references: [user.id],
+    }),
+    cities: many(cityItineraries),
+    lodging: many(lodging),
   }),
-  cities: many(cityItineraries),
-  flights: many(flights),
-  lodging: many(lodging),
-}))
+)
 
 export const cityItinerariesRelations = relations(
   cityItineraries,
   ({ one, many }) => ({
-    parentItinerary: one(itineraries, {
-      fields: [cityItineraries.parentItineraryId],
-      references: [itineraries.id],
+    folder: one(itineraryFolders, {
+      fields: [cityItineraries.folderId],
+      references: [itineraryFolders.id],
     }),
-    usersToCityItineraries: many(usersToCityItineraries),
-    schedule: many(days),
+    schedule: many(itineraryDays),
   }),
 )
 
-export const usersToCityItineraries = pgTable(
-  'users_to_city_itineraries',
-  {
-    userId: text('user_id')
-      .notNull()
-      .references(() => user.id),
-    cityItineraryId: text('city_itinerary_id')
-      .notNull()
-      .references(() => cityItineraries.id),
-  },
-  (t) => [primaryKey({ columns: [t.userId, t.cityItineraryId] })],
-)
-
-export const usersToCityItinerariesRelations = relations(
-  usersToCityItineraries,
-  ({ one }) => ({
-    cityItinerary: one(cityItineraries, {
-      fields: [usersToCityItineraries.cityItineraryId],
+export const itineraryDaysRelations = relations(
+  itineraryDays,
+  ({ one, many }) => ({
+    city: one(cityItineraries, {
+      fields: [itineraryDays.cityItineraryId],
       references: [cityItineraries.id],
     }),
+    timeSlots: many(timeSlots),
+  }),
+)
+
+export const timeSlotRelations = relations(timeSlots, ({ one, many }) => ({
+  itineraryDay: one(itineraryDays, {
+    fields: [timeSlots.itineraryDayId],
+    references: [itineraryDays.id],
+  }),
+  activities: many(savedActivities),
+}))
+
+export const savedActivitiesRelations = relations(
+  savedActivities,
+  ({ one }) => ({
     user: one(user, {
-      fields: [usersToCityItineraries.userId],
+      fields: [savedActivities.userId],
       references: [user.id],
+    }),
+    timeSlot: one(timeSlots, {
+      fields: [savedActivities.timeSlotId],
+      references: [timeSlots.id],
     }),
   }),
 )
 
-export const daysRelations = relations(days, ({ one, many }) => ({
-  city: one(cityItineraries, {
-    fields: [days.cityItineraryId],
-    references: [cityItineraries.id],
-  }),
-  timeSlots: many(timeSlots),
-}))
-
-export const timeSlotRelations = relations(timeSlots, ({ one }) => ({
-  day: one(days, {
-    fields: [timeSlots.dayId],
-    references: [days.id],
-  }),
-}))
-
-export const flightsRelations = relations(flights, ({ one }) => ({
-  itinerary: one(itineraries, {
-    fields: [flights.itineraryId],
-    references: [itineraries.id],
-  }),
-}))
-
 export const lodgingRelations = relations(lodging, ({ one }) => ({
-  itinerary: one(itineraries, {
+  itinerary: one(itineraryFolders, {
     fields: [lodging.itineraryId],
-    references: [itineraries.id],
+    references: [itineraryFolders.id],
   }),
 }))
