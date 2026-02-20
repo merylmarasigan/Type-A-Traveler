@@ -1,29 +1,20 @@
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { getCitiesFn } from '@/services/cities/api'
-import { CityData } from '@/services/cities/schema'
-import { useServerFn } from '@tanstack/react-start'
-import { ArrowRight } from 'lucide-react'
-import { SubmitEvent, useRef, useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import { SubmitEvent, useRef } from 'react'
 
 export function SearchCities() {
-  const getCitiesServerFn = useServerFn(getCitiesFn)
-  const queryRef = useRef<HTMLInputElement>(null)
-
-  const [results, setResults] = useState<CityData[]>([])
+  const inputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
 
   const searchForCities = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!queryRef.current) return
-    if (queryRef.current.value === '') return setResults([])
+    if (!inputRef.current) return
+    if (inputRef.current.value === '') return
 
-    const res = await getCitiesServerFn({
-      data: { city: queryRef.current.value },
-    })
-
-    setResults(res)
+    router.navigate({ to: `/search?city=${inputRef.current.value}` })
   }
 
   return (
@@ -36,28 +27,13 @@ export function SearchCities() {
           <Input
             id="near"
             placeholder="Los Angeles, New York, etc."
-            ref={queryRef}
+            ref={inputRef}
             className="w-full"
           />
         </Field>
 
         <Button type="submit">Search</Button>
       </form>
-
-      <ul className="flex flex-col w-96">
-        {results.length > 0 && (
-          <p className="text-muted-foreground font-bold text-xs">Cities</p>
-        )}
-        {results.map((city, i) => (
-          <li
-            key={i}
-            className="bg-card p-2 rounded-md hover:bg-muted hover:cursor-pointer flex items-center justify-between"
-          >
-            {city.name}
-            <ArrowRight />
-          </li>
-        ))}
-      </ul>
     </>
   )
 }
