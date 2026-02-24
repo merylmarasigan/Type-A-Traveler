@@ -9,18 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ItinerariesNewCityRouteImport } from './routes/itineraries/new/$city'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -51,7 +45,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/search': typeof SearchRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/new/$city': typeof ItinerariesNewCityRoute
 }
@@ -59,7 +52,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/search': typeof SearchRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/new/$city': typeof ItinerariesNewCityRoute
 }
@@ -68,7 +60,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/search': typeof SearchRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/new/$city': typeof ItinerariesNewCityRoute
 }
@@ -78,23 +69,15 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/search'
     | '/api/auth/$'
     | '/itineraries/new/$city'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/login'
-    | '/register'
-    | '/search'
-    | '/api/auth/$'
-    | '/itineraries/new/$city'
+  to: '/' | '/login' | '/register' | '/api/auth/$' | '/itineraries/new/$city'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/register'
-    | '/search'
     | '/api/auth/$'
     | '/itineraries/new/$city'
   fileRoutesById: FileRoutesById
@@ -103,20 +86,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  SearchRoute: typeof SearchRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ItinerariesNewCityRoute: typeof ItinerariesNewCityRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -159,7 +134,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  SearchRoute: SearchRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ItinerariesNewCityRoute: ItinerariesNewCityRoute,
 }

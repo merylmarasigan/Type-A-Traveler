@@ -5,4 +5,5 @@ export const citiesQueryOptions = (city: string) =>
   queryOptions({
     queryKey: ['cities', city],
     queryFn: () => getCitiesFn({ data: { city } }),
+    enabled: city !== '',
   })
