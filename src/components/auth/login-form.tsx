@@ -13,10 +13,9 @@ import { Link, useRouter } from '@tanstack/react-router'
 import z from 'zod'
 import { useForm } from '@tanstack/react-form'
 import { authClient } from '@/lib/auth-client'
+import { useState } from 'react'
 
 const formSchema = z.object({
-  email: z.email(),
-  name: z.string().min(1, 'Name cannot be empty.'),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters.')
@@ -29,23 +28,23 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 const defaultFormValues: FormValues = {
-  email: '',
-  name: '',
   password: '',
   username: '',
 }
 
-export function SignupForm() {
+export function LoginForm() {
   const router = useRouter()
+  const [error, setError] = useState('')
 
   const form = useForm({
     defaultValues: defaultFormValues,
     validators: {
       onSubmit: formSchema,
     },
+
     onSubmit: async ({ value }) => {
-      const { error } = await authClient.signUp.email(value)
-      if (error) throw error
+      const { error } = await authClient.signIn.username(value)
+      if (error) return setError(error.message ?? 'Something went wrong.')
 
       router.navigate({ to: '/' })
     },
@@ -59,59 +58,13 @@ export function SignupForm() {
           form.handleSubmit()
         }}
       >
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-xl font-bold">Welcome to Type A Planner!</h1>
+        <div className="flex flex-col items-center gap-2 text-center pb-2">
+          <h1 className="text-xl font-bold">Welcome back!</h1>
           <FieldDescription>
-            Already have an account? <Link to="/login">Sign in</Link>
+            Don't have an account yet? <Link to="/signup">Create one</Link>
           </FieldDescription>
         </div>
         <FieldGroup>
-          <form.Field
-            name="email"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                    placeholder="name@example.com"
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              )
-            }}
-          />
-
-          <form.Field
-            name="name"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Name</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                    placeholder="John Doe"
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              )
-            }}
-          />
-
           <form.Field
             name="username"
             children={(field) => {
@@ -157,10 +110,12 @@ export function SignupForm() {
               )
             }}
           />
+          {error && <FieldError>{error}</FieldError>}
 
           <Field>
-            <Button type="submit">Create Account</Button>
+            <Button type="submit">Sign in</Button>
           </Field>
+
           <FieldSeparator>Or</FieldSeparator>
           <Field className="grid gap-4">
             <Button variant="outline" type="submit">
