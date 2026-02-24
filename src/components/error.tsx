@@ -14,7 +14,9 @@ export function ErrorComponent({
     <Alert variant="destructive" className="max-w-md">
       <AlertCircleIcon />
       <AlertTitle>{error.name}</AlertTitle>
-      <AlertDescription>{description ?? error.message}</AlertDescription>
+      <AlertDescription>
+        {description} ({error.message})
+      </AlertDescription>
     </Alert>
   )
 }

@@ -1,8 +1,8 @@
-import { getActivitiesFn } from '@/services/foursquare/api'
+import { getPlacesFn } from '@/services/foursquare/api'
 import { queryOptions } from '@tanstack/react-query'
 
-export const activitiesQueryOptions = (city: string, query?: string) =>
+export const placesQueryOptions = (city: string, query?: string) =>
   queryOptions({
-    queryKey: ['cities', city, 'activities', query],
-    queryFn: () => getActivitiesFn({ data: { location: city, query } }),
+    queryKey: ['cities', city, 'foursquare_places', query],
+    queryFn: () => getPlacesFn({ data: { location: city, query } }),
   })
