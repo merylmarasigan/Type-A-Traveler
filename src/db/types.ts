@@ -1,4 +1,8 @@
-import { cityItineraries, itineraryFolders } from '@/db/schema/app'
+import {
+  cityItineraries,
+  itineraryDays,
+  itineraryFolders,
+} from '@/db/schema/app'
 import {
   createInsertSchema,
   createSelectSchema,
@@ -38,3 +42,18 @@ export const updateCityItinerarySchema = createUpdateSchema(cityItineraries, {
   id: z.string(), // Makes id required for updates
 })
 export type UpdateCityItinerary = z.infer<typeof updateCityItinerarySchema>
+
+// ---------- ITINERARY DAYS ----------
+
+export const insertItineraryDaySchema = createInsertSchema(itineraryDays).omit({
+  id: true,
+}) // Omit id as they are generated within the createItineraryDay() function
+export type NewItineraryDay = z.infer<typeof insertItineraryDaySchema>
+
+export const selectItineraryDaySchema = createSelectSchema(itineraryDays)
+export type ItineraryDay = z.infer<typeof selectItineraryDaySchema>
+
+export const updateItineraryDaySchema = createUpdateSchema(itineraryDays, {
+  id: z.string(), // Makes id required for updates
+})
+export type UpdateItineraryDay = z.infer<typeof updateItineraryDaySchema>

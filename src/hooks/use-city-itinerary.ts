@@ -5,17 +5,9 @@ import {
 } from '@/services/backend/city-itineraries.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-interface UseCityItineraryOptions {
-  folderId: string
-  cityItineraryId: string
-}
-
-export const useCityItinerary = ({
-  folderId,
-  cityItineraryId,
-}: UseCityItineraryOptions) => {
+export const useCityItinerary = (cityItineraryId: string) => {
   const itineraryQuery = useSuspenseQuery(
-    singleCityItineraryQueryOptions(folderId, cityItineraryId),
+    singleCityItineraryQueryOptions(cityItineraryId),
   )
 
   const updateItineraryMutation = useMutation(

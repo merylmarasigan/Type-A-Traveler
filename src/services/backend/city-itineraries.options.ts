@@ -15,17 +15,9 @@ export const folderCityItinerariesQueryOptions = (folderId: string) =>
     enabled: folderId !== '',
   })
 
-export const singleCityItineraryQueryOptions = (
-  folderId: string,
-  cityItineraryId: string,
-) =>
+export const singleCityItineraryQueryOptions = (cityItineraryId: string) =>
   queryOptions({
-    queryKey: [
-      'itinerary_folders',
-      folderId,
-      'city_itineraries',
-      cityItineraryId,
-    ],
+    queryKey: ['city_itineraries', cityItineraryId],
     queryFn: () => getSingleCityItineraryFn({ data: { cityItineraryId } }),
     enabled: cityItineraryId !== '',
   })
@@ -46,12 +38,7 @@ export const updateCityItineraryMutationOptions = () =>
     mutationKey: ['updateCityItinerary'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: [
-          'itinerary_folders',
-          data.folderId,
-          'city_itineraries',
-          data.id,
-        ],
+        queryKey: ['city_itineraries', data.id],
       }),
   })
 
