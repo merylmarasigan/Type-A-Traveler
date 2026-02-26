@@ -13,6 +13,7 @@ import { Link, useRouter } from '@tanstack/react-router'
 import z from 'zod'
 import { useForm } from '@tanstack/react-form'
 import { authClient } from '@/lib/auth-client'
+import { useState } from 'react'
 
 const formSchema = z.object({
   email: z.email(),
@@ -37,6 +38,7 @@ const defaultFormValues: FormValues = {
 
 export function SignupForm() {
   const router = useRouter()
+  const [error, setError] = useState('')
 
   const form = useForm({
     defaultValues: defaultFormValues,
@@ -45,7 +47,7 @@ export function SignupForm() {
     },
     onSubmit: async ({ value }) => {
       const { error } = await authClient.signUp.email(value)
-      if (error) throw error
+      if (error) return setError(error.message ?? 'Something went wrong.')
 
       router.navigate({ to: '/' })
     },
@@ -157,6 +159,7 @@ export function SignupForm() {
               )
             }}
           />
+          {error && <FieldError>{error}</FieldError>}
 
           <Field>
             <Button type="submit">Create Account</Button>
