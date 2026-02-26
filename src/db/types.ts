@@ -2,6 +2,7 @@ import {
   cityItineraries,
   itineraryDays,
   itineraryFolders,
+  timeSlots,
 } from '@/db/schema/app'
 import {
   createInsertSchema,
@@ -57,3 +58,18 @@ export const updateItineraryDaySchema = createUpdateSchema(itineraryDays, {
   id: z.string(), // Makes id required for updates
 })
 export type UpdateItineraryDay = z.infer<typeof updateItineraryDaySchema>
+
+// ---------- TIME SLOTS ----------
+
+export const insertTimeSlotSchema = createInsertSchema(timeSlots).omit({
+  id: true,
+}) // Omit id as they are generated within the createTimeSlot() function
+export type NewTimeSlot = z.infer<typeof insertTimeSlotSchema>
+
+export const selectTimeSlotSchema = createSelectSchema(timeSlots)
+export type TimeSlot = z.infer<typeof selectTimeSlotSchema>
+
+export const updateTimeSlotSchema = createUpdateSchema(timeSlots, {
+  id: z.string(), // Makes id required for updates
+})
+export type UpdateTimeSlot = z.infer<typeof updateTimeSlotSchema>
