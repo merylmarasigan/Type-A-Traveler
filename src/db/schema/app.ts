@@ -1,23 +1,24 @@
-import { timestamps } from '@/db/schema/columns.helpers'
-import { pgTable, text, integer, date, timestamp } from 'drizzle-orm/pg-core'
+import { startEndTimestamps, timestamps } from '@/db/schema/columns.helpers'
+import { pgTable, text, integer, date } from 'drizzle-orm/pg-core'
 
-export const itineraries = pgTable('itineraries', {
+export const itineraryFolders = pgTable('itinerary_folders', {
   id: text().primaryKey(),
   authorId: text().notNull(),
   title: text().notNull(),
+  flightNumbers: text().array(),
   ...timestamps,
 })
 
 export const cityItineraries = pgTable('city_itineraries', {
   id: text().primaryKey(),
-  parentItineraryId: text().notNull(),
+  folderId: text().notNull(),
   title: text().notNull(),
-  location: text().notNull(),
+  city: text().notNull(),
   budget: integer(),
   ...timestamps,
 })
 
-export const days = pgTable('days', {
+export const itineraryDays = pgTable('itinerary_days', {
   id: text().primaryKey(),
   cityItineraryId: text().notNull(),
   date: date().notNull(),
@@ -26,24 +27,19 @@ export const days = pgTable('days', {
 
 export const timeSlots = pgTable('time_slots', {
   id: text().primaryKey(),
-  dayId: text().notNull(),
-  start: timestamp().notNull(),
-  end: timestamp().notNull(),
-  destination: text().notNull(),
+  itineraryDayId: text().notNull(),
   notes: text(),
+  ...startEndTimestamps,
   ...timestamps,
 })
 
-export const flights = pgTable('flights', {
+export const savedActivities = pgTable('saved_activities', {
   id: text().primaryKey(),
-  itineraryId: text().notNull(),
-  flightNo: text().notNull(),
-  departure: timestamp().notNull(),
-  arrival: timestamp().notNull(),
-  fromCity: text().notNull(),
-  toCity: text().notNull(),
-  confirmationNo: text(),
-  ...timestamps,
+  userId: text().notNull(),
+  timeSlotId: text(),
+  city: text().notNull(),
+  fsq_place_id: text(),
+  trp_location_id: text(),
 })
 
 export const lodging = pgTable('lodging', {

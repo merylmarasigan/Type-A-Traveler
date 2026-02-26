@@ -1,17 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod/v4'
 import { serverEnv } from '@/config/env'
-
-export interface CityData {
-  name: string
-  adminName1: string
-  countryName: string
-}
-
-interface GeoNamesResult {
-  geonames: CityData[]
-  totalResultsCount: number
-}
+import { GeoNamesResult } from '@/services/cities/schema'
 
 // https://www.geonames.org/export/geonames-search.html
 export const getCitiesFn = createServerFn({ method: 'POST' })

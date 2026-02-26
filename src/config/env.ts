@@ -11,6 +11,10 @@ const envSchema = z.object({
 
   GEONAMES_USERNAME: z.string(),
   FOURSQUARE_API_KEY: z.string(),
+  TRIPADVISOR_API_KEY: z.string(),
+
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
 })
 
 // Validate server environment
