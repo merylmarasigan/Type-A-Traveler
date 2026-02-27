@@ -9,22 +9,27 @@ import {
 } from '@/services/backend/itinerary-folders.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
+const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
+
+const singleItineraryFolderQueryKey = (itineraryFolderId: string) =>
+  ['itinerary_folders', itineraryFolderId] as const
+
 export const multipleItineraryFoldersQueryOptions = (limit?: number) =>
   queryOptions({
-    queryKey: ['itinerary_folders'],
+    queryKey: multipleItineraryFoldersQueryKey(),
     queryFn: () => getMultipleItineraryFoldersFn({ data: { limit } }),
   })
 
 export const userItineraryFoldersQueryOptions = (userId: string) =>
   queryOptions({
-    queryKey: ['users', userId, 'itinerary_folders'],
+    queryKey: ['users', userId, ...multipleItineraryFoldersQueryKey()],
     queryFn: () => getUserItineraryFoldersFn({ data: { userId } }),
     enabled: userId !== '',
   })
 
 export const singleItineraryFolderQueryOptions = (itineraryFolderId: string) =>
   queryOptions({
-    queryKey: ['itinerary_folders', itineraryFolderId],
+    queryKey: singleItineraryFolderQueryKey(itineraryFolderId),
     queryFn: () => getSingleItineraryFolderFn({ data: { itineraryFolderId } }),
     enabled: itineraryFolderId !== '',
   })
@@ -37,7 +42,7 @@ export const createItineraryFolderMutationOptions = (
     mutationKey: ['createItineraryFolder'],
     onSuccess: async (_data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_folders'],
+        queryKey: multipleItineraryFoldersQueryKey(),
       }),
   })
 
@@ -48,7 +53,7 @@ export const updateItineraryFolderMutationOptions = () =>
     mutationKey: ['updateItineraryFolder'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_folders', data.id],
+        queryKey: singleItineraryFolderQueryKey(data.id),
       }),
   })
 
@@ -59,6 +64,6 @@ export const deleteItineraryFolderMutationOptions = () =>
     mutationKey: ['deleteItineraryFolder'],
     onSuccess: async (_data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_folders'],
+        queryKey: multipleItineraryFoldersQueryKey(),
       }),
   })

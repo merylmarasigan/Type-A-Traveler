@@ -8,16 +8,22 @@ import {
 } from '@/services/backend/itinerary-days.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
+const multipleItineraryDaysQueryKey = (cityItineraryId: string) =>
+  ['city_itineraries', cityItineraryId, 'itinerary_days'] as const
+
+const singleItineraryDayQueryKey = (itineraryDayId: string) =>
+  ['itinerary_days', itineraryDayId] as const
+
 export const cityItineraryDaysQueryOptions = (cityItineraryId: string) =>
   queryOptions({
-    queryKey: ['city_itineraries', cityItineraryId, 'itinerary_days'],
+    queryKey: multipleItineraryDaysQueryKey(cityItineraryId),
     queryFn: () => getCityItineraryDaysFn({ data: { cityItineraryId } }),
     enabled: cityItineraryId !== '',
   })
 
 export const singleItineraryDayQueryOptions = (itineraryDayId: string) =>
   queryOptions({
-    queryKey: ['itinerary_days', itineraryDayId],
+    queryKey: singleItineraryDayQueryKey(itineraryDayId),
     queryFn: () => getSingleItineraryDayFn({ data: { itineraryDayId } }),
     enabled: itineraryDayId !== '',
   })
@@ -28,7 +34,7 @@ export const createItineraryDayMutationOptions = (data: NewItineraryDay) =>
     mutationKey: ['createItineraryDay'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['city_itineraries', data.cityItineraryId, 'itinerary_days'],
+        queryKey: multipleItineraryDaysQueryKey(data.cityItineraryId),
       }),
   })
 
@@ -38,7 +44,7 @@ export const updateItineraryDayMutationOptions = () =>
     mutationKey: ['updateItineraryDay'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_days', data.id],
+        queryKey: singleItineraryDayQueryKey(data.id),
       }),
   })
 
@@ -49,6 +55,6 @@ export const deleteItineraryDayMutationOptions = () =>
     mutationKey: ['deleteItineraryDay'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['city_itineraries', data.cityItineraryId, 'itinerary_days'],
+        queryKey: multipleItineraryDaysQueryKey(data.cityItineraryId),
       }),
   })

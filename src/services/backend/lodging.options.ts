@@ -8,16 +8,22 @@ import {
 } from '@/services/backend/lodging.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
+const multipleLodgingQueryKey = (itineraryFolderId: string) =>
+  ['itinerary_folders', itineraryFolderId, 'lodging'] as const
+
+const singleLodgingQueryKey = (lodgingId: string) =>
+  ['lodging', lodgingId] as const
+
 export const folderLodgingQueryOptions = (itineraryFolderId: string) =>
   queryOptions({
-    queryKey: ['itinerary_folders', itineraryFolderId, 'lodging'],
+    queryKey: multipleLodgingQueryKey(itineraryFolderId),
     queryFn: () => getItineraryLodgingFn({ data: { itineraryFolderId } }),
     enabled: itineraryFolderId !== '',
   })
 
 export const singleLodgingQueryOptions = (lodgingId: string) =>
   queryOptions({
-    queryKey: ['lodging', lodgingId],
+    queryKey: singleLodgingQueryKey(lodgingId),
     queryFn: () => getSingleLodgingFn({ data: { lodgingId } }),
     enabled: lodgingId !== '',
   })
@@ -28,7 +34,7 @@ export const createLodgingMutationOptions = (data: NewLodging) =>
     mutationKey: ['createLodging'],
     onSuccess: async (_data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_folders', data.itineraryId, 'lodging'],
+        queryKey: multipleLodgingQueryKey(data.itineraryId),
       }),
   })
 
@@ -38,7 +44,7 @@ export const updateLodgingMutationOptions = () =>
     mutationKey: ['updateLodging'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['lodging', data.id],
+        queryKey: singleLodgingQueryKey(data.id),
       }),
   })
 
@@ -48,6 +54,6 @@ export const deleteLodgingMutationOptions = () =>
     mutationKey: ['deleteLodging'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_folders', data.itineraryId, 'lodging'],
+        queryKey: multipleLodgingQueryKey(data.itineraryId),
       }),
   })

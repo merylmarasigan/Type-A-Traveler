@@ -51,5 +51,7 @@ export const deleteSavedActivityFn = createServerFn({
 })
   .inputValidator(z.object({ savedActivityId: z.string() }))
   .handler(async ({ data }) => {
-    await deleteSavedActivity(data.savedActivityId)
+    const deletedActivity = await deleteSavedActivity(data.savedActivityId)
+
+    return deletedActivity
   })

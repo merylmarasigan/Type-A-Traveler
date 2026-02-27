@@ -8,16 +8,22 @@ import {
 } from '@/services/backend/saved-activities.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
+const multipleSavedActivitiesQueryKey = (userId: string) =>
+  ['users', userId, 'saved_activities'] as const
+
+const singleSavedActivityQueryKey = (savedActivityId: string) =>
+  ['saved_activities', savedActivityId] as const
+
 export const userSavedActivitiesQueryOptions = (userId: string) =>
   queryOptions({
-    queryKey: ['users', userId, 'saved_activities'],
+    queryKey: multipleSavedActivitiesQueryKey(userId),
     queryFn: () => getUserSavedActivitiesFn({ data: { userId } }),
     enabled: userId !== '',
   })
 
 export const singleSavedActivityQueryOptions = (savedActivityId: string) =>
   queryOptions({
-    queryKey: ['saved_activities', savedActivityId],
+    queryKey: singleSavedActivityQueryKey(savedActivityId),
     queryFn: () => getSingleSavedActivityFn({ data: { savedActivityId } }),
     enabled: savedActivityId !== '',
   })
@@ -28,7 +34,7 @@ export const createSavedActivityMutationOptions = (data: NewSavedActivity) =>
     mutationKey: ['createSavedActivity'],
     onSuccess: async (_data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['saved_activities'],
+        queryKey: multipleSavedActivitiesQueryKey(data.userId),
       }),
   })
 
@@ -38,7 +44,7 @@ export const updateSavedActivityMutationOptions = () =>
     mutationKey: ['updateSavedActivity'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['saved_activities', data.id],
+        queryKey: singleSavedActivityQueryKey(data.id),
       }),
   })
 
@@ -47,8 +53,8 @@ export const deleteSavedActivityMutationOptions = () =>
     mutationFn: (savedActivityId: string) =>
       deleteSavedActivityFn({ data: { savedActivityId } }),
     mutationKey: ['deleteSavedActivity'],
-    onSuccess: async (_data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['saved_activities'],
+        queryKey: multipleSavedActivitiesQueryKey(data.userId),
       }),
   })

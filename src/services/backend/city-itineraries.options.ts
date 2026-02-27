@@ -8,16 +8,22 @@ import {
 } from '@/services/backend/city-itineraries.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
+const multipleCityItinerariesQueryKey = (folderId: string) =>
+  ['itinerary_folders', folderId, 'city_itineraries'] as const
+
+const singleCityItineraryQueryKey = (cityItineraryId: string) =>
+  ['city_itineraries', cityItineraryId] as const
+
 export const folderCityItinerariesQueryOptions = (folderId: string) =>
   queryOptions({
-    queryKey: ['itinerary_folders', folderId, 'city_itineraries'],
+    queryKey: multipleCityItinerariesQueryKey(folderId),
     queryFn: () => getFolderCityItinerariesFn({ data: { folderId } }),
     enabled: folderId !== '',
   })
 
 export const singleCityItineraryQueryOptions = (cityItineraryId: string) =>
   queryOptions({
-    queryKey: ['city_itineraries', cityItineraryId],
+    queryKey: singleCityItineraryQueryKey(cityItineraryId),
     queryFn: () => getSingleCityItineraryFn({ data: { cityItineraryId } }),
     enabled: cityItineraryId !== '',
   })
@@ -28,7 +34,7 @@ export const createCityItineraryMutationOptions = (data: NewCityItinerary) =>
     mutationKey: ['createCityItinerary'],
     onSuccess: async (_data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_folders', data.folderId, 'city_itineraries'],
+        queryKey: multipleCityItinerariesQueryKey(data.folderId),
       }),
   })
 
@@ -38,7 +44,7 @@ export const updateCityItineraryMutationOptions = () =>
     mutationKey: ['updateCityItinerary'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['city_itineraries', data.id],
+        queryKey: singleCityItineraryQueryKey(data.id),
       }),
   })
 
@@ -49,6 +55,6 @@ export const deleteCityItineraryMutationOptions = () =>
     mutationKey: ['deleteCityItinerary'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_folders', data.folderId, 'city_itineraries'],
+        queryKey: multipleCityItinerariesQueryKey(data.folderId),
       }),
   })

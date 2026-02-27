@@ -45,5 +45,10 @@ export const updateSavedActivity = async (values: UpdateSavedActivity) => {
 }
 
 export const deleteSavedActivity = async (id: string) => {
-  await db.delete(savedActivities).where(eq(savedActivities.id, id))
+  const [result] = await db
+    .delete(savedActivities)
+    .where(eq(savedActivities.id, id))
+    .returning()
+
+  return result
 }
