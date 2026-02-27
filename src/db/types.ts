@@ -2,6 +2,7 @@ import {
   cityItineraries,
   itineraryDays,
   itineraryFolders,
+  savedActivities,
   timeSlots,
 } from '@/db/schema/app'
 import {
@@ -73,3 +74,20 @@ export const updateTimeSlotSchema = createUpdateSchema(timeSlots, {
   id: z.string(), // Makes id required for updates
 })
 export type UpdateTimeSlot = z.infer<typeof updateTimeSlotSchema>
+
+// ---------- SAVED ACTIVITIES ----------
+
+export const insertSavedActivitySchema = createInsertSchema(
+  savedActivities,
+).omit({
+  id: true,
+}) // Omit id as they are generated within the createSavedActivity() function
+export type NewSavedActivity = z.infer<typeof insertSavedActivitySchema>
+
+export const selectSavedActivitySchema = createSelectSchema(savedActivities)
+export type SavedActivity = z.infer<typeof selectSavedActivitySchema>
+
+export const updateSavedActivitySchema = createUpdateSchema(savedActivities, {
+  id: z.string(), // Makes id required for updates
+})
+export type UpdateSavedActivity = z.infer<typeof updateSavedActivitySchema>

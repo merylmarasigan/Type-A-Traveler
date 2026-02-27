@@ -37,7 +37,9 @@ export const savedActivities = pgTable('saved_activities', {
   id: text().primaryKey(),
   userId: text().notNull(),
   timeSlotId: text(),
-  city: text().notNull(),
+  name: text().notNull(),
+  description: text(),
+  imageUrl: text(),
   fsq_place_id: text(),
   trp_location_id: text(),
 })
