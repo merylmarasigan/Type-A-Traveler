@@ -2,6 +2,7 @@ import {
   cityItineraries,
   itineraryDays,
   itineraryFolders,
+  lodging,
   savedActivities,
   timeSlots,
 } from '@/db/schema/app'
@@ -91,3 +92,18 @@ export const updateSavedActivitySchema = createUpdateSchema(savedActivities, {
   id: z.string(), // Makes id required for updates
 })
 export type UpdateSavedActivity = z.infer<typeof updateSavedActivitySchema>
+
+// ---------- LODGING ----------
+
+export const insertLodgingSchema = createInsertSchema(lodging).omit({
+  id: true,
+}) // Omit id as they are generated within the createLodging() function
+export type NewLodging = z.infer<typeof insertLodgingSchema>
+
+export const selectLodgingSchema = createSelectSchema(lodging)
+export type Lodging = z.infer<typeof selectLodgingSchema>
+
+export const updateLodgingSchema = createUpdateSchema(lodging, {
+  id: z.string(), // Makes id required for updates
+})
+export type UpdateLodging = z.infer<typeof updateLodgingSchema>

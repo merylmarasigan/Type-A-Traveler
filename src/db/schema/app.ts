@@ -49,6 +49,5 @@ export const lodging = pgTable('lodging', {
   itineraryId: text().notNull(),
   name: text().notNull(),
   address: text(),
-  confirmationNo: text(),
   ...timestamps,
 })
