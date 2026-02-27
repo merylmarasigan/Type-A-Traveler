@@ -28,10 +28,10 @@ export const singleItineraryDayQueryOptions = (itineraryDayId: string) =>
     enabled: itineraryDayId !== '',
   })
 
-export const createItineraryDayMutationOptions = (data: NewItineraryDay) =>
+export const createItineraryDayMutationOptions = () =>
   mutationOptions({
-    mutationFn: () => createItineraryDayFn({ data }),
     mutationKey: ['createItineraryDay'],
+    mutationFn: (data: NewItineraryDay) => createItineraryDayFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleItineraryDaysQueryKey(data.cityItineraryId),
@@ -40,8 +40,8 @@ export const createItineraryDayMutationOptions = (data: NewItineraryDay) =>
 
 export const updateItineraryDayMutationOptions = () =>
   mutationOptions({
-    mutationFn: (data: UpdateItineraryDay) => updateItineraryDayFn({ data }),
     mutationKey: ['updateItineraryDay'],
+    mutationFn: (data: UpdateItineraryDay) => updateItineraryDayFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: singleItineraryDayQueryKey(data.id),
@@ -50,9 +50,9 @@ export const updateItineraryDayMutationOptions = () =>
 
 export const deleteItineraryDayMutationOptions = () =>
   mutationOptions({
+    mutationKey: ['deleteItineraryDay'],
     mutationFn: (itineraryDayId: string) =>
       deleteItineraryDayFn({ data: { itineraryDayId } }),
-    mutationKey: ['deleteItineraryDay'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleItineraryDaysQueryKey(data.cityItineraryId),

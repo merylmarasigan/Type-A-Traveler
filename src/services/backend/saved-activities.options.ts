@@ -28,11 +28,11 @@ export const singleSavedActivityQueryOptions = (savedActivityId: string) =>
     enabled: savedActivityId !== '',
   })
 
-export const createSavedActivityMutationOptions = (data: NewSavedActivity) =>
+export const createSavedActivityMutationOptions = () =>
   mutationOptions({
-    mutationFn: () => createSavedActivityFn({ data }),
     mutationKey: ['createSavedActivity'],
-    onSuccess: async (_data, _variables, _result, ctx) =>
+    mutationFn: (data: NewSavedActivity) => createSavedActivityFn({ data }),
+    onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleSavedActivitiesQueryKey(data.userId),
       }),
@@ -40,8 +40,8 @@ export const createSavedActivityMutationOptions = (data: NewSavedActivity) =>
 
 export const updateSavedActivityMutationOptions = () =>
   mutationOptions({
-    mutationFn: (data: UpdateSavedActivity) => updateSavedActivityFn({ data }),
     mutationKey: ['updateSavedActivity'],
+    mutationFn: (data: UpdateSavedActivity) => updateSavedActivityFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: singleSavedActivityQueryKey(data.id),
@@ -50,9 +50,9 @@ export const updateSavedActivityMutationOptions = () =>
 
 export const deleteSavedActivityMutationOptions = () =>
   mutationOptions({
+    mutationKey: ['deleteSavedActivity'],
     mutationFn: (savedActivityId: string) =>
       deleteSavedActivityFn({ data: { savedActivityId } }),
-    mutationKey: ['deleteSavedActivity'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleSavedActivitiesQueryKey(data.userId),

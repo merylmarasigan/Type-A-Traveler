@@ -34,12 +34,10 @@ export const singleItineraryFolderQueryOptions = (itineraryFolderId: string) =>
     enabled: itineraryFolderId !== '',
   })
 
-export const createItineraryFolderMutationOptions = (
-  data: NewItineraryFolder,
-) =>
+export const createItineraryFolderMutationOptions = () =>
   mutationOptions({
-    mutationFn: () => createItineraryFolderFn({ data }),
     mutationKey: ['createItineraryFolder'],
+    mutationFn: (data: NewItineraryFolder) => createItineraryFolderFn({ data }),
     onSuccess: async (_data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleItineraryFoldersQueryKey(),
@@ -48,9 +46,9 @@ export const createItineraryFolderMutationOptions = (
 
 export const updateItineraryFolderMutationOptions = () =>
   mutationOptions({
+    mutationKey: ['updateItineraryFolder'],
     mutationFn: (data: UpdateItineraryFolder) =>
       updateItineraryFolderFn({ data }),
-    mutationKey: ['updateItineraryFolder'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: singleItineraryFolderQueryKey(data.id),
@@ -59,9 +57,9 @@ export const updateItineraryFolderMutationOptions = () =>
 
 export const deleteItineraryFolderMutationOptions = () =>
   mutationOptions({
+    mutationKey: ['deleteItineraryFolder'],
     mutationFn: (itineraryFolderId: string) =>
       deleteItineraryFolderFn({ data: { itineraryFolderId } }),
-    mutationKey: ['deleteItineraryFolder'],
     onSuccess: async (_data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleItineraryFoldersQueryKey(),

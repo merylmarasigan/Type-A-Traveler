@@ -28,11 +28,11 @@ export const singleLodgingQueryOptions = (lodgingId: string) =>
     enabled: lodgingId !== '',
   })
 
-export const createLodgingMutationOptions = (data: NewLodging) =>
+export const createLodgingMutationOptions = () =>
   mutationOptions({
-    mutationFn: () => createLodgingFn({ data }),
     mutationKey: ['createLodging'],
-    onSuccess: async (_data, _variables, _result, ctx) =>
+    mutationFn: (data: NewLodging) => createLodgingFn({ data }),
+    onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleLodgingQueryKey(data.itineraryId),
       }),
@@ -40,8 +40,8 @@ export const createLodgingMutationOptions = (data: NewLodging) =>
 
 export const updateLodgingMutationOptions = () =>
   mutationOptions({
-    mutationFn: (data: UpdateLodging) => updateLodgingFn({ data }),
     mutationKey: ['updateLodging'],
+    mutationFn: (data: UpdateLodging) => updateLodgingFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: singleLodgingQueryKey(data.id),
@@ -50,8 +50,8 @@ export const updateLodgingMutationOptions = () =>
 
 export const deleteLodgingMutationOptions = () =>
   mutationOptions({
-    mutationFn: (lodgingId: string) => deleteLodgingFn({ data: { lodgingId } }),
     mutationKey: ['deleteLodging'],
+    mutationFn: (lodgingId: string) => deleteLodgingFn({ data: { lodgingId } }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleLodgingQueryKey(data.itineraryId),

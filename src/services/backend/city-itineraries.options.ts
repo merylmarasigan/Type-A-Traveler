@@ -28,11 +28,11 @@ export const singleCityItineraryQueryOptions = (cityItineraryId: string) =>
     enabled: cityItineraryId !== '',
   })
 
-export const createCityItineraryMutationOptions = (data: NewCityItinerary) =>
+export const createCityItineraryMutationOptions = () =>
   mutationOptions({
-    mutationFn: () => createCityItineraryFn({ data }),
     mutationKey: ['createCityItinerary'],
-    onSuccess: async (_data, _variables, _result, ctx) =>
+    mutationFn: (data: NewCityItinerary) => createCityItineraryFn({ data }),
+    onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleCityItinerariesQueryKey(data.folderId),
       }),
@@ -40,8 +40,8 @@ export const createCityItineraryMutationOptions = (data: NewCityItinerary) =>
 
 export const updateCityItineraryMutationOptions = () =>
   mutationOptions({
-    mutationFn: (data: UpdateCityItinerary) => updateCityItineraryFn({ data }),
     mutationKey: ['updateCityItinerary'],
+    mutationFn: (data: UpdateCityItinerary) => updateCityItineraryFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: singleCityItineraryQueryKey(data.id),
@@ -50,9 +50,9 @@ export const updateCityItineraryMutationOptions = () =>
 
 export const deleteCityItineraryMutationOptions = () =>
   mutationOptions({
+    mutationKey: ['deleteCityItinerary'],
     mutationFn: (cityItineraryId: string) =>
       deleteCityItineraryFn({ data: { cityItineraryId } }),
-    mutationKey: ['deleteCityItinerary'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: multipleCityItinerariesQueryKey(data.folderId),

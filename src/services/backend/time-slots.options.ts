@@ -22,10 +22,10 @@ export const singleTimeSlotQueryOptions = (timeSlotId: string) =>
     enabled: timeSlotId !== '',
   })
 
-export const createTimeSlotMutationOptions = (data: NewTimeSlot) =>
+export const createTimeSlotMutationOptions = () =>
   mutationOptions({
-    mutationFn: () => createTimeSlotFn({ data }),
     mutationKey: ['createTimeSlot'],
+    mutationFn: (data: NewTimeSlot) => createTimeSlotFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: ['itinerary_days', data.itineraryDayId, 'time_slots'],
@@ -34,8 +34,8 @@ export const createTimeSlotMutationOptions = (data: NewTimeSlot) =>
 
 export const updateTimeSlotMutationOptions = () =>
   mutationOptions({
-    mutationFn: (data: UpdateTimeSlot) => updateTimeSlotFn({ data }),
     mutationKey: ['updateTimeSlot'],
+    mutationFn: (data: UpdateTimeSlot) => updateTimeSlotFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: ['time_slots', data.id],
@@ -44,9 +44,9 @@ export const updateTimeSlotMutationOptions = () =>
 
 export const deleteTimeSlotMutationOptions = () =>
   mutationOptions({
+    mutationKey: ['deleteTimeSlot'],
     mutationFn: (timeSlotId: string) =>
       deleteTimeSlotFn({ data: { timeSlotId } }),
-    mutationKey: ['deleteTimeSlot'],
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
         queryKey: ['itinerary_days', data.itineraryDayId, 'time_slots'],
