@@ -8,16 +8,22 @@ import {
 } from '@/services/backend/time-slots.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
+const multipleTimeSlotsQueryKey = (itineraryDayId: string) =>
+  ['itinerary_days', itineraryDayId, 'time_slots'] as const
+
+const singleTimeSlotQueryKey = (timeSlotId: string) =>
+  ['time_slots', timeSlotId] as const
+
 export const itineraryDayTimeSlotsQueryOptions = (itineraryDayId: string) =>
   queryOptions({
-    queryKey: ['itinerary_days', itineraryDayId, 'time_slots'],
+    queryKey: multipleTimeSlotsQueryKey(itineraryDayId),
     queryFn: () => getItineraryDayTimeSlotsFn({ data: { itineraryDayId } }),
     enabled: itineraryDayId !== '',
   })
 
 export const singleTimeSlotQueryOptions = (timeSlotId: string) =>
   queryOptions({
-    queryKey: ['time_slots', timeSlotId],
+    queryKey: singleTimeSlotQueryKey(timeSlotId),
     queryFn: () => getSingleTimeSlotFn({ data: { timeSlotId } }),
     enabled: timeSlotId !== '',
   })
@@ -28,7 +34,7 @@ export const createTimeSlotMutationOptions = () =>
     mutationFn: (data: NewTimeSlot) => createTimeSlotFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_days', data.itineraryDayId, 'time_slots'],
+        queryKey: multipleTimeSlotsQueryKey(data.itineraryDayId),
       }),
   })
 
@@ -38,7 +44,7 @@ export const updateTimeSlotMutationOptions = () =>
     mutationFn: (data: UpdateTimeSlot) => updateTimeSlotFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['time_slots', data.id],
+        queryKey: singleTimeSlotQueryKey(data.id),
       }),
   })
 
@@ -49,6 +55,6 @@ export const deleteTimeSlotMutationOptions = () =>
       deleteTimeSlotFn({ data: { timeSlotId } }),
     onSuccess: async (data, _variables, _result, ctx) =>
       await ctx.client.invalidateQueries({
-        queryKey: ['itinerary_days', data.itineraryDayId, 'time_slots'],
+        queryKey: multipleTimeSlotsQueryKey(data.itineraryDayId),
       }),
   })
