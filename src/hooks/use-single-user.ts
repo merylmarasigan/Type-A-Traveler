@@ -5,7 +5,7 @@ import {
 } from '@/services/backend/users.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useUser = (userId: string) => {
+export const useSingleUser = (userId: string) => {
   const userQuery = useSuspenseQuery(singleUserQueryOptions(userId))
 
   const updateUserMutation = useMutation(updateUserMutationOptions())

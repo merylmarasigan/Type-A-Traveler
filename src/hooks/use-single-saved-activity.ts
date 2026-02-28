@@ -5,8 +5,10 @@ import {
 } from '@/services/backend/saved-activities.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useSavedActivity = (id: string) => {
-  const activityQuery = useSuspenseQuery(singleSavedActivityQueryOptions(id))
+export const useSingleSavedActivity = (savedActivityId: string) => {
+  const activityQuery = useSuspenseQuery(
+    singleSavedActivityQueryOptions(savedActivityId),
+  )
 
   const updateActivityMutation = useMutation(
     updateSavedActivityMutationOptions(),

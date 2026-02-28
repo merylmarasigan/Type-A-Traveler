@@ -1,20 +1,16 @@
 import {
-  deleteLodgingMutationOptions,
-  singleLodgingQueryOptions,
-  updateLodgingMutationOptions,
+  createLodgingMutationOptions,
+  folderLodgingQueryOptions,
 } from '@/services/backend/lodging.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useLodging = (lodgingId: string) => {
-  const lodgingQuery = useSuspenseQuery(singleLodgingQueryOptions(lodgingId))
+export const useLodging = (folderId: string) => {
+  const lodgingQuery = useSuspenseQuery(folderLodgingQueryOptions(folderId))
 
-  const updateLodgingMutation = useMutation(updateLodgingMutationOptions())
-
-  const deleteLodgingMutation = useMutation(deleteLodgingMutationOptions())
+  const createLodgingMutation = useMutation(createLodgingMutationOptions())
 
   return {
     lodgingQuery,
-    updateLodgingMutation,
-    deleteLodgingMutation,
+    createLodgingMutation,
   }
 }

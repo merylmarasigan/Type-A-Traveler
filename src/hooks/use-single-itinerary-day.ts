@@ -5,7 +5,7 @@ import {
 } from '@/services/backend/itinerary-days.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useItineraryDay = (itineraryDayId: string) => {
+export const useSingleItineraryDay = (itineraryDayId: string) => {
   const dayQuery = useSuspenseQuery(
     singleItineraryDayQueryOptions(itineraryDayId),
   )

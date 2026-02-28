@@ -5,7 +5,7 @@ import {
 } from '@/services/backend/city-itineraries.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useCityItinerary = (cityItineraryId: string) => {
+export const useSingleCityItinerary = (cityItineraryId: string) => {
   const itineraryQuery = useSuspenseQuery(
     singleCityItineraryQueryOptions(cityItineraryId),
   )
