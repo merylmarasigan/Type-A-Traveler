@@ -6,6 +6,10 @@ export default function FilterButtons() {
   
   const [testText, settestText] = useState("Pressed");
 
+  // function handleClick() {
+  //   settestText(testText => testText+", Pressed");
+  // };
+
   function handleClick() {
     settestText(prev => prev+", Pressed");
   };
