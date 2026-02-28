@@ -6,6 +6,7 @@ import {
   savedActivities,
   timeSlots,
 } from '@/db/schema/app'
+import { user } from '@/db/schema/auth'
 import {
   createInsertSchema,
   createSelectSchema,
@@ -107,3 +108,9 @@ export const updateLodgingSchema = createUpdateSchema(lodging, {
   id: z.string(), // Makes id required for updates
 })
 export type UpdateLodging = z.infer<typeof updateLodgingSchema>
+
+// ---------- USERS ----------
+export const updateUserSchema = createUpdateSchema(user, {
+  id: z.string(), // Makes id required for updates
+})
+export type UpdateUser = z.infer<typeof updateUserSchema>
