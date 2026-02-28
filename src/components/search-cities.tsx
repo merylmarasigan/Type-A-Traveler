@@ -30,49 +30,49 @@ export function SearchCities() {
   )
 
   return (
-    <Combobox
-      items={cities}
-      itemToStringValue={(city: CityData) => city.name}
-      autoHighlight
-    >
-      <ComboboxInput
-        placeholder="Los Angeles, New York, etc."
-        className="w-96"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        showClear
+      <Combobox
+        items={cities}
+        itemToStringValue={(city: CityData) => city.name}
+        autoHighlight
       >
-        <InputGroupAddon>
-          <GlobeIcon />
-        </InputGroupAddon>
-      </ComboboxInput>
-      <ComboboxContent>
-        <ComboboxEmpty>
-          {isLoading ? 'Searching...' : 'No cities found.'}
-        </ComboboxEmpty>
-        <ComboboxList>
-          {(city: CityData, i) => (
-            <Link
-              key={i}
-              to="/itineraries/new/$city"
-              params={{ city: city.name }}
-            >
-              <ComboboxItem value={city}>
-                <Item size="sm" className="p-0">
-                  <ItemContent>
-                    <ItemTitle className="whitespace-nowrap">
-                      {city.name}
-                    </ItemTitle>
-                    <ItemDescription>
-                      {city.adminName1} ({city.countryName})
-                    </ItemDescription>
-                  </ItemContent>
-                </Item>
-              </ComboboxItem>
-            </Link>
-          )}
-        </ComboboxList>
-      </ComboboxContent>
-    </Combobox>
+        <ComboboxInput
+          placeholder="Los Angeles, New York, etc."
+          className="w-96"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          showClear
+        >
+          <InputGroupAddon>
+            <GlobeIcon />
+          </InputGroupAddon>
+        </ComboboxInput>
+        <ComboboxContent>
+          <ComboboxEmpty>
+            {isLoading ? 'Searching...' : 'No cities found.'}
+          </ComboboxEmpty>
+          <ComboboxList>
+            {(city: CityData, i) => (
+              <Link
+                key={i}
+                to="/itineraries/new/$city"
+                params={{ city: city.name }}
+              >
+                <ComboboxItem value={city}>
+                  <Item size="sm" className="p-0">
+                    <ItemContent>
+                      <ItemTitle className="whitespace-nowrap">
+                        {city.name}
+                      </ItemTitle>
+                      <ItemDescription>
+                        {city.adminName1} ({city.countryName})
+                      </ItemDescription>
+                    </ItemContent>
+                  </Item>
+                </ComboboxItem>
+              </Link>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
   )
 }
