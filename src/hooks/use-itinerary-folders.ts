@@ -1,11 +1,16 @@
 import {
   createItineraryFolderMutationOptions,
   multipleItineraryFoldersQueryOptions,
+  userItineraryFoldersQueryOptions,
 } from '@/services/backend/itinerary-folders.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useItineraryFolders = () => {
+export const useItineraryFolders = (userId?: string) => {
   const foldersQuery = useSuspenseQuery(multipleItineraryFoldersQueryOptions())
+
+  const userFoldersQuery = useSuspenseQuery(
+    userItineraryFoldersQueryOptions(userId),
+  )
 
   const createFolderMutation = useMutation(
     createItineraryFolderMutationOptions(),
@@ -13,6 +18,7 @@ export const useItineraryFolders = () => {
 
   return {
     foldersQuery,
+    userFoldersQuery,
     createFolderMutation,
   }
 }

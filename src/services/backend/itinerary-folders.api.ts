@@ -26,8 +26,10 @@ export const getMultipleItineraryFoldersFn = createServerFn({
 export const getUserItineraryFoldersFn = createServerFn({
   method: 'GET',
 })
-  .inputValidator(z.object({ userId: z.string() }))
+  .inputValidator(z.object({ userId: z.string().optional() }))
   .handler(async ({ data }) => {
+    if (!data.userId) return []
+
     const folders = await getUserItineraryFolders(data.userId)
 
     return folders

@@ -20,11 +20,11 @@ export const multipleItineraryFoldersQueryOptions = (limit?: number) =>
     queryFn: () => getMultipleItineraryFoldersFn({ data: { limit } }),
   })
 
-export const userItineraryFoldersQueryOptions = (userId: string) =>
+export const userItineraryFoldersQueryOptions = (userId?: string) =>
   queryOptions({
     queryKey: ['users', userId, ...multipleItineraryFoldersQueryKey()],
     queryFn: () => getUserItineraryFoldersFn({ data: { userId } }),
-    enabled: userId !== '',
+    enabled: userId !== undefined && userId !== '',
   })
 
 export const singleItineraryFolderQueryOptions = (itineraryFolderId: string) =>
