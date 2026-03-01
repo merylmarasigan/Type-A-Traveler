@@ -1,15 +1,18 @@
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldLabel,
   FieldTitle,
 } from "@/components/ui/field"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useState } from "react";
 
 export default function FilterButtons() {
+  
+  const [currentValue, setCurrentValue] = useState("hotels");
+  
   return (
-    <RadioGroup defaultValue="hotels" className="grid-flow-col">
+    <RadioGroup defaultValue="hotels" className="grid-flow-col" onValueChange={(e) => setCurrentValue(e)}>
       <FieldLabel htmlFor="hotels">
         <Field orientation="horizontal">
           <FieldContent>
