@@ -1,11 +1,15 @@
 import {
+  LocationCategory,
   getLocationsFn,
   getSingleLocationFn,
   getSingleLocationPhotoFn,
 } from '@/services/tripadvisor/api'
 import { queryOptions } from '@tanstack/react-query'
 
-export const locationsQueryOptions = (city: string, category: string) =>
+export const locationsQueryOptions = (
+  city: string,
+  category: LocationCategory,
+) =>
   queryOptions({
     queryKey: ['cities', city, 'tripadvisor_locations', category],
     queryFn: () =>

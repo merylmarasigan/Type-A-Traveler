@@ -14,12 +14,19 @@ import z from 'zod'
 const TRIPADVISOR_API_URL =
   'https://api.content.tripadvisor.com/api/v1' as const
 
+export const LocationCategoryEnum = z.enum([
+  'hotels',
+  'attractions',
+  'restaurants',
+])
+export type LocationCategory = z.infer<typeof LocationCategoryEnum>
+
 export const getLocationsFn = createServerFn({ method: 'GET' })
   .middleware([fetchErrorMiddleware])
   .inputValidator(
     z.object({
       location: z.string(),
-      category: z.string(),
+      category: LocationCategoryEnum,
     }),
   )
   .handler(async ({ data }) => {
