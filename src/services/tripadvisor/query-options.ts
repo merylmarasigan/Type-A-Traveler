@@ -7,8 +7,9 @@ import { queryOptions } from '@tanstack/react-query'
 
 export const locationsQueryOptions = (city: string, category: string) =>
   queryOptions({
-    queryKey: ['cities', city, 'tripadvisor_locations'],
-    queryFn: () => getLocationsFn({ data: { location: city, category: category } }),
+    queryKey: ['cities', city, 'tripadvisor_locations', category],
+    queryFn: () =>
+      getLocationsFn({ data: { location: city, category: category } }),
   })
 
 export const singleLocationQueryOptions = (city: string, locationId: string) =>
