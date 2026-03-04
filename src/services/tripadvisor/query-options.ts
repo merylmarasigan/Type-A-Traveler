@@ -3,7 +3,7 @@ import {
   getLocationsFn,
   getSingleLocationFn,
   getSingleLocationPhotoFn,
-} from '@/services/tripadvisor/api'
+} from '@/services/tripadvisor'
 import { queryOptions } from '@tanstack/react-query'
 
 export const locationsQueryOptions = (
