@@ -21,7 +21,11 @@ import { GlobeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useDebounce } from 'use-debounce'
 
-export function SearchCities() {
+type Props = {
+  category: string
+}
+
+export function SearchCities({category} : Props) {
   const [inputValue, setInputValue] = useState('')
   const [debouncedValue] = useDebounce(inputValue, 1000)
 
@@ -56,6 +60,7 @@ export function SearchCities() {
                 key={i}
                 to="/itineraries/new/$city"
                 params={{ city: city.name }}
+                search={{ category: category }}
               >
                 <ComboboxItem value={city}>
                   <Item size="sm" className="p-0">

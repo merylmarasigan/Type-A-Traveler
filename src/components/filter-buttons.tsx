@@ -4,15 +4,16 @@ import {
   FieldLabel,
   FieldTitle,
 } from "@/components/ui/field"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { useState } from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export default function FilterButtons() {
-  
-  const [currentValue, setCurrentValue] = useState("hotels");
-  
+type Props = {
+  currentCategory: string
+  setCurrentCategory: (value: string) => void
+}
+
+export default function FilterButtons({ currentCategory, setCurrentCategory }: Props) {
   return (
-    <RadioGroup defaultValue="hotels" className="grid-flow-col" onValueChange={(e) => setCurrentValue(e)}>
+    <RadioGroup value={currentCategory} className="grid-flow-col" onValueChange={(e) => setCurrentCategory(e)}>
       <FieldLabel htmlFor="hotels">
         <Field orientation="horizontal">
           <FieldContent>

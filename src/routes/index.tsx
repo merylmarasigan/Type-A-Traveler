@@ -15,8 +15,8 @@ function App() {
       <TypographyH1>Type A Traveler</TypographyH1>
       <TypographyH2>Enter your destination to get started.</TypographyH2>
 
-      <FilterButtons/>
-      <SearchCities />
+      <FilterButtons currentCategory={searchCategory} setCurrentCategory={setSearchCategory}/>
+      <SearchCities category={searchCategory}/>
     </div>
   )
 }

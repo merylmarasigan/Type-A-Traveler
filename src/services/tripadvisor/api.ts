@@ -14,11 +14,12 @@ export const getLocationsFn = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
       location: z.string(),
+      category: z.string()
     }),
   )
   .handler(async ({ data }) => {
     const res = await fetch(
-      `${TRIPADVISOR_API_URL}/location/search?key=${serverEnv.TRIPADVISOR_API_KEY}&searchQuery=${data.location}`,
+      `${TRIPADVISOR_API_URL}/location/search?key=${serverEnv.TRIPADVISOR_API_KEY}&searchQuery=${data.location}&category=${data.category}`,
     )
     if (res.status === 429) throw new Error('API call limit reached')
     if (!res.ok)
