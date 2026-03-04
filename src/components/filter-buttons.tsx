@@ -3,23 +3,36 @@ import {
   FieldContent,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+} from '@/components/ui/field'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+  LocationCategory,
+  LocationCategoryEnum,
+} from '@/services/tripadvisor/api'
 
 type Props = {
-  currentCategory: string
-  setCurrentCategory: (value: string) => void
+  currentCategory: LocationCategory
+  setCurrentCategory: (value: LocationCategory) => void
 }
 
-export default function FilterButtons({ currentCategory, setCurrentCategory }: Props) {
+export function FilterButtons({ currentCategory, setCurrentCategory }: Props) {
+  const validateCategory = (value: string) => {
+    const validatedCategory = LocationCategoryEnum.parse(value)
+    setCurrentCategory(validatedCategory)
+  }
+
   return (
-    <RadioGroup value={currentCategory} className="grid-flow-col" onValueChange={(e) => setCurrentCategory(e)}>
+    <RadioGroup
+      value={currentCategory}
+      className="grid-flow-col"
+      onValueChange={validateCategory}
+    >
       <FieldLabel htmlFor="hotels">
         <Field orientation="horizontal">
           <FieldContent>
             <FieldTitle>Hotels</FieldTitle>
           </FieldContent>
-          <RadioGroupItem value="hotels" id="hotels" className="sr-only"/>
+          <RadioGroupItem value="hotels" id="hotels" className="sr-only" />
         </Field>
       </FieldLabel>
       <FieldLabel htmlFor="attractions">
@@ -27,7 +40,11 @@ export default function FilterButtons({ currentCategory, setCurrentCategory }: P
           <FieldContent>
             <FieldTitle>Attractions</FieldTitle>
           </FieldContent>
-          <RadioGroupItem value="attractions" id="attractions" className="sr-only"/>
+          <RadioGroupItem
+            value="attractions"
+            id="attractions"
+            className="sr-only"
+          />
         </Field>
       </FieldLabel>
       <FieldLabel htmlFor="restaurants">
@@ -35,7 +52,11 @@ export default function FilterButtons({ currentCategory, setCurrentCategory }: P
           <FieldContent>
             <FieldTitle>Restaurants</FieldTitle>
           </FieldContent>
-          <RadioGroupItem value="restaurants" id="restaurants" className="sr-only"/>
+          <RadioGroupItem
+            value="restaurants"
+            id="restaurants"
+            className="sr-only"
+          />
         </Field>
       </FieldLabel>
     </RadioGroup>
