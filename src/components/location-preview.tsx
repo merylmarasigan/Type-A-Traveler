@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+// import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { singleLocationPhotoQueryOptions } from '@/services/tripadvisor/query-options'
 import { Location } from '@/services/tripadvisor/schema'
 import { useSuspenseQuery } from '@tanstack/react-query'
