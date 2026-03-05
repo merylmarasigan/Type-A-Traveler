@@ -96,7 +96,6 @@ async function main() {
           expiresAt: f.timestamp(),
         },
       },
-
       itineraryFolders: {
         columns: {
           id: f.uuid(),
@@ -110,22 +109,22 @@ async function main() {
               'Morocco & Spain',
             ],
           }),
+          description: f.valuesFromArray({
+            values: [
+              'Cherry blossoms, bullet trains, and ryokan stays — a springtime journey through Tokyo, Kyoto, and Hiroshima.',
+              'A sun-soaked summer across Paris, Barcelona, Amsterdam, and the Amalfi Coast with friends and endless memories.',
+              'Backpacking through Thailand, Vietnam, and Cambodia — street food, ancient ruins, and turquoise waters await.',
+              "Coast to coast across America's most iconic highways, national parks, and roadside diners.",
+              "From the Amazon rainforest to Patagonia's glaciers, an epic overland journey through the continent's wildest landscapes.",
+              'Spice markets in Marrakech, flamenco in Seville, and sunsets over the Strait of Gibraltar on this dual-country escape.',
+            ],
+          }),
         },
         with: {
           cityItineraries: 2,
           lodging: 1,
         },
       },
-      description: f.valuesFromArray({
-        values: [
-          'Cherry blossoms, bullet trains, and ryokan stays — a springtime journey through Tokyo, Kyoto, and Hiroshima.',
-          'A sun-soaked summer across Paris, Barcelona, Amsterdam, and the Amalfi Coast with friends and endless memories.',
-          'Backpacking through Thailand, Vietnam, and Cambodia — street food, ancient ruins, and turquoise waters await.',
-          "Coast to coast across America's most iconic highways, national parks, and roadside diners.",
-          "From the Amazon rainforest to Patagonia's glaciers, an epic overland journey through the continent's wildest landscapes.",
-          'Spice markets in Marrakech, flamenco in Seville, and sunsets over the Strait of Gibraltar on this dual-country escape.',
-        ],
-      }),
       cityItineraries: {
         columns: {
           id: f.uuid(),
