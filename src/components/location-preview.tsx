@@ -23,6 +23,7 @@ import { Bookmark, Eye } from 'lucide-react'
 import { ComponentProps } from 'react'
 import { HoverCard as HoverCardPrimitive } from 'radix-ui'
 import { Link } from '@tanstack/react-router'
+import { Image } from '@unpic/react'
 
 interface LocationPreviewHoverProps extends ComponentProps<
   typeof HoverCardPrimitive.Root
@@ -67,8 +68,11 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
   return (
     <LocationPreviewHover details={details}>
       <Card className="relative mx-auto w-full max-w-sm max-h-fit pt-0 hover:bg-muted hover:cursor-pointer">
-        <img
+        <Image
           src={photo}
+          layout="constrained"
+          width={384}
+          height={192}
           alt={location.name}
           className="relative aspect-video w-full object-cover dark:brightness-40 rounded-t-md"
         />

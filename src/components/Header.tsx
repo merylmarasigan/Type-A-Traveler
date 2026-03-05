@@ -7,24 +7,43 @@ import {
 } from '@/components/ui/navigation-menu'
 import { AuthHeader } from '@/components/auth/header-user'
 import { Link } from '@tanstack/react-router'
+import { Image } from '@unpic/react'
 
 export function Header() {
   return (
-    <header className="p-2 bg-blue-500 w-full">
-      <div className="flex justify-between items-center w-full h-20">
-        {/* <Link to="/" className="text-white font-bold">Type A Traveler</Link> */}
+    <header className="p-4 bg-blue-500 w-full">
+      <div className="flex justify-between items-center w-full">
         <Link to="/">
-          <img
+          <Image
             src="banner logo idea.png"
+            layout="constrained"
+            width={192}
+            height={48}
             alt="Type A Traveler"
-            className="h-12 invert"
+            className="invert hover:invert-90"
           />
         </Link>
         <div className="flex items-center gap-4">
-          <Link to="/community" className="text-white">
-            Community
-          </Link>
-          <AuthHeader />
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={navigationMenuTriggerStyle()}
+                >
+                  <Link
+                    to="/community"
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Community
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <AuthHeader />
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
       </div>
     </header>
