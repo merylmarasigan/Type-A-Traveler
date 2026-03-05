@@ -5,25 +5,27 @@ import {
   NavigationMenuLink,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
-import { AuthHeader } from '@/integrations/better-auth/header-user'
+import { AuthHeader } from '@/components/auth/header-user'
 import { Link } from '@tanstack/react-router'
 
-export default function Header() {
+export function Header() {
   return (
     <header className="p-2 bg-blue-500 w-full">
       <div className="flex justify-between items-center w-full h-20">
         {/* <Link to="/" className="text-white font-bold">Type A Traveler</Link> */}
         <Link to="/">
-          <img src="banner logo idea.png" alt="Type A Traveler" className="h-12 invert" />
+          <img
+            src="banner logo idea.png"
+            alt="Type A Traveler"
+            className="h-12 invert"
+          />
         </Link>
         <div className="flex items-center gap-4">
-           <Link to="/community" className="text-white">
+          <Link to="/community" className="text-white">
             Community
           </Link>
           <AuthHeader />
-
         </div>
-       
       </div>
     </header>
   )
