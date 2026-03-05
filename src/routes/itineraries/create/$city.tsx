@@ -1,3 +1,4 @@
+import { DateRangePicker } from '@/components/date-range-picker'
 import { TypographyH2, TypographySmall } from '@/components/ui/typography'
 import { UserSavedActivities } from '@/components/user-saved-activities'
 import { authClient } from '@/lib/auth-client'
@@ -13,10 +14,13 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="max-w-7xl flex flex-col gap-2 md:gap-4 p-2">
+      <div className="max-w-7xl flex flex-col items-start gap-2 md:gap-4 p-2">
         <TypographyH2>Create your itinerary for {city}</TypographyH2>
         {data?.user ? (
-          <UserSavedActivities user={data.user} city={city} />
+          <>
+            <DateRangePicker />
+            <UserSavedActivities user={data.user} city={city} />
+          </>
         ) : (
           <TypographySmall>Please sign in to continue.</TypographySmall>
         )}
