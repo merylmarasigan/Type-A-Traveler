@@ -13,7 +13,8 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ItinerariesNewCityRouteImport } from './routes/itineraries/new/$city'
+import { Route as ActivitiesCityRouteImport } from './routes/activities/$city'
+import { Route as ItinerariesCreateCityRouteImport } from './routes/itineraries/create/$city'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const SignupRoute = SignupRouteImport.update({
@@ -36,9 +37,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ItinerariesNewCityRoute = ItinerariesNewCityRouteImport.update({
-  id: '/itineraries/new/$city',
-  path: '/itineraries/new/$city',
+const ActivitiesCityRoute = ActivitiesCityRouteImport.update({
+  id: '/activities/$city',
+  path: '/activities/$city',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ItinerariesCreateCityRoute = ItinerariesCreateCityRouteImport.update({
+  id: '/itineraries/create/$city',
+  path: '/itineraries/create/$city',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -52,16 +58,18 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/activities/$city': typeof ActivitiesCityRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/itineraries/new/$city': typeof ItinerariesNewCityRoute
+  '/itineraries/create/$city': typeof ItinerariesCreateCityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/activities/$city': typeof ActivitiesCityRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/itineraries/new/$city': typeof ItinerariesNewCityRoute
+  '/itineraries/create/$city': typeof ItinerariesCreateCityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,8 +77,9 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/activities/$city': typeof ActivitiesCityRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/itineraries/new/$city': typeof ItinerariesNewCityRoute
+  '/itineraries/create/$city': typeof ItinerariesCreateCityRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,24 +88,27 @@ export interface FileRouteTypes {
     | '/community'
     | '/login'
     | '/signup'
+    | '/activities/$city'
     | '/api/auth/$'
-    | '/itineraries/new/$city'
+    | '/itineraries/create/$city'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/community'
     | '/login'
     | '/signup'
+    | '/activities/$city'
     | '/api/auth/$'
-    | '/itineraries/new/$city'
+    | '/itineraries/create/$city'
   id:
     | '__root__'
     | '/'
     | '/community'
     | '/login'
     | '/signup'
+    | '/activities/$city'
     | '/api/auth/$'
-    | '/itineraries/new/$city'
+    | '/itineraries/create/$city'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -104,8 +116,9 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  ActivitiesCityRoute: typeof ActivitiesCityRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ItinerariesNewCityRoute: typeof ItinerariesNewCityRoute
+  ItinerariesCreateCityRoute: typeof ItinerariesCreateCityRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -138,11 +151,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/itineraries/new/$city': {
-      id: '/itineraries/new/$city'
-      path: '/itineraries/new/$city'
-      fullPath: '/itineraries/new/$city'
-      preLoaderRoute: typeof ItinerariesNewCityRouteImport
+    '/activities/$city': {
+      id: '/activities/$city'
+      path: '/activities/$city'
+      fullPath: '/activities/$city'
+      preLoaderRoute: typeof ActivitiesCityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/itineraries/create/$city': {
+      id: '/itineraries/create/$city'
+      path: '/itineraries/create/$city'
+      fullPath: '/itineraries/create/$city'
+      preLoaderRoute: typeof ItinerariesCreateCityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -160,8 +180,9 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  ActivitiesCityRoute: ActivitiesCityRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ItinerariesNewCityRoute: ItinerariesNewCityRoute,
+  ItinerariesCreateCityRoute: ItinerariesCreateCityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

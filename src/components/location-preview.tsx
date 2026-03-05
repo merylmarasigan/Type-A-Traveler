@@ -90,24 +90,15 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
           <TypographyMuted>{details.description}</TypographyMuted>
         </CardContent>
         <CardFooter className="gap-2 justify-between">
-          <Button
-            asChild
-            variant="secondary"
-            className="flex-1 hover:cursor-pointer"
-          >
-            <Link
-              to={details.website}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Eye />
-              View
-            </Link>
+          <Button variant="secondary" className="flex-1 hover:cursor-pointer">
+            <Eye />
+            View
           </Button>
           <SaveActivityButton
             activity={details}
             user={data?.user}
             disabled={authPending || !data?.user}
+            imageUrl={photo}
           />
         </CardFooter>
       </Card>
