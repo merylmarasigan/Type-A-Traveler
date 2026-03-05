@@ -15,6 +15,8 @@ const envSchema = z.object({
 
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+
+  VITE_USE_MOCK_API: z.stringbool().default(true),
 })
 
 // Validate server environment
