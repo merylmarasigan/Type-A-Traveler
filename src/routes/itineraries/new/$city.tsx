@@ -1,6 +1,6 @@
 import { LocationPreview } from '@/components/location-preview'
 import { ErrorComponent } from '@/components/error'
-import { TypographyH1, TypographyH4 } from '@/components/ui/typography'
+import { TypographyH2 } from '@/components/ui/typography'
 import { locationsQueryOptions } from '@/services/tripadvisor/query-options'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
@@ -31,22 +31,19 @@ function RouteComponent() {
   )
 
   return (
-    <div className="flex flex-col">
-      <TypographyH1>Create an itinerary for {city}</TypographyH1>
-      <div className="flex">
-        <ul className="flex flex-col gap-2 items-center w-lg max-w-md">
-          <TypographyH4 className="capitalize">
-            Suggested {category}
-          </TypographyH4>
-          {cityLocationsQuery.data.map((location) => (
-            <LocationPreview
-              key={location.location_id}
-              city={city}
-              location={location}
-            />
-          ))}
-        </ul>
-      </div>
+    <div className="flex flex-col items-center gap-2 md:gap-4 p-2">
+      <TypographyH2>
+        Suggested {category} for {city}
+      </TypographyH2>
+      <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 max-w-7xl">
+        {cityLocationsQuery.data.map((location) => (
+          <LocationPreview
+            key={location.location_id}
+            city={city}
+            location={location}
+          />
+        ))}
+      </ul>
     </div>
   )
 }
