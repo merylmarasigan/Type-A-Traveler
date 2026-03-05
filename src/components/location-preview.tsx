@@ -19,11 +19,13 @@ import {
 } from '@/services/tripadvisor/query-options'
 import { Location, LocationDetails } from '@/services/tripadvisor/schema'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Bookmark, Eye } from 'lucide-react'
+import { Eye } from 'lucide-react'
 import { ComponentProps } from 'react'
 import { HoverCard as HoverCardPrimitive } from 'radix-ui'
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
+import { authClient } from '@/lib/auth-client'
+import { SaveActivityButton } from '@/components/save-activity-button'
 
 interface LocationPreviewHoverProps extends ComponentProps<
   typeof HoverCardPrimitive.Root
@@ -65,6 +67,8 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
     singleLocationPhotoQueryOptions(city, location.location_id),
   )
 
+  const { data, isPending: authPending } = authClient.useSession()
+
   return (
     <LocationPreviewHover details={details}>
       <Card className="relative mx-auto w-full max-w-sm max-h-fit pt-0 hover:bg-muted hover:cursor-pointer">
@@ -86,7 +90,11 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
           <TypographyMuted>{details.description}</TypographyMuted>
         </CardContent>
         <CardFooter className="gap-2 justify-between">
-          <Button asChild className="flex-1 hover:cursor-pointer">
+          <Button
+            asChild
+            variant="secondary"
+            className="flex-1 hover:cursor-pointer"
+          >
             <Link
               to={details.website}
               target="_blank"
@@ -96,10 +104,11 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
               View
             </Link>
           </Button>
-          <Button className="flex-1 hover:cursor-pointer" variant="secondary">
-            <Bookmark />
-            Save
-          </Button>
+          <SaveActivityButton
+            activity={details}
+            user={data?.user}
+            disabled={authPending || !data?.user}
+          />
         </CardFooter>
       </Card>
     </LocationPreviewHover>
