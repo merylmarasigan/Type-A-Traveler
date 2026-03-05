@@ -5,6 +5,7 @@ export const itineraryFolders = pgTable('itinerary_folders', {
   id: text().primaryKey(),
   authorId: text().notNull(),
   title: text().notNull(),
+  description: text(),
   flightNumbers: text().array(),
   ...timestamps,
 })
@@ -13,6 +14,7 @@ export const cityItineraries = pgTable('city_itineraries', {
   id: text().primaryKey(),
   folderId: text().notNull(),
   title: text().notNull(),
+  description: text(),
   city: text().notNull(),
   budget: integer(),
   ...timestamps,
