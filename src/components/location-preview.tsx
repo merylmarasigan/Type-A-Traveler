@@ -25,7 +25,7 @@ import { HoverCard as HoverCardPrimitive } from 'radix-ui'
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { authClient } from '@/lib/auth-client'
-import { SaveActivityButton } from '@/components/save-activity-button'
+import { SaveActivityButton } from '@/components/saved-activities/save-activity-button'
 
 interface LocationPreviewHoverProps extends ComponentProps<
   typeof HoverCardPrimitive.Root
@@ -97,6 +97,7 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
           <SaveActivityButton
             activity={details}
             user={data?.user}
+            city={city}
             disabled={authPending || !data?.user}
             imageUrl={photo}
           />

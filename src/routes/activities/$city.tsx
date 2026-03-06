@@ -66,7 +66,7 @@ interface ContinueButtonProps {
 
 function ContinueButton({ user }: ContinueButtonProps) {
   const { city } = Route.useParams()
-  const { activitiesQuery } = useSavedActivities(user.id)
+  const { activitiesQuery } = useSavedActivities(user.id, city)
 
   if (activitiesQuery.data.length === 0) return null
 

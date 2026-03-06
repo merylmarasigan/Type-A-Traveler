@@ -40,6 +40,7 @@ export const savedActivities = pgTable('saved_activities', {
   userId: text().notNull(),
   timeSlotId: text(),
   name: text().notNull(),
+  city: text().notNull(),
   description: text(),
   imageUrl: text(),
   fsq_place_id: text(),

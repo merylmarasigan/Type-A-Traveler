@@ -10,16 +10,18 @@ import { ComponentProps } from 'react'
 interface SaveActivityButtonProps extends ComponentProps<'button'> {
   activity: LocationDetails
   user?: User
+  city: string
   imageUrl?: string
 }
 
 export function SaveActivityButton({
   user,
+  city,
   className,
   ...props
 }: SaveActivityButtonProps) {
   return user ? (
-    <SaveActivityButtonWithSession {...props} user={user} />
+    <SaveActivityButtonWithSession {...props} user={user} city={city} />
   ) : (
     <Button
       disabled={props.disabled}
@@ -39,12 +41,14 @@ interface SaveActivityButtonWithSessionProps extends SaveActivityButtonProps {
 function SaveActivityButtonWithSession({
   activity,
   user,
+  city,
   imageUrl,
   className,
   ...props
 }: SaveActivityButtonWithSessionProps) {
   const { activitiesQuery, createSavedActivityMutation } = useSavedActivities(
     user.id,
+    city,
   )
 
   const saveActivity = async () => {
@@ -53,6 +57,7 @@ function SaveActivityButtonWithSession({
     await createSavedActivityMutation.mutateAsync({
       userId: user.id,
       name: activity.name,
+      city,
       description: activity.description,
       imageUrl,
       trp_location_id: `${activity.location_id}`,

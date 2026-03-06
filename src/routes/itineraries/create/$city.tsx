@@ -1,6 +1,6 @@
 import { DateRangePicker } from '@/components/date-range-picker'
 import { TypographyH2, TypographySmall } from '@/components/ui/typography'
-import { UserSavedActivities } from '@/components/user-saved-activities'
+import { UserSavedActivities } from '@/components/saved-activities/user-saved-activities'
 import { authClient } from '@/lib/auth-client'
 import { createFileRoute } from '@tanstack/react-router'
 

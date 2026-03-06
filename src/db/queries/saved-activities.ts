@@ -2,13 +2,15 @@ import { db } from '@/db'
 import { savedActivities } from '@/db/schema/app'
 import { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
 import { generateId } from 'better-auth'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 
-export const getUserSavedActivities = async (userId: string) => {
-  const result = await db
-    .select()
-    .from(savedActivities)
-    .where(eq(savedActivities.userId, userId))
+export const getUserSavedActivities = async (userId: string, city?: string) => {
+  const userIdClause = eq(savedActivities.userId, userId)
+  const whereClause = city
+    ? and(userIdClause, eq(savedActivities.city, city))
+    : userIdClause
+
+  const result = await db.select().from(savedActivities).where(whereClause)
 
   return result
 }
