@@ -5,6 +5,7 @@ import { singleLocationPhotoQueryOptions } from '@/services/tripadvisor/query-op
 import { Location } from '@/services/tripadvisor/schema'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Bookmark, Eye } from 'lucide-react'
+import { LocationDetails } from './location-details'
 
 interface LocationPreviewProps {
   city: string
@@ -31,10 +32,10 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
         <CardTitle>{location.name}</CardTitle>
       </CardHeader>
       <CardFooter className="flex-col gap-2">
-        <Button className="w-full">
-          <Eye />
-          View
-        </Button>
+      <LocationDetails 
+        city={city} 
+        location={location} 
+        photo={photo}/>
         <Button className="w-full" variant="secondary">
           <Bookmark />
           Save
