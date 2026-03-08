@@ -51,7 +51,7 @@ export type UpdateCityItinerary = z.infer<typeof updateCityItinerarySchema>
 
 export const insertItineraryDaySchema = createInsertSchema(itineraryDays).omit({
   id: true,
-}) // Omit id as they are generated within the createItineraryDay() function
+}) // Omit id as they are generated within the createItineraryDays() function
 export type NewItineraryDay = z.infer<typeof insertItineraryDaySchema>
 
 export const selectItineraryDaySchema = createSelectSchema(itineraryDays)

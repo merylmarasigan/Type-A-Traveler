@@ -18,7 +18,7 @@ function RouteComponent() {
         <TypographyH2>Create your itinerary for {city}</TypographyH2>
         {data?.user ? (
           <>
-            <DateRangePicker />
+            <DateRangePicker city={city} />
             <UserSavedActivities user={data.user} city={city} />
           </>
         ) : (

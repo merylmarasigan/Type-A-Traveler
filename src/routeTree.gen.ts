@@ -13,6 +13,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ItinerariesIdRouteImport } from './routes/itineraries/$id'
 import { Route as ActivitiesCityRouteImport } from './routes/activities/$city'
 import { Route as ItinerariesCreateCityRouteImport } from './routes/itineraries/create/$city'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ItinerariesIdRoute = ItinerariesIdRouteImport.update({
+  id: '/itineraries/$id',
+  path: '/itineraries/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ActivitiesCityRoute = ActivitiesCityRouteImport.update({
   id: '/activities/$city',
   path: '/activities/$city',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/activities/$city': typeof ActivitiesCityRoute
+  '/itineraries/$id': typeof ItinerariesIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/create/$city': typeof ItinerariesCreateCityRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/activities/$city': typeof ActivitiesCityRoute
+  '/itineraries/$id': typeof ItinerariesIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/create/$city': typeof ItinerariesCreateCityRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/activities/$city': typeof ActivitiesCityRoute
+  '/itineraries/$id': typeof ItinerariesIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/create/$city': typeof ItinerariesCreateCityRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/activities/$city'
+    | '/itineraries/$id'
     | '/api/auth/$'
     | '/itineraries/create/$city'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/activities/$city'
+    | '/itineraries/$id'
     | '/api/auth/$'
     | '/itineraries/create/$city'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/activities/$city'
+    | '/itineraries/$id'
     | '/api/auth/$'
     | '/itineraries/create/$city'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   ActivitiesCityRoute: typeof ActivitiesCityRoute
+  ItinerariesIdRoute: typeof ItinerariesIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ItinerariesCreateCityRoute: typeof ItinerariesCreateCityRoute
 }
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/itineraries/$id': {
+      id: '/itineraries/$id'
+      path: '/itineraries/$id'
+      fullPath: '/itineraries/$id'
+      preLoaderRoute: typeof ItinerariesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/activities/$city': {
       id: '/activities/$city'
       path: '/activities/$city'
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   ActivitiesCityRoute: ActivitiesCityRoute,
+  ItinerariesIdRoute: ItinerariesIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ItinerariesCreateCityRoute: ItinerariesCreateCityRoute,
 }

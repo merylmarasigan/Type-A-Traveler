@@ -4,7 +4,7 @@ import { pgTable, text, integer, date } from 'drizzle-orm/pg-core'
 export const itineraryFolders = pgTable('itinerary_folders', {
   id: text().primaryKey(),
   authorId: text().notNull(),
-  title: text().notNull(),
+  title: text(),
   description: text(),
   flightNumbers: text().array(),
   ...timestamps,
@@ -13,7 +13,7 @@ export const itineraryFolders = pgTable('itinerary_folders', {
 export const cityItineraries = pgTable('city_itineraries', {
   id: text().primaryKey(),
   folderId: text().notNull(),
-  title: text().notNull(),
+  title: text(),
   description: text(),
   city: text().notNull(),
   budget: integer(),
@@ -23,7 +23,7 @@ export const cityItineraries = pgTable('city_itineraries', {
 export const itineraryDays = pgTable('itinerary_days', {
   id: text().primaryKey(),
   cityItineraryId: text().notNull(),
-  date: date().notNull(),
+  date: date({ mode: 'date' }).notNull(),
   ...timestamps,
 })
 

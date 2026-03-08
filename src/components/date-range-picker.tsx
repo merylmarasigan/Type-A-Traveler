@@ -8,15 +8,34 @@ import {
 } from '@/components/ui/popover'
 import { TypographyH3 } from '@/components/ui/typography'
 import { addDays, format } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarCheck2, CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 import { type DateRange } from 'react-day-picker'
+import { useItineraryDays } from '@/hooks/use-itinerary-days'
+import { Spinner } from '@/components/ui/spinner'
+import { useRouter } from '@tanstack/react-router'
 
-export function DateRangePicker() {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(new Date().getFullYear(), 0, 12),
-    to: addDays(new Date(new Date().getFullYear(), 0, 12), 30),
+interface DateRangePickerProps {
+  city: string
+}
+
+export function DateRangePicker({ city }: DateRangePickerProps) {
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: new Date(),
+    to: addDays(new Date(), 14),
   })
+
+  const { createInitialDays, createIsPending } = useItineraryDays()
+  const router = useRouter()
+
+  const handleConfirmDates = async () => {
+    const { itineraryFolder } = await createInitialDays(dateRange, city)
+
+    await router.navigate({
+      to: '/itineraries/$id',
+      params: { id: itineraryFolder.id },
+    })
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -48,14 +67,19 @@ export function DateRangePicker() {
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="range"
-              defaultMonth={dateRange?.from}
+              defaultMonth={dateRange.from}
               selected={dateRange}
+              required
               onSelect={setDateRange}
               numberOfMonths={2}
             />
           </PopoverContent>
         </Popover>
       </Field>
+      <Button disabled={createIsPending} onClick={handleConfirmDates}>
+        {createIsPending ? <Spinner /> : <CalendarCheck2 />}
+        {createIsPending ? 'Saving...' : 'Confirm'}
+      </Button>
     </div>
   )
 }
