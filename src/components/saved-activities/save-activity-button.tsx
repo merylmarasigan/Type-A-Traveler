@@ -17,11 +17,17 @@ interface SaveActivityButtonProps extends ComponentProps<'button'> {
 export function SaveActivityButton({
   user,
   city,
+  imageUrl,
   className,
   ...props
 }: SaveActivityButtonProps) {
   return user ? (
-    <SaveActivityButtonWithSession {...props} user={user} city={city} />
+    <SaveActivityButtonWithSession
+      {...props}
+      user={user}
+      city={city}
+      imageUrl={imageUrl}
+    />
   ) : (
     <Button
       disabled={props.disabled}

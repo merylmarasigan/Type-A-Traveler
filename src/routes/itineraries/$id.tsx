@@ -1,7 +1,9 @@
 import { ItineraryDaysList } from '@/components/itinerary-days'
+import { UserSavedActivities } from '@/components/saved-activities/user-saved-activities'
 import { TypographyH1, TypographyH2 } from '@/components/ui/typography'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
+import { authClient } from '@/lib/auth-client'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/itineraries/$id')({
@@ -12,6 +14,7 @@ function RouteComponent() {
   const { id } = Route.useParams()
   const { folderQuery } = useSingleItineraryFolder(id)
   const { itinerariesQuery } = useCityItineraries(id)
+  const { data } = authClient.useSession()
 
   return (
     <div>
@@ -25,6 +28,12 @@ function RouteComponent() {
           <ItineraryDaysList cityItineraryId={cityItinerary.id} />
         </div>
       ))}
+      {data?.user && (
+        <UserSavedActivities
+          user={data.user}
+          city={itinerariesQuery.data[0].city}
+        />
+      )}
     </div>
   )
 }
