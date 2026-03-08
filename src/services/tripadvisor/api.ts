@@ -72,8 +72,37 @@ export const getSingleLocationPhotoFn = createServerFn({ method: 'GET' })
     const response: PhotosResponse = await res.json()
     const images = response.data.map((p) => p.images)
 
+    // if(!images)
+    // {
+    //   return null
+    // }
+
+    if(images.length == 0)
+    {
+      return null
+    }
+    
     const url = images[0].original
       ? images[0].original.url
       : images[0].medium.url
     return url
+  })
+
+export const getDefaultLocationFn = createServerFn({ method: 'GET' })
+  .middleware([fetchErrorMiddleware])
+  .inputValidator(
+    z.object({
+      location: z.string(),
+      lat: z.string(),
+      lng: z.string()
+    }),
+  )
+  .handler(async ({ data }) => {
+    const res = await fetchOrThrow(
+      `${TRIPADVISOR_API_URL}/location/search?searchQuery=${data.location}&key=${serverEnv.TRIPADVISOR_API_KEY}&latLong=${data.lat}%2C${data.lng}`,
+      data.location,
+    )
+
+    const response: SearchResponse = await res.json()
+    return response.data[0]
   })

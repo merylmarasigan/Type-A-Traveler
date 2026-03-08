@@ -12,9 +12,10 @@ import { LocationDetailsDialog } from '@/components/location-details'
 interface LocationPreviewProps {
   city: string
   location: Location
+  cityPhoto: string
 }
 
-export function LocationPreview({ city, location }: LocationPreviewProps) {
+export function LocationPreview({ city, location, cityPhoto }: LocationPreviewProps) {
   const { data: details } = useSuspenseQuery(
     singleLocationQueryOptions(city, location.location_id),
   )
@@ -28,7 +29,7 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
   return (
     <Card className="relative mx-auto w-full max-w-sm pt-0">
       <img
-        src={photo}
+        src={photo ? photo : cityPhoto}
         alt={location.name}
         className="relative aspect-video w-full object-cover dark:brightness-40 rounded-t-md"
       />
@@ -36,13 +37,13 @@ export function LocationPreview({ city, location }: LocationPreviewProps) {
         <CardTitle>{location.name}</CardTitle>
       </CardHeader>
       <CardFooter className="gap-2 justify-between">
-        <LocationDetailsDialog city={city} details={details} imageUrl={photo} />
+        <LocationDetailsDialog city={city} details={details} imageUrl={photo ? photo : cityPhoto} />
         <SaveActivityButton
           activity={details}
           user={data?.user}
           city={city}
           disabled={authPending || !data?.user}
-          imageUrl={photo}
+          imageUrl={photo ? photo : cityPhoto}
         />
       </CardFooter>
     </Card>

@@ -1,7 +1,7 @@
 import { LocationPreview } from '@/components/location-preview'
 import { ErrorComponent } from '@/components/error'
 import { TypographyH2 } from '@/components/ui/typography'
-import { locationsQueryOptions } from '@/services/tripadvisor/query-options'
+import { defaultLocationQueryOptions, locationsQueryOptions, singleLocationPhotoQueryOptions } from '@/services/tripadvisor/query-options'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { LocationCategoryEnum } from '@/services/tripadvisor/api'
@@ -34,6 +34,14 @@ function RouteComponent() {
     locationsQueryOptions(city, category, lat, lng),
   )
 
+  const defaultLocationQuery = useSuspenseQuery(
+    defaultLocationQueryOptions(city, lat, lng),
+  )
+
+  const { data: defaultCityPhoto } = useSuspenseQuery(
+    singleLocationPhotoQueryOptions(city, defaultLocationQuery.data.location_id),
+  )
+
   const { data } = authClient.useSession()
 
   return (
@@ -50,6 +58,7 @@ function RouteComponent() {
             <LocationPreview
               key={location.location_id}
               city={city}
+              cityPhoto={defaultCityPhoto ? defaultCityPhoto : process.env.PUBLIC_URL + '/No_Image_Available.jpg'}
               location={location}
             />
           ))}
