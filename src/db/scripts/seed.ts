@@ -217,6 +217,7 @@ async function main() {
               'Beach Day',
             ],
           }),
+          city: f.city(),
           description: f.loremIpsum(),
           imageUrl: f.string(),
           fsq_place_id: f.valuesFromArray({

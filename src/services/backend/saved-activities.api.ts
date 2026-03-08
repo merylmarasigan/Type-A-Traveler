@@ -15,9 +15,14 @@ import z from 'zod/v4'
 export const getUserSavedActivitiesFn = createServerFn({
   method: 'GET',
 })
-  .inputValidator(z.object({ userId: z.string() }))
+  .inputValidator(
+    z.object({
+      userId: z.string(),
+      city: z.string().optional(),
+    }),
+  )
   .handler(async ({ data }) => {
-    const activities = await getUserSavedActivities(data.userId)
+    const activities = await getUserSavedActivities(data.userId, data.city)
 
     return activities
   })

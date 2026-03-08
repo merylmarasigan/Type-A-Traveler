@@ -1,9 +1,10 @@
 import {
-  createItineraryDay,
+  createItineraryDays,
   deleteItineraryDay,
   getItineraryDay,
   getCityItineraryDays,
-  updateItineraryDay,
+  updateMultipleItineraryDays,
+  updateSingleItineraryDay,
 } from '@/db/queries/itinerary-days'
 import { insertItineraryDaySchema, updateItineraryDaySchema } from '@/db/types'
 import { createServerFn } from '@tanstack/react-start'
@@ -12,8 +13,10 @@ import z from 'zod/v4'
 export const getCityItineraryDaysFn = createServerFn({
   method: 'GET',
 })
-  .inputValidator(z.object({ cityItineraryId: z.string() }))
+  .inputValidator(z.object({ cityItineraryId: z.string().optional() }))
   .handler(async ({ data }) => {
+    if (!data.cityItineraryId) return []
+
     const days = await getCityItineraryDays(data.cityItineraryId)
 
     return days
@@ -27,20 +30,28 @@ export const getSingleItineraryDayFn = createServerFn({ method: 'GET' })
     return day
   })
 
-export const createItineraryDayFn = createServerFn({ method: 'POST' })
-  .inputValidator(insertItineraryDaySchema)
+export const createItineraryDaysFn = createServerFn({ method: 'POST' })
+  .inputValidator(insertItineraryDaySchema.array())
   .handler(async ({ data }) => {
-    const newItineraryDay = await createItineraryDay(data)
+    const newItineraryDays = await createItineraryDays(data)
 
-    return newItineraryDay
+    return newItineraryDays
   })
 
-export const updateItineraryDayFn = createServerFn({ method: 'POST' })
+export const updateSingleItineraryDayFn = createServerFn({ method: 'POST' })
   .inputValidator(updateItineraryDaySchema)
   .handler(async ({ data }) => {
-    const updatedItineraryDay = await updateItineraryDay(data)
+    const updatedItineraryDay = await updateSingleItineraryDay(data)
 
     return updatedItineraryDay
+  })
+
+export const updateMultipleItineraryDaysFn = createServerFn({ method: 'POST' })
+  .inputValidator(insertItineraryDaySchema.array())
+  .handler(async ({ data }) => {
+    const updatedItineraryDays = await updateMultipleItineraryDays(data)
+
+    return updatedItineraryDays
   })
 
 export const deleteItineraryDayFn = createServerFn({

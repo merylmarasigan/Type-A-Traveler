@@ -1,7 +1,11 @@
 import { cn } from '@/lib/utils'
 import { ComponentProps } from 'react'
 
-export function TypographyH1({ className, ...props }: ComponentProps<'h1'>) {
+export function TypographyH1({
+  className,
+  children,
+  ...props
+}: ComponentProps<'h1'>) {
   return (
     <h1
       className={cn(
@@ -10,12 +14,16 @@ export function TypographyH1({ className, ...props }: ComponentProps<'h1'>) {
       )}
       {...props}
     >
-      {props.children}
+      {children}
     </h1>
   )
 }
 
-export function TypographyH2({ className, ...props }: ComponentProps<'h2'>) {
+export function TypographyH2({
+  className,
+  children,
+  ...props
+}: ComponentProps<'h2'>) {
   return (
     <h2
       className={cn(
@@ -24,12 +32,16 @@ export function TypographyH2({ className, ...props }: ComponentProps<'h2'>) {
       )}
       {...props}
     >
-      {props.children}
+      {children}
     </h2>
   )
 }
 
-export function TypographyH3({ className, ...props }: ComponentProps<'h3'>) {
+export function TypographyH3({
+  className,
+  children,
+  ...props
+}: ComponentProps<'h3'>) {
   return (
     <h3
       className={cn(
@@ -38,12 +50,16 @@ export function TypographyH3({ className, ...props }: ComponentProps<'h3'>) {
       )}
       {...props}
     >
-      {props.children}
+      {children}
     </h3>
   )
 }
 
-export function TypographyH4({ className, ...props }: ComponentProps<'h4'>) {
+export function TypographyH4({
+  className,
+  children,
+  ...props
+}: ComponentProps<'h4'>) {
   return (
     <h4
       className={cn(
@@ -52,21 +68,26 @@ export function TypographyH4({ className, ...props }: ComponentProps<'h4'>) {
       )}
       {...props}
     >
-      {props.children}
+      {children}
     </h4>
   )
 }
 
-export function TypographyP({ className, ...props }: ComponentProps<'p'>) {
+export function TypographyP({
+  className,
+  children,
+  ...props
+}: ComponentProps<'p'>) {
   return (
     <p className={cn('leading-7 not-first:mt-6', className)} {...props}>
-      {props.children}
+      {children}
     </p>
   )
 }
 
 export function TypographyBlockquote({
   className,
+  children,
   ...props
 }: ComponentProps<'blockquote'>) {
   return (
@@ -74,21 +95,26 @@ export function TypographyBlockquote({
       className={cn('mt-6 border-l-2 pl-6 italic', className)}
       {...props}
     >
-      {props.children}
+      {children}
     </blockquote>
   )
 }
 
-export function TypographyList({ className, ...props }: ComponentProps<'ul'>) {
+export function TypographyList({
+  className,
+  children,
+  ...props
+}: ComponentProps<'ul'>) {
   return (
     <ul className={cn('my-6 ml-6 list-disc [&>li]:mt-2', className)} {...props}>
-      {props.children}
+      {children}
     </ul>
   )
 }
 
 export function TypographyInlineCode({
   className,
+  children,
   ...props
 }: ComponentProps<'code'>) {
   return (
@@ -99,32 +125,38 @@ export function TypographyInlineCode({
       )}
       {...props}
     >
-      {props.children}
+      {children}
     </code>
   )
 }
 
-export function TypographyLead({ className, ...props }: ComponentProps<'p'>) {
+export function TypographyLead({
+  className,
+  children,
+  ...props
+}: ComponentProps<'p'>) {
   return (
     <p className={cn('text-muted-foreground text-xl', className)} {...props}>
-      {props.children}
+      {children}
     </p>
   )
 }
 
 export function TypographyLarge({
   className,
+  children,
   ...props
 }: ComponentProps<'div'>) {
   return (
     <div className={cn('text-lg font-semibold', className)} {...props}>
-      {props.children}
+      {children}
     </div>
   )
 }
 
 export function TypographySmall({
   className,
+  children,
   ...props
 }: ComponentProps<'small'>) {
   return (
@@ -132,15 +164,19 @@ export function TypographySmall({
       className={cn('text-sm leading-none font-medium', className)}
       {...props}
     >
-      {props.children}
+      {children}
     </small>
   )
 }
 
-export function TypographyMuted({ className, ...props }: ComponentProps<'p'>) {
+export function TypographyMuted({
+  className,
+  children,
+  ...props
+}: ComponentProps<'p'>) {
   return (
     <p className={cn('text-muted-foreground text-sm', className)} {...props}>
-      {props.children}
+      {children}
     </p>
   )
 }

@@ -15,8 +15,10 @@ import z from 'zod/v4'
 export const getFolderCityItinerariesFn = createServerFn({
   method: 'GET',
 })
-  .inputValidator(z.object({ folderId: z.string() }))
+  .inputValidator(z.object({ folderId: z.string().optional() }))
   .handler(async ({ data }) => {
+    if (!data.folderId) return []
+
     const folders = await getFolderCityItineraries(data.folderId)
 
     return folders

@@ -8,17 +8,17 @@ import {
 } from '@/services/backend/city-itineraries.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
-const multipleCityItinerariesQueryKey = (folderId: string) =>
+const multipleCityItinerariesQueryKey = (folderId?: string) =>
   ['itinerary_folders', folderId, 'city_itineraries'] as const
 
 const singleCityItineraryQueryKey = (cityItineraryId: string) =>
   ['city_itineraries', cityItineraryId] as const
 
-export const folderCityItinerariesQueryOptions = (folderId: string) =>
+export const folderCityItinerariesQueryOptions = (folderId?: string) =>
   queryOptions({
     queryKey: multipleCityItinerariesQueryKey(folderId),
     queryFn: () => getFolderCityItinerariesFn({ data: { folderId } }),
-    enabled: folderId !== '',
+    enabled: folderId !== undefined && folderId !== '',
   })
 
 export const singleCityItineraryQueryOptions = (cityItineraryId: string) =>

@@ -8,16 +8,19 @@ import {
 } from '@/services/backend/saved-activities.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
-const multipleSavedActivitiesQueryKey = (userId: string) =>
-  ['users', userId, 'saved_activities'] as const
+const multipleSavedActivitiesQueryKey = (userId: string, city?: string) =>
+  ['users', userId, 'saved_activities', city] as const
 
 const singleSavedActivityQueryKey = (savedActivityId: string) =>
   ['saved_activities', savedActivityId] as const
 
-export const userSavedActivitiesQueryOptions = (userId: string) =>
+export const userSavedActivitiesQueryOptions = (
+  userId: string,
+  city?: string,
+) =>
   queryOptions({
     queryKey: multipleSavedActivitiesQueryKey(userId),
-    queryFn: () => getUserSavedActivitiesFn({ data: { userId } }),
+    queryFn: () => getUserSavedActivitiesFn({ data: { userId, city } }),
     enabled: userId !== '',
   })
 

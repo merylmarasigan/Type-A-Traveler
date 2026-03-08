@@ -59,7 +59,7 @@ export function SearchCities({ category }: Props) {
           {(city: CityData, i) => (
             <Link
               key={i}
-              to="/itineraries/new/$city"
+              to="/activities/$city"
               params={{ city: city.name }}
               search={{ category }}
             >
