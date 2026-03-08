@@ -58,7 +58,7 @@ function RouteComponent() {
             <LocationPreview
               key={location.location_id}
               city={city}
-              cityPhoto={defaultCityPhoto ? defaultCityPhoto : process.env.PUBLIC_URL + '/No_Image_Available.jpg'}
+              cityPhoto={defaultCityPhoto ? defaultCityPhoto : '../No_Image_Available.jpg'}
               location={location}
             />
           ))}
