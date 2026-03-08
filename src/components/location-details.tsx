@@ -1,47 +1,48 @@
-import { Button } from "@/components/ui/button"
+import { SaveActivityButton } from '@/components/saved-activities/save-activity-button'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { singleLocationPhotoQueryOptions, singleLocationQueryOptions } from '@/services/tripadvisor/query-options'
-import { Location } from '@/services/tripadvisor/schema'
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { Bookmark, Eye, SquareArrowOutUpRight } from 'lucide-react'
+} from '@/components/ui/dialog'
+import { authClient } from '@/lib/auth-client'
+import { LocationDetails } from '@/services/tripadvisor/schema'
+import { Link } from '@tanstack/react-router'
+import { Eye, SquareArrowOutUpRight } from 'lucide-react'
 
 interface LocationDetailsProps {
   city: string
-  location: Location,
-  photo: string
+  details: LocationDetails
+  imageUrl: string
 }
 
-export function LocationDetails({ city, location, photo }: LocationDetailsProps) {
-  
-  const { data: details } = useSuspenseQuery(
-    singleLocationQueryOptions(city, location.location_id),
-  )
+export function LocationDetailsDialog({
+  city,
+  details,
+  imageUrl,
+}: LocationDetailsProps) {
+  const { data, isPending: authPending } = authClient.useSession()
 
-    return (
+  return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full">
+        <Button variant="secondary" className="flex-1 hover:cursor-pointer">
           <Eye />
           View
         </Button>
       </DialogTrigger>
       <DialogContent>
         <img
-          src={photo}
-          alt={location.name}
-          className="relative aspect-video w-full object-cover   dark:brightness-40 rounded-t-md"
+          src={imageUrl}
+          alt={details.name}
+          className="mt-4 relative aspect-video w-full object-cover dark:brightness-40 rounded-t-md"
         />
         <DialogHeader>
-          <DialogTitle>{location.name}</DialogTitle>
+          <DialogTitle>{details.name}</DialogTitle>
           <DialogDescription>
             {details.address_obj?.city}, {details.address_obj?.state}
           </DialogDescription>
@@ -49,19 +50,20 @@ export function LocationDetails({ city, location, photo }: LocationDetailsProps)
         <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
           {details.description}
         </div>
-        <DialogFooter className="sm:flex-col flex">
-          <a target="_blank" href={details.web_url} className="flex gap-x-2 items-center">
-            <Button className="w-full hover:cursor-pointer" variant="default">
-              
-                See More on TripAdvisor.com
-                <SquareArrowOutUpRight />
-              
-            </Button>
-          </a>
-          <Button className="w-full" variant="secondary">
-            <Bookmark />
-            Save
+        <DialogFooter className="gap-2 justify-between">
+          <Button variant="link" className="flex-1 hover:cursor-pointer">
+            <Link target="_blank" to={details.web_url}>
+              See more on TripAdvisor.com
+            </Link>
+            <SquareArrowOutUpRight />
           </Button>
+          <SaveActivityButton
+            activity={details}
+            user={data?.user}
+            city={city}
+            disabled={authPending || !data?.user}
+            imageUrl={imageUrl}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>
