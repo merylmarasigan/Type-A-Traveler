@@ -10,7 +10,9 @@ import { authClient } from '@/lib/auth-client'
 import { CreateItineraryDialog } from '@/components/create-itinerary-dialog'
 
 const categorySearchSchema = z.object({
-  category: LocationCategoryEnum.catch('hotels').default('hotels'),
+  category: LocationCategoryEnum.catch('hotels'),
+  lat: z.string(),
+  lng: z.string(),
 })
 
 export const Route = createFileRoute('/activities/$city')({
@@ -26,10 +28,10 @@ export const Route = createFileRoute('/activities/$city')({
 
 function RouteComponent() {
   const { city } = Route.useParams()
-  const { category } = Route.useSearch()
+  const { category, lat, lng } = Route.useSearch()
 
   const cityLocationsQuery = useSuspenseQuery(
-    locationsQueryOptions(city, category),
+    locationsQueryOptions(city, category, lat, lng),
   )
 
   const { data } = authClient.useSession()

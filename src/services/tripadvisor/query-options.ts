@@ -9,11 +9,13 @@ import { queryOptions } from '@tanstack/react-query'
 export const locationsQueryOptions = (
   city: string,
   category: LocationCategory,
+  lat: string,
+  lng: string
 ) =>
   queryOptions({
-    queryKey: ['cities', city, 'tripadvisor_locations', category],
+    queryKey: ['cities', city, 'tripadvisor_locations', category, lat, lng],
     queryFn: () =>
-      getLocationsFn({ data: { location: city, category: category } }),
+      getLocationsFn({ data: { location: city, category: category, lat: lat, lng: lng } }),
     staleTime: Infinity, // TO PREVENT HITTING API LIMIT
   })
 

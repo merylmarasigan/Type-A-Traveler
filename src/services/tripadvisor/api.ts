@@ -27,11 +27,13 @@ export const getLocationsFn = createServerFn({ method: 'GET' })
     z.object({
       location: z.string(),
       category: LocationCategoryEnum,
+      lat: z.string(),
+      lng: z.string()
     }),
   )
   .handler(async ({ data }) => {
     const res = await fetchOrThrow(
-      `${TRIPADVISOR_API_URL}/location/search?key=${serverEnv.TRIPADVISOR_API_KEY}&searchQuery=${data.location}&category=${data.category}`,
+      `${TRIPADVISOR_API_URL}/location/nearby_search?key=${serverEnv.TRIPADVISOR_API_KEY}&latLong=${data.lat}%2C${data.lng}&category=${data.category}`,
       data.location,
     )
 
