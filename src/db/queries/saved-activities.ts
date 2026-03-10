@@ -1,8 +1,8 @@
 import { db } from '@/db'
-import { savedActivities } from '@/db/schema/app'
+import { itineraryDays, savedActivities, timeSlots } from '@/db/schema/app'
 import { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
 import { generateId } from 'better-auth'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, getTableColumns } from 'drizzle-orm'
 
 export const getUserSavedActivities = async (userId: string, city?: string) => {
   const userIdClause = eq(savedActivities.userId, userId)
@@ -13,6 +13,19 @@ export const getUserSavedActivities = async (userId: string, city?: string) => {
   const result = await db.select().from(savedActivities).where(whereClause)
 
   return result
+}
+
+export const getCityItinerarySavedActivities = async (
+  cityItineraryId: string,
+) => {
+  const result = await db
+    .select({ savedActivities: getTableColumns(savedActivities) })
+    .from(savedActivities)
+    .innerJoin(timeSlots, eq(timeSlots.id, savedActivities.timeSlotId))
+    .innerJoin(itineraryDays, eq(itineraryDays.id, timeSlots.itineraryDayId))
+    .where(eq(itineraryDays.cityItineraryId, cityItineraryId))
+
+  return result.map((r) => r.savedActivities)
 }
 
 export const getSavedActivity = async (id: string) => {

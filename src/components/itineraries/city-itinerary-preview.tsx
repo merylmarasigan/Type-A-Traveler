@@ -7,9 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { TypographyMuted } from '@/components/ui/typography'
+import { TypographyMuted, TypographySmall } from '@/components/ui/typography'
 import { CityItinerary } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
+import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { Link } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
 import { Eye } from 'lucide-react'
@@ -22,6 +23,9 @@ export function CityItineraryPreview({
   cityItinerary,
 }: CityItineraryPreviewProps) {
   const { itineraryDaysQuery } = useItineraryDays(cityItinerary.id)
+  const { cityActivitiesQuery } = useSavedActivities({
+    cityItineraryId: cityItinerary.id,
+  })
 
   const first = itineraryDaysQuery.data[0]
   const last = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
@@ -34,9 +38,13 @@ export function CityItineraryPreview({
         <CardDescription>{cityItinerary.city}</CardDescription>
       </CardHeader>
       <CardContent>
-        <TypographyMuted>{scheduleDescription}</TypographyMuted>
+        <TypographySmall>
+          {cityActivitiesQuery.data.length} activities
+        </TypographySmall>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="justify-between">
+        <TypographyMuted>{scheduleDescription}</TypographyMuted>
+
         <Button asChild>
           <Link
             to="/itineraries/cities/$cityId"

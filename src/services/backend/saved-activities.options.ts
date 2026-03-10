@@ -5,23 +5,37 @@ import {
   getUserSavedActivitiesFn,
   updateSavedActivityFn,
   deleteSavedActivityFn,
+  getCityItinerarySavedActivitiesFn,
 } from '@/services/backend/saved-activities.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
-const multipleSavedActivitiesQueryKey = (userId: string, city?: string) =>
+const multipleSavedActivitiesQueryKey = (userId?: string, city?: string) =>
   ['users', userId, 'saved_activities', city] as const
+
+const cityItinerarySavedActivitiesQueryKey = (cityItineraryId?: string) =>
+  ['city_itineraries', cityItineraryId, 'saved_activities'] as const
 
 const singleSavedActivityQueryKey = (savedActivityId: string) =>
   ['saved_activities', savedActivityId] as const
 
 export const userSavedActivitiesQueryOptions = (
-  userId: string,
+  userId?: string,
   city?: string,
 ) =>
   queryOptions({
     queryKey: multipleSavedActivitiesQueryKey(userId),
     queryFn: () => getUserSavedActivitiesFn({ data: { userId, city } }),
     enabled: userId !== '',
+  })
+
+export const cityItinerarySavedActivitiesQueryOptions = (
+  cityItineraryId?: string,
+) =>
+  queryOptions({
+    queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
+    queryFn: () =>
+      getCityItinerarySavedActivitiesFn({ data: { cityItineraryId } }),
+    enabled: cityItineraryId !== undefined && cityItineraryId !== '',
   })
 
 export const singleSavedActivityQueryOptions = (savedActivityId: string) =>

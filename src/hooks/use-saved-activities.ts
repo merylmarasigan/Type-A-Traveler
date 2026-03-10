@@ -1,20 +1,37 @@
+import { authClient } from '@/lib/auth-client'
 import {
+  cityItinerarySavedActivitiesQueryOptions,
   createSavedActivityMutationOptions,
   userSavedActivitiesQueryOptions,
 } from '@/services/backend/saved-activities.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useSavedActivities = (userId: string, city?: string) => {
-  const activitiesQuery = useSuspenseQuery(
-    userSavedActivitiesQueryOptions(userId, city),
+interface UseSavedActivitiesParams {
+  city?: string
+  cityItineraryId?: string
+}
+
+export const useSavedActivities = ({
+  city,
+  cityItineraryId,
+}: UseSavedActivitiesParams) => {
+  const { data } = authClient.useSession()
+
+  const userActivitiesQuery = useSuspenseQuery(
+    userSavedActivitiesQueryOptions(data?.user.id, city),
   )
 
   const createSavedActivityMutation = useMutation(
     createSavedActivityMutationOptions(),
   )
 
+  const cityActivitiesQuery = useSuspenseQuery(
+    cityItinerarySavedActivitiesQueryOptions(cityItineraryId),
+  )
+
   return {
-    activitiesQuery,
+    userActivitiesQuery,
+    cityActivitiesQuery,
     createSavedActivityMutation,
   }
 }
