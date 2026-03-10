@@ -1,5 +1,4 @@
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
-import { UserSavedActivities } from '@/components/saved-activities/user-saved-activities'
 import { TypographyH1, TypographyH2 } from '@/components/ui/typography'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
@@ -32,7 +31,6 @@ function RouteComponent() {
           cityItinerary={cityItinerary}
         />
       ))}
-      <UserSavedActivities city={cityItineraries.data[0].city} />
     </div>
   )
 }
