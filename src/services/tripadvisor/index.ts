@@ -1,9 +1,16 @@
+import z from 'zod'
+
+const useMockAPI = z
+  .stringbool()
+  .default(true)
+  .parse(import.meta.env.VITE_USE_MOCK_API)
+
 export const {
   getLocationsFn,
   getSingleLocationFn,
   getSingleLocationPhotoFn,
   LocationCategoryEnum,
-} = import.meta.env.VITE_USE_MOCK_API
+} = useMockAPI
   ? await import('@/services/tripadvisor/__mocks__/api')
   : await import('@/services/tripadvisor/api')
 
