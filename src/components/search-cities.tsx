@@ -61,7 +61,7 @@ export function SearchCities({ category }: Props) {
               key={i}
               to="/activities/$city"
               params={{ city: city.name }}
-              search={{ category }}
+              search={{ category, lat: city.lat, lng: city.lng }}
             >
               <ComboboxItem value={city}>
                 <Item size="sm" className="p-0">
