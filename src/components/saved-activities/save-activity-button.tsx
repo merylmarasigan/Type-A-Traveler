@@ -52,10 +52,8 @@ function SaveActivityButtonWithSession({
   className,
   ...props
 }: SaveActivityButtonWithSessionProps) {
-  const { activitiesQuery, createSavedActivityMutation } = useSavedActivities(
-    user.id,
-    city,
-  )
+  const { cityActivitiesQuery, createSavedActivityMutation } =
+    useSavedActivities({ city })
 
   const saveActivity = async () => {
     if (alreadyBookmarked || isDisabledOrPending) return
@@ -70,7 +68,7 @@ function SaveActivityButtonWithSession({
     })
   }
 
-  const alreadyBookmarked = activitiesQuery.data.some(
+  const alreadyBookmarked = cityActivitiesQuery.data.some(
     (a) => a.trp_location_id === `${activity.location_id}`,
   )
 

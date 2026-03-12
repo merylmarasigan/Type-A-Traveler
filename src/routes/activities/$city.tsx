@@ -10,7 +10,6 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { LocationCategoryEnum } from '@/services/tripadvisor/api'
 import z from 'zod/v4'
-import { authClient } from '@/lib/auth-client'
 import { CreateItineraryDialog } from '@/components/create-itinerary-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { SearchAlertIcon } from 'lucide-react'
@@ -51,8 +50,6 @@ function RouteComponent() {
     ),
   )
 
-  const { data } = authClient.useSession()
-
   return (
     <div className="flex flex-col items-center">
       <div className="max-w-7xl flex flex-col gap-2 md:gap-4 p-2">
@@ -60,7 +57,7 @@ function RouteComponent() {
           <TypographyH2 className="text-start">
             Suggested {category} for {city}
           </TypographyH2>
-          {data?.user && <CreateItineraryDialog user={data.user} city={city} />}
+          <CreateItineraryDialog city={city} />
         </div>
         {cityLocationsQuery.data.length === 0 ? (
           <Alert>

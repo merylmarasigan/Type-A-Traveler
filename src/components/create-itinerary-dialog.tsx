@@ -8,21 +8,16 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
-import { User } from 'better-auth'
 import { DateRangePicker } from '@/components/date-range-picker'
 
 interface CreateItineraryDialogProps {
-  user: User
   city: string
 }
 
-export function CreateItineraryDialog({
-  user,
-  city,
-}: CreateItineraryDialogProps) {
-  const { activitiesQuery } = useSavedActivities(user.id, city)
+export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
+  const { cityActivitiesQuery } = useSavedActivities({ city })
 
-  if (activitiesQuery.data.length === 0) return null
+  if (cityActivitiesQuery.data.length === 0) return null
 
   return (
     <Dialog>
