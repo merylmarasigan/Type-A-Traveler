@@ -17,12 +17,12 @@ interface CreateItineraryDialogProps {
 export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
   const { userActivitiesQuery } = useSavedActivities({ city })
 
-  if (userActivitiesQuery.data.length === 0) return null
+  const noSavedActivities = userActivitiesQuery.data.length === 0
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Create your itinerary</Button>
+        <Button disabled={noSavedActivities}>Create your itinerary</Button>
       </DialogTrigger>
       <DialogContent className="w-auto sm:max-w-xl p-0">
         <DialogHeader className="px-4 pt-4">
@@ -31,7 +31,7 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
             What days will you be traveling?
           </DialogDescription>
         </DialogHeader>
-        <DateRangePicker city={city} />
+        <DateRangePicker city={city} disabled={noSavedActivities} />
       </DialogContent>
     </Dialog>
   )

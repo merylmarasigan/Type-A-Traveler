@@ -8,13 +8,14 @@ import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { Spinner } from '@/components/ui/spinner'
 import { useRouter } from '@tanstack/react-router'
 import { Card, CardContent } from '@/components/ui/card'
-import { TypographyMuted } from '@/components/ui/typography'
+import { TypographyMuted, TypographySmall } from '@/components/ui/typography'
 
 interface DateRangePickerProps {
   city: string
+  disabled?: boolean
 }
 
-export function DateRangePicker({ city }: DateRangePickerProps) {
+export function DateRangePicker({ city, disabled }: DateRangePickerProps) {
   const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(),
     to: addDays(new Date(), 14),
@@ -37,6 +38,7 @@ export function DateRangePicker({ city }: DateRangePickerProps) {
       <Card>
         <CardContent>
           <Calendar
+            disabled={disabled}
             required
             mode="range"
             defaultMonth={dateRange.from}
@@ -46,15 +48,24 @@ export function DateRangePicker({ city }: DateRangePickerProps) {
           />
         </CardContent>
       </Card>
-      <TypographyMuted className="text-center">
-        {dateRange.from && dateRange.to && (
-          <>
-            {formatDate(dateRange.from, 'MMMM do, y')} -{' '}
-            {formatDate(dateRange.to, 'MMMM do, y')}
-          </>
-        )}
-      </TypographyMuted>
-      <Button disabled={createIsPending} onClick={handleConfirmDates}>
+      {disabled ? (
+        <TypographySmall className="text-center text-destructive">
+          You have no saved activities yet!
+        </TypographySmall>
+      ) : (
+        <TypographyMuted className="text-center">
+          {dateRange.from && dateRange.to && (
+            <>
+              {formatDate(dateRange.from, 'MMMM do, y')} -{' '}
+              {formatDate(dateRange.to, 'MMMM do, y')}
+            </>
+          )}
+        </TypographyMuted>
+      )}
+      <Button
+        disabled={disabled || createIsPending}
+        onClick={handleConfirmDates}
+      >
         {createIsPending ? <Spinner /> : <CalendarCheck2 />}
         {createIsPending ? 'Saving...' : 'Confirm'}
       </Button>
