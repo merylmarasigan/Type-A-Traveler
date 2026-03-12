@@ -23,7 +23,7 @@ export const userSavedActivitiesQueryOptions = (
   city?: string,
 ) =>
   queryOptions({
-    queryKey: multipleSavedActivitiesQueryKey(userId),
+    queryKey: multipleSavedActivitiesQueryKey(userId, city),
     queryFn: () => getUserSavedActivitiesFn({ data: { userId, city } }),
     enabled: userId !== '',
   })
@@ -45,14 +45,21 @@ export const singleSavedActivityQueryOptions = (savedActivityId: string) =>
     enabled: savedActivityId !== '',
   })
 
-export const createSavedActivityMutationOptions = () =>
+export const createSavedActivityMutationOptions = (cityItineraryId?: string) =>
   mutationOptions({
     mutationKey: ['createSavedActivity'],
     mutationFn: (data: NewSavedActivity) => createSavedActivityFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) =>
-      await ctx.client.invalidateQueries({
-        queryKey: multipleSavedActivitiesQueryKey(data.userId),
-      }),
+    onSuccess: async (data, _variables, _result, ctx) => {
+      if (cityItineraryId) {
+        await ctx.client.invalidateQueries({
+          queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
+        })
+      } else {
+        await ctx.client.invalidateQueries({
+          queryKey: multipleSavedActivitiesQueryKey(data.userId, data.city),
+        })
+      }
+    },
   })
 
 export const updateSavedActivityMutationOptions = () =>

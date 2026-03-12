@@ -1,98 +1,68 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
+import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { LocationDetails } from '@/services/tripadvisor/schema'
-import { User } from 'better-auth'
-import { Bookmark, BookmarkCheck } from 'lucide-react'
-import { ComponentProps } from 'react'
+import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
 
-interface SaveActivityButtonProps extends ComponentProps<'button'> {
+interface SaveActivityButtonProps {
   activity: LocationDetails
-  user?: User
   city: string
   imageUrl?: string
 }
-
 export function SaveActivityButton({
-  user,
-  city,
-  imageUrl,
-  className,
-  ...props
-}: SaveActivityButtonProps) {
-  return user ? (
-    <SaveActivityButtonWithSession
-      {...props}
-      user={user}
-      city={city}
-      imageUrl={imageUrl}
-    />
-  ) : (
-    <Button
-      disabled={props.disabled}
-      className={cn('flex-1', className)}
-      {...props}
-    >
-      <Bookmark />
-      Save
-    </Button>
-  )
-}
-
-interface SaveActivityButtonWithSessionProps extends SaveActivityButtonProps {
-  user: User
-}
-
-function SaveActivityButtonWithSession({
   activity,
-  user,
   city,
   imageUrl,
-  className,
-  ...props
-}: SaveActivityButtonWithSessionProps) {
-  const { cityActivitiesQuery, createSavedActivityMutation } =
+}: SaveActivityButtonProps) {
+  const { data, isPending: authIsPending } = authClient.useSession()
+
+  const { userActivitiesQuery, createSavedActivityMutation } =
     useSavedActivities({ city })
 
-  const saveActivity = async () => {
-    if (alreadyBookmarked || isDisabledOrPending) return
+  const alreadyBookmarked = userActivitiesQuery.data.some(
+    (a) => a.trp_location_id === `${activity.location_id}`,
+  )
 
-    await createSavedActivityMutation.mutateAsync({
-      userId: user.id,
+  const saveActivity = async () => {
+    if (
+      alreadyBookmarked ||
+      !data?.user ||
+      createSavedActivityMutation.isPending
+    )
+      return
+
+    const res = await createSavedActivityMutation.mutateAsync({
+      userId: data.user.id,
       name: activity.name,
       city,
       description: activity.description,
       imageUrl,
       trp_location_id: `${activity.location_id}`,
     })
+    console.log(res)
   }
 
-  const alreadyBookmarked = cityActivitiesQuery.data.some(
-    (a) => a.trp_location_id === `${activity.location_id}`,
-  )
-
-  const isDisabledOrPending =
-    props.disabled || createSavedActivityMutation.isPending
+  if (authIsPending || !data?.user || createSavedActivityMutation.isPending) {
+    return (
+      <Button disabled className="flex-1">
+        {authIsPending ? <Spinner /> : <BookmarkPlus />}
+        {createSavedActivityMutation.isPending ? 'Saving...' : 'Save'}
+      </Button>
+    )
+  }
 
   return (
     <Button
       onClick={saveActivity}
-      disabled={isDisabledOrPending || alreadyBookmarked}
+      disabled={alreadyBookmarked}
       className={cn(
         'flex-1 hover:cursor-pointer',
         alreadyBookmarked && 'opacity-50',
-        className,
       )}
-      {...props}
     >
-      {isDisabledOrPending ? (
-        <Spinner data-icon="inline-start" />
-      ) : alreadyBookmarked ? (
-        <BookmarkCheck />
-      ) : (
-        <Bookmark />
-      )}
+      {alreadyBookmarked ? <BookmarkCheck /> : <BookmarkPlus />}
       {alreadyBookmarked ? 'Saved' : 'Save'}
     </Button>
   )

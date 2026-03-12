@@ -15,9 +15,9 @@ interface CreateItineraryDialogProps {
 }
 
 export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
-  const { cityActivitiesQuery } = useSavedActivities({ city })
+  const { userActivitiesQuery } = useSavedActivities({ city })
 
-  if (cityActivitiesQuery.data.length === 0) return null
+  if (userActivitiesQuery.data.length === 0) return null
 
   return (
     <Dialog>
