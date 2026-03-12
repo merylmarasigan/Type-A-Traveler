@@ -1,3 +1,4 @@
+import { FilterButtons } from '@/components/filter-buttons'
 import {
   Combobox,
   ComboboxContent,
@@ -22,11 +23,13 @@ import { GlobeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useDebounce } from 'use-debounce'
 
-type Props = {
-  category: LocationCategory
+interface SearchCitiesProps {
+  showFilterButtons?: boolean
 }
 
-export function SearchCities({ category }: Props) {
+export function SearchCities({ showFilterButtons = true }: SearchCitiesProps) {
+  const [searchCategory, setSearchCategory] =
+    useState<LocationCategory>('hotels')
   const [inputValue, setInputValue] = useState('')
   const [debouncedValue] = useDebounce(inputValue, 1000)
 
@@ -35,50 +38,62 @@ export function SearchCities({ category }: Props) {
   )
 
   return (
-    <Combobox
-      items={cities}
-      itemToStringValue={(city: CityData) => city.name}
-      autoHighlight
-    >
-      <ComboboxInput
-        placeholder="Los Angeles, New York, etc."
-        className="w-96"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        showClear
+    <div className="flex flex-col items-center gap-2">
+      {showFilterButtons && (
+        <FilterButtons
+          currentCategory={searchCategory}
+          setCurrentCategory={setSearchCategory}
+        />
+      )}
+      <Combobox
+        items={cities}
+        itemToStringValue={(city: CityData) => city.name}
+        autoHighlight
       >
-        <InputGroupAddon>
-          <GlobeIcon />
-        </InputGroupAddon>
-      </ComboboxInput>
-      <ComboboxContent>
-        <ComboboxEmpty>
-          {isLoading ? 'Searching...' : 'No cities found.'}
-        </ComboboxEmpty>
-        <ComboboxList>
-          {(city: CityData, i) => (
-            <Link
-              key={i}
-              to="/activities/$city"
-              params={{ city: city.name }}
-              search={{ category, lat: city.lat, lng: city.lng }}
-            >
-              <ComboboxItem value={city}>
-                <Item size="sm" className="p-0">
-                  <ItemContent>
-                    <ItemTitle className="whitespace-nowrap">
-                      {city.name}
-                    </ItemTitle>
-                    <ItemDescription>
-                      {city.adminName1} ({city.countryName})
-                    </ItemDescription>
-                  </ItemContent>
-                </Item>
-              </ComboboxItem>
-            </Link>
-          )}
-        </ComboboxList>
-      </ComboboxContent>
-    </Combobox>
+        <ComboboxInput
+          placeholder="Los Angeles, New York, etc."
+          className="w-ful md:w-96"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          showClear
+        >
+          <InputGroupAddon>
+            <GlobeIcon />
+          </InputGroupAddon>
+        </ComboboxInput>
+        <ComboboxContent>
+          <ComboboxEmpty>
+            {isLoading ? 'Searching...' : 'No cities found.'}
+          </ComboboxEmpty>
+          <ComboboxList>
+            {(city: CityData, i) => (
+              <Link
+                key={i}
+                to="/activities/$city"
+                params={{ city: city.name }}
+                search={{
+                  category: searchCategory,
+                  lat: city.lat,
+                  lng: city.lng,
+                }}
+              >
+                <ComboboxItem value={city}>
+                  <Item size="sm" className="p-0">
+                    <ItemContent>
+                      <ItemTitle className="whitespace-nowrap">
+                        {city.name}
+                      </ItemTitle>
+                      <ItemDescription>
+                        {city.adminName1} ({city.countryName})
+                      </ItemDescription>
+                    </ItemContent>
+                  </Item>
+                </ComboboxItem>
+              </Link>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
+    </div>
   )
 }
