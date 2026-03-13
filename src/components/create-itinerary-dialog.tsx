@@ -54,16 +54,16 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
   const noSavedActivities = userActivitiesQuery.data.length === 0
 
   const handleConfirmDates = async () => {
-    if (selectedItinerary) {
-      // TODO: implement adding to existing itinerary
-    } else {
-      const { itineraryFolder } = await createInitialDays(dateRange, city)
+    const { itineraryFolderId } = await createInitialDays(
+      dateRange,
+      city,
+      selectedItinerary?.id,
+    )
 
-      await router.navigate({
-        to: '/itineraries/$id',
-        params: { id: itineraryFolder.id },
-      })
-    }
+    await router.navigate({
+      to: '/itineraries/$id',
+      params: { id: itineraryFolderId },
+    })
   }
 
   const handleSelectItinerary = (id: string) => {
