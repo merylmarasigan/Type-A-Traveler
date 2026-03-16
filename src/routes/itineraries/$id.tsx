@@ -14,8 +14,6 @@ function RouteComponent() {
   const { folderQuery } = useSingleItineraryFolder(id)
   const { itinerariesQuery: cityItineraries } = useCityItineraries(id)
 
-  // TODO: add view for only one city in the folder
-
   return (
     <div className="flex flex-col gap-2 p-2">
       <div className="grid grid-cols-3">
@@ -29,12 +27,14 @@ function RouteComponent() {
           {cityItineraries.data.length} cities
         </TypographyH2>
       )}
-      {cityItineraries.data.map((cityItinerary) => (
-        <CityItineraryPreview
-          key={cityItinerary.id}
-          cityItinerary={cityItinerary}
-        />
-      ))}
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 self-center">
+        {cityItineraries.data.map((cityItinerary) => (
+          <CityItineraryPreview
+            key={cityItinerary.id}
+            cityItinerary={cityItinerary}
+          />
+        ))}
+      </div>
     </div>
   )
 }

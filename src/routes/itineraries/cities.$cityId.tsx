@@ -1,6 +1,7 @@
 import { ItineraryDayPreview } from '@/components/itinerary-day-preview'
 import { ItineraryDaySchedule } from '@/components/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import {
   TypographyH1,
@@ -11,8 +12,10 @@ import { ItineraryDay } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
-import { createFileRoute } from '@tanstack/react-router'
+import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
+import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
 
@@ -27,6 +30,7 @@ function RouteComponent() {
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: cityId,
   })
+  const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
 
   const start = itineraryDaysQuery.data[0]
   const end = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
@@ -37,6 +41,15 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-2 p-2">
+      <Button variant="link" asChild className="self-start">
+        <Link
+          to="/itineraries/$id"
+          params={{ id: itineraryQuery.data.folderId }}
+        >
+          <ArrowLeft />
+          {folderQuery.data.title}
+        </Link>
+      </Button>
       <TypographyH1 className="text-start">
         {itineraryQuery.data.title}
       </TypographyH1>

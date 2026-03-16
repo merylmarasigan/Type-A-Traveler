@@ -32,7 +32,7 @@ export function CityItineraryPreview({
   const scheduleDescription = `${formatDate(first.date, 'MMMM do, y')} - ${formatDate(last.date, 'MMMM do, y')}`
 
   return (
-    <Card className="max-w-md">
+    <Card className="w-full md:w-96 md:max-w-md">
       <CardHeader>
         <CardTitle>{cityItinerary.title}</CardTitle>
         <CardDescription>{cityItinerary.city}</CardDescription>
