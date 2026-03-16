@@ -146,11 +146,11 @@ export function TypographyLarge({
   className,
   children,
   ...props
-}: ComponentProps<'div'>) {
+}: ComponentProps<'p'>) {
   return (
-    <div className={cn('text-lg font-semibold', className)} {...props}>
+    <p className={cn('text-lg font-semibold', className)} {...props}>
       {children}
-    </div>
+    </p>
   )
 }
 

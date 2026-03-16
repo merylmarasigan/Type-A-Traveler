@@ -1,5 +1,6 @@
 import { ItineraryDayPreview } from '@/components/itinerary-day-preview'
 import { ItineraryDaySchedule } from '@/components/itinerary-day-schedule'
+import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import {
   TypographyH1,
@@ -8,6 +9,7 @@ import {
 } from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
+import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { createFileRoute } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
@@ -22,6 +24,9 @@ function RouteComponent() {
   const { cityId } = Route.useParams()
   const { itineraryQuery } = useSingleCityItinerary(cityId)
   const { itineraryDaysQuery } = useItineraryDays(cityId)
+  const { cityActivitiesQuery } = useSavedActivities({
+    cityItineraryId: cityId,
+  })
 
   const start = itineraryDaysQuery.data[0]
   const end = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
@@ -40,7 +45,11 @@ function RouteComponent() {
         {formatDate(end.date, 'MMMM do, y')}
       </TypographyH2>
 
-      <TypographyLarge>Schedule</TypographyLarge>
+      <div className="flex items-center gap-2">
+        <TypographyLarge>Schedule</TypographyLarge>
+        <Badge>{cityActivitiesQuery.data.length ?? 0} activities</Badge>
+      </div>
+
       <div className="flex gap-2">
         <div className="flex flex-col gap-2 w-36">
           {itineraryDaysQuery.data.map((day, i) => (

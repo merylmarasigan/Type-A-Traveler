@@ -1,11 +1,6 @@
 import { TimeSlotDetails } from '@/components/time-slot-details'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ItineraryDay } from '@/db/types'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useTimeSlots } from '@/hooks/use-time-slots'
@@ -23,13 +18,20 @@ export function ItineraryDaySchedule({
     cityItineraryId: itineraryDay.cityItineraryId,
   })
 
+  const todayTimeSlotIds = timeSlotsQuery.data
+    .filter((timeSlot) => timeSlot.itineraryDayId === itineraryDay.id)
+    .map((timeSlot) => timeSlot.id)
+
+  const todaysActivities = cityActivitiesQuery.data.filter(
+    (activity) =>
+      activity.timeSlotId && todayTimeSlotIds.includes(activity.timeSlotId),
+  )
+
   return (
     <Card className="w-full">
       <CardHeader>
         <CardTitle>{formatDate(itineraryDay.date, 'EEEE')}</CardTitle>
-        <CardDescription>
-          {cityActivitiesQuery.data.length} activities
-        </CardDescription>
+        <Badge variant="secondary">{todaysActivities.length} activities</Badge>
       </CardHeader>
       <CardContent>
         {timeSlotsQuery.data.map((slot) => (
