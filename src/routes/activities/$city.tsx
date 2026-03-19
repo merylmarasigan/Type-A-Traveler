@@ -10,7 +10,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { LocationCategoryEnum } from '@/services/tripadvisor/api'
 import z from 'zod/v4'
-import { CreateItineraryDialog } from '@/components/create-itinerary-dialog'
+import { CreateItineraryDialog } from '@/components/itineraries/create-itinerary-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { SearchAlertIcon } from 'lucide-react'
 

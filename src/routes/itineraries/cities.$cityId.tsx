@@ -1,5 +1,5 @@
-import { ItineraryDayPreview } from '@/components/itinerary-day-preview'
-import { ItineraryDaySchedule } from '@/components/itinerary-day-schedule'
+import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
+import { ItineraryDaySchedule } from '@/components/itineraries/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
