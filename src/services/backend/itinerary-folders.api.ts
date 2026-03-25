@@ -36,8 +36,10 @@ export const getUserItineraryFoldersFn = createServerFn({
   })
 
 export const getSingleItineraryFolderFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ itineraryFolderId: z.string() }))
+  .inputValidator(z.object({ itineraryFolderId: z.string().optional() }))
   .handler(async ({ data }) => {
+    if (!data.itineraryFolderId) return null
+
     const folder = await getItineraryFolder(data.itineraryFolderId)
 
     return folder

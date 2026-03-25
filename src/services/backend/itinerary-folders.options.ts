@@ -11,7 +11,7 @@ import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
 const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
 
-const singleItineraryFolderQueryKey = (itineraryFolderId: string) =>
+const singleItineraryFolderQueryKey = (itineraryFolderId?: string) =>
   ['itinerary_folders', itineraryFolderId] as const
 
 export const multipleItineraryFoldersQueryOptions = (limit?: number) =>
@@ -27,11 +27,11 @@ export const userItineraryFoldersQueryOptions = (userId?: string) =>
     enabled: userId !== undefined && userId !== '',
   })
 
-export const singleItineraryFolderQueryOptions = (itineraryFolderId: string) =>
+export const singleItineraryFolderQueryOptions = (itineraryFolderId?: string) =>
   queryOptions({
     queryKey: singleItineraryFolderQueryKey(itineraryFolderId),
     queryFn: () => getSingleItineraryFolderFn({ data: { itineraryFolderId } }),
-    enabled: itineraryFolderId !== '',
+    enabled: itineraryFolderId !== undefined && itineraryFolderId !== '',
   })
 
 export const createItineraryFolderMutationOptions = () =>
