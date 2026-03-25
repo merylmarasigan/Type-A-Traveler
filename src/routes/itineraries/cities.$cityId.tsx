@@ -3,6 +3,7 @@ import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-prev
 import { ItineraryDaySchedule } from '@/components/itineraries/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { TypographyH2, TypographyLarge } from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
@@ -45,7 +46,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="flex flex-col gap-2 p-2">
+    <div className="flex flex-col h-full gap-2 p-2">
       <Button variant="link" asChild className="self-start">
         <Link
           to="/itineraries/$id"
@@ -72,19 +73,21 @@ function RouteComponent() {
         <Badge>{cityActivitiesQuery.data.length ?? 0} activities</Badge>
       </div>
 
-      <div className="flex gap-2">
-        <div className="flex flex-col gap-2 w-36">
-          {itineraryDaysQuery.data.map((day, i) => (
-            <Fragment key={day.id}>
-              <ItineraryDayPreview
-                itineraryDay={day}
-                selected={day.id === selectedDay.id}
-                onClick={() => setSelectedDay(day)}
-              />
-              {i !== itineraryDaysQuery.data.length - 1 && <Separator />}
-            </Fragment>
-          ))}
-        </div>
+      <div className="flex gap-2 flex-1 min-h-0">
+        <ScrollArea className="h-full">
+          <div className="flex flex-col gap-2 w-36">
+            {itineraryDaysQuery.data.map((day, i) => (
+              <Fragment key={day.id}>
+                <ItineraryDayPreview
+                  itineraryDay={day}
+                  selected={day.id === selectedDay.id}
+                  onClick={() => setSelectedDay(day)}
+                />
+                {i !== itineraryDaysQuery.data.length - 1 && <Separator />}
+              </Fragment>
+            ))}
+          </div>
+        </ScrollArea>
 
         <ItineraryDaySchedule itineraryDay={selectedDay} />
       </div>

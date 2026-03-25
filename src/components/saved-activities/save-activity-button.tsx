@@ -41,7 +41,6 @@ export function SaveActivityButton({
       imageUrl,
       trp_location_id: `${activity.location_id}`,
     })
-    console.log(res)
   }
 
   if (authIsPending || !data?.user || createSavedActivityMutation.isPending) {
