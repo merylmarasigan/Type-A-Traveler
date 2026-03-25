@@ -21,11 +21,11 @@ export const folderCityItinerariesQueryOptions = (folderId?: string) =>
     enabled: folderId !== undefined && folderId !== '',
   })
 
-export const singleCityItineraryQueryOptions = (cityItineraryId?: string) =>
+export const singleCityItineraryQueryOptions = (cityItineraryId: string) =>
   queryOptions({
     queryKey: singleCityItineraryQueryKey(cityItineraryId),
     queryFn: () => getSingleCityItineraryFn({ data: { cityItineraryId } }),
-    enabled: cityItineraryId !== '',
+    enabled: !!cityItineraryId,
   })
 
 export const createCityItineraryMutationOptions = () =>

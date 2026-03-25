@@ -25,10 +25,8 @@ export const getFolderCityItinerariesFn = createServerFn({
   })
 
 export const getSingleCityItineraryFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ cityItineraryId: z.string().optional() }))
+  .inputValidator(z.object({ cityItineraryId: z.string() }))
   .handler(async ({ data }) => {
-    if (!data.cityItineraryId) return null
-
     const folder = await getCityItinerary(data.cityItineraryId)
 
     return folder

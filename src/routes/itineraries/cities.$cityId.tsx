@@ -1,13 +1,10 @@
+import { EditableItineraryTitle } from '@/components/itineraries/editable-itinerary-title'
 import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
 import { ItineraryDaySchedule } from '@/components/itineraries/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import {
-  TypographyH1,
-  TypographyH2,
-  TypographyLarge,
-} from '@/components/ui/typography'
+import { TypographyH2, TypographyLarge } from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
@@ -25,7 +22,8 @@ export const Route = createFileRoute('/itineraries/cities/$cityId')({
 
 function RouteComponent() {
   const { cityId } = Route.useParams()
-  const { itineraryQuery } = useSingleCityItinerary(cityId)
+  const { itineraryQuery, updateItineraryMutation } =
+    useSingleCityItinerary(cityId)
   const { itineraryDaysQuery } = useItineraryDays(cityId)
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: cityId,
@@ -39,6 +37,13 @@ function RouteComponent() {
     itineraryDaysQuery.data[0],
   )
 
+  const updateTitle = async (value: { title: string | null }) => {
+    await updateItineraryMutation.mutateAsync({
+      id: cityId,
+      title: value.title,
+    })
+  }
+
   return (
     <div className="flex flex-col gap-2 p-2">
       <Button variant="link" asChild className="self-start">
@@ -50,9 +55,13 @@ function RouteComponent() {
           {folderQuery.data.title}
         </Link>
       </Button>
-      <TypographyH1 className="text-start">
-        {itineraryQuery.data.title}
-      </TypographyH1>
+      <EditableItineraryTitle
+        title={itineraryQuery.data.title}
+        id={cityId}
+        type="City"
+        onSubmit={updateTitle}
+        className="text-start"
+      />
       <TypographyH2>
         {formatDate(start.date, 'MMMM do, y')} -{' '}
         {formatDate(end.date, 'MMMM do, y')}

@@ -27,11 +27,11 @@ export const userItineraryFoldersQueryOptions = (userId?: string) =>
     enabled: userId !== undefined && userId !== '',
   })
 
-export const singleItineraryFolderQueryOptions = (itineraryFolderId?: string) =>
+export const singleItineraryFolderQueryOptions = (itineraryFolderId: string) =>
   queryOptions({
     queryKey: singleItineraryFolderQueryKey(itineraryFolderId),
     queryFn: () => getSingleItineraryFolderFn({ data: { itineraryFolderId } }),
-    enabled: itineraryFolderId !== undefined && itineraryFolderId !== '',
+    enabled: !!itineraryFolderId,
   })
 
 export const createItineraryFolderMutationOptions = () =>

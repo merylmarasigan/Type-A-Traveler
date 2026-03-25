@@ -12,8 +12,15 @@ export const Route = createFileRoute('/itineraries/$id')({
 
 function RouteComponent() {
   const { id } = Route.useParams()
-  const { folderQuery } = useSingleItineraryFolder(id)
+  const { folderQuery, updateFolderMutation } = useSingleItineraryFolder(id)
   const { itinerariesQuery: cityItineraries } = useCityItineraries(id)
+
+  const updateTitle = async (value: { title: string | null }) => {
+    await updateFolderMutation.mutateAsync({
+      id,
+      title: value.title,
+    })
+  }
 
   return (
     <div className="flex flex-col gap-2 p-2">
@@ -22,6 +29,7 @@ function RouteComponent() {
           title={folderQuery.data?.title ?? cityItineraries.data[0].title}
           id={id}
           type="Folder"
+          onSubmit={updateTitle}
         />
         <SearchCitiesDialog className="col-start-3 justify-self-end" />
       </div>
