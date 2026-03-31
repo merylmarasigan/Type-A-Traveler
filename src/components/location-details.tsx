@@ -27,7 +27,7 @@ export function LocationDetailsDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="flex-1 hover:cursor-pointer">
+        <Button variant="secondary" className="flex-1">
           <Eye />
           View
         </Button>
@@ -48,7 +48,7 @@ export function LocationDetailsDialog({
           {details.description}
         </div>
         <DialogFooter className="gap-2 justify-between">
-          <Button variant="link" className="flex-1 hover:cursor-pointer">
+          <Button variant="link" className="flex-1">
             <Link target="_blank" to={details.web_url}>
               See more on TripAdvisor.com
             </Link>

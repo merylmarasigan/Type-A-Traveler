@@ -33,7 +33,7 @@ export function SaveActivityButton({
     )
       return
 
-    const res = await createSavedActivityMutation.mutateAsync({
+    await createSavedActivityMutation.mutateAsync({
       userId: data.user.id,
       name: activity.name,
       city,
@@ -56,10 +56,7 @@ export function SaveActivityButton({
     <Button
       onClick={saveActivity}
       disabled={alreadyBookmarked}
-      className={cn(
-        'flex-1 hover:cursor-pointer',
-        alreadyBookmarked && 'opacity-50',
-      )}
+      className={cn('flex-1', alreadyBookmarked && 'opacity-50')}
     >
       {alreadyBookmarked ? <BookmarkCheck /> : <BookmarkPlus />}
       {alreadyBookmarked ? 'Saved' : 'Save'}

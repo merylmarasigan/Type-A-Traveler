@@ -38,7 +38,6 @@ export function EditableItineraryTitle(props: EditableItineraryTitleProps) {
             'h-min w-full col-start-1 col-span-2 md:col-start-2 md:col-span-1',
             'flex flex-wrap justify-between items-center',
             'line-clamp-2text-center text-3xl md:text-4xl font-extrabold',
-            'hover:cursor-pointer',
           )}
         >
           <span
