@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/popover'
 import { ItineraryDay } from '@/db/types'
 import { useTimeSlots } from '@/hooks/use-time-slots'
+import { cn } from '@/lib/utils'
 import { useForm } from '@tanstack/react-form'
 import { addHours, format, setHours, setMinutes } from 'date-fns'
 import { ClockCheck, ClockPlus } from 'lucide-react'
@@ -21,6 +22,7 @@ import z from 'zod/v4'
 
 interface CreateTimeSlotProps {
   itineraryDay: ItineraryDay
+  iconOnly?: boolean
 }
 
 const formSchema = z.object({
@@ -28,7 +30,10 @@ const formSchema = z.object({
   endTime: z.date(),
 })
 
-export function CreateTimeSlot({ itineraryDay }: CreateTimeSlotProps) {
+export function CreateTimeSlot({
+  itineraryDay,
+  iconOnly,
+}: CreateTimeSlotProps) {
   const [open, setOpen] = useState(false)
 
   const { createTimeSlotMutation } = useTimeSlots(itineraryDay.id)
@@ -46,6 +51,8 @@ export function CreateTimeSlot({ itineraryDay }: CreateTimeSlotProps) {
         itineraryDayId: itineraryDay.id,
         ...value,
       })
+
+      setOpen(false)
     },
   })
 
@@ -66,9 +73,12 @@ export function CreateTimeSlot({ itineraryDay }: CreateTimeSlotProps) {
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button className="justify-between">
+          <Button
+            variant={iconOnly ? 'outline' : 'default'}
+            className={cn(iconOnly && 'w-full')}
+          >
             <ClockPlus />
-            Add time slot
+            {!iconOnly && 'Add time slot'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="flex flex-col gap-4">

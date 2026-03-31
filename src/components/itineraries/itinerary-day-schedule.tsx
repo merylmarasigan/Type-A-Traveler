@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { TypographyLarge } from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useTimeSlots } from '@/hooks/use-time-slots'
@@ -37,44 +38,48 @@ export function ItineraryDaySchedule({
       activity.timeSlotId && todayTimeSlotIds.includes(activity.timeSlotId),
   )
 
-  const notYetAddedActivities = cityActivitiesQuery.data.filter(
-    (activity) => activity.timeSlotId === null,
-  )
+  const dayOfWeek = formatDate(itineraryDay.date, 'EEEE')
 
   return (
     <Card className="w-full">
       <ScrollArea className="h-full w-full">
         <CardHeader>
-          <CardTitle>{formatDate(itineraryDay.date, 'EEEE')}</CardTitle>
+          <CardTitle>{dayOfWeek}</CardTitle>
           <CardDescription>
             <Badge variant="secondary">
               {todaysActivities.length} activities
             </Badge>
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <TypographyLarge>Time Slots</TypographyLarge>
+              <CreateTimeSlot itineraryDay={itineraryDay} />
+            </div>
+
             {timeSlotsQuery.data.length === 0 ? (
               <div className="flex flex-col gap-2 items-center">
-                <Alert className="max-w-md self-center">
+                <Alert className="self-center">
                   <AlertCircleIcon />
                   <AlertTitle>No Time Slots</AlertTitle>
                   <AlertDescription>
-                    This day has no time slots with activities yet.
+                    {dayOfWeek} has no time slots yet.
                   </AlertDescription>
                 </Alert>
-
-                <CreateTimeSlot itineraryDay={itineraryDay} />
               </div>
             ) : (
               timeSlotsQuery.data.map((slot) => (
-                <TimeSlotDetails
-                  key={slot.id}
-                  timeSlot={slot}
-                  activities={cityActivitiesQuery.data.filter(
-                    (activity) => activity.timeSlotId === slot.id,
-                  )}
-                />
+                <div key={slot.id} className="flex flex-col gap-2">
+                  <TimeSlotDetails
+                    timeSlot={slot}
+                    activities={cityActivitiesQuery.data.filter(
+                      (activity) => activity.timeSlotId === slot.id,
+                    )}
+                    cityItineraryId={itineraryDay.cityItineraryId}
+                  />
+                  <CreateTimeSlot itineraryDay={itineraryDay} iconOnly />
+                </div>
               ))
             )}
           </div>

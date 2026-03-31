@@ -1,5 +1,7 @@
+import { Button } from '@/components/ui/button'
 import {
   Card,
+  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -8,14 +10,19 @@ import {
 import { TypographySmall } from '@/components/ui/typography'
 import { SavedActivity } from '@/db/types'
 import { Image } from '@unpic/react'
+import { Plus } from 'lucide-react'
 
 interface SavedActivityPreviewProps {
   activity: SavedActivity
+  addToTimeSlot?: () => Promise<void>
 }
 
-export function SavedActivityPreview({ activity }: SavedActivityPreviewProps) {
+export function SavedActivityPreview({
+  activity,
+  addToTimeSlot,
+}: SavedActivityPreviewProps) {
   return (
-    <Card className="relative mx-auto w-full max-w-sm max-h-fit pt-0 hover:bg-muted hover:cursor-pointer">
+    <Card className="pt-0">
       {activity.imageUrl && (
         <Image
           src={activity.imageUrl}
@@ -31,10 +38,20 @@ export function SavedActivityPreview({ activity }: SavedActivityPreviewProps) {
         <CardDescription className="line-clamp-2">
           {activity.description}
         </CardDescription>
+        {addToTimeSlot && (
+          <CardAction>
+            <Button>
+              <Plus />
+              Add
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
-      <CardFooter>
-        <TypographySmall>{activity.city}</TypographySmall>
-      </CardFooter>
+      {!addToTimeSlot && (
+        <CardFooter>
+          <TypographySmall>{activity.city}</TypographySmall>
+        </CardFooter>
+      )}
     </Card>
   )
 }
