@@ -30,10 +30,6 @@ export function TimeSlotDetails({
     city: itineraryQuery.data.city,
   })
 
-  const addSavedActivity = async () => {
-    console.log('addSavedActivity()')
-  }
-
   const notYetAddedActivities = userActivitiesQuery.data.filter(
     (activity) =>
       activity.timeSlotId === null &&
@@ -68,8 +64,9 @@ export function TimeSlotDetails({
                       {notYetAddedActivities.map((activity) => (
                         <SavedActivityPreview
                           key={activity.id}
-                          activity={activity}
-                          addToTimeSlot={addSavedActivity}
+                          id={activity.id}
+                          timeSlotId={timeSlot.id}
+                          cityItineraryId={cityItineraryId}
                         />
                       ))}
                     </div>
@@ -81,7 +78,7 @@ export function TimeSlotDetails({
           </Alert>
         ) : (
           activities.map((activity) => (
-            <SavedActivityPreview key={activity.id} activity={activity} />
+            <SavedActivityPreview key={activity.id} id={activity.id} />
           ))
         )}
       </div>

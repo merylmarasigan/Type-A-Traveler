@@ -40,7 +40,7 @@ export function UserSavedActivities({ city }: UserSavedActivitiesProps) {
       ) : (
         <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
           {savedActivities.map((activity) => (
-            <SavedActivityPreview key={activity.id} activity={activity} />
+            <SavedActivityPreview key={activity.id} id={activity.id} />
           ))}
         </ul>
       )}

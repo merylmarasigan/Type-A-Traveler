@@ -8,19 +8,37 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { TypographySmall } from '@/components/ui/typography'
-import { SavedActivity } from '@/db/types'
+import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
 import { Image } from '@unpic/react'
 import { Plus } from 'lucide-react'
 
 interface SavedActivityPreviewProps {
-  activity: SavedActivity
-  addToTimeSlot?: () => Promise<void>
+  id: string
+  timeSlotId?: string
+  cityItineraryId?: string
 }
 
 export function SavedActivityPreview({
-  activity,
-  addToTimeSlot,
+  id,
+  timeSlotId,
+  cityItineraryId,
 }: SavedActivityPreviewProps) {
+  const { activityQuery, updateActivityMutation } = useSingleSavedActivity(
+    id,
+    cityItineraryId,
+  )
+
+  const addToTimeSlot = async () => {
+    if (!timeSlotId) return
+
+    await updateActivityMutation.mutateAsync({
+      id,
+      timeSlotId,
+    })
+  }
+
+  const activity = activityQuery.data
+
   return (
     <Card className="pt-0">
       {activity.imageUrl && (
@@ -38,16 +56,16 @@ export function SavedActivityPreview({
         <CardDescription className="line-clamp-2">
           {activity.description}
         </CardDescription>
-        {addToTimeSlot && (
+        {timeSlotId && (
           <CardAction>
-            <Button>
+            <Button onClick={addToTimeSlot}>
               <Plus />
               Add
             </Button>
           </CardAction>
         )}
       </CardHeader>
-      {!addToTimeSlot && (
+      {!timeSlotId && (
         <CardFooter>
           <TypographySmall>{activity.city}</TypographySmall>
         </CardFooter>

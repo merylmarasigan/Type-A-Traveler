@@ -62,14 +62,18 @@ export const createSavedActivityMutationOptions = (cityItineraryId?: string) =>
     },
   })
 
-export const updateSavedActivityMutationOptions = () =>
+export const updateSavedActivityMutationOptions = (cityItineraryId?: string) =>
   mutationOptions({
     mutationKey: ['updateSavedActivity'],
     mutationFn: (data: UpdateSavedActivity) => updateSavedActivityFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) => {
       await ctx.client.invalidateQueries({
         queryKey: singleSavedActivityQueryKey(data.id),
-      }),
+      })
+      await ctx.client.invalidateQueries({
+        queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
+      })
+    },
   })
 
 export const deleteSavedActivityMutationOptions = () =>
