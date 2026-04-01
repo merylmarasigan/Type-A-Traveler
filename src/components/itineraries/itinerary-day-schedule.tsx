@@ -13,6 +13,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { TypographyLarge } from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
+import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useTimeSlots } from '@/hooks/use-time-slots'
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon } from 'lucide-react'
@@ -28,6 +29,9 @@ export function ItineraryDaySchedule({
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: itineraryDay.cityItineraryId,
   })
+  const { itineraryQuery } = useSingleCityItinerary(
+    itineraryDay.cityItineraryId,
+  )
 
   const todayTimeSlotIds = timeSlotsQuery.data
     .filter((timeSlot) => timeSlot.itineraryDayId === itineraryDay.id)
@@ -77,6 +81,7 @@ export function ItineraryDaySchedule({
                       (activity) => activity.timeSlotId === slot.id,
                     )}
                     cityItineraryId={itineraryDay.cityItineraryId}
+                    city={itineraryQuery.data.city}
                   />
                   <CreateTimeSlot itineraryDay={itineraryDay} iconOnly />
                 </div>

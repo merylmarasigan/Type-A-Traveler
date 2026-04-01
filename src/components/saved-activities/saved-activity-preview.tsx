@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/card'
 import { TypographySmall } from '@/components/ui/typography'
 import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
+import { authClient } from '@/lib/auth-client'
 import { Image } from '@unpic/react'
 import { Plus } from 'lucide-react'
 
@@ -16,16 +17,22 @@ interface SavedActivityPreviewProps {
   id: string
   timeSlotId?: string
   cityItineraryId?: string
+  city?: string
 }
 
 export function SavedActivityPreview({
   id,
   timeSlotId,
   cityItineraryId,
+  city,
 }: SavedActivityPreviewProps) {
+  const { data } = authClient.useSession()
+
   const { activityQuery, updateActivityMutation } = useSingleSavedActivity(
     id,
     cityItineraryId,
+    data?.user.id,
+    city,
   )
 
   const addToTimeSlot = async () => {
@@ -40,7 +47,7 @@ export function SavedActivityPreview({
   const activity = activityQuery.data
 
   return (
-    <Card className="pt-0">
+    <Card className="pt-0 max-w-sm">
       {activity.imageUrl && (
         <Image
           src={activity.imageUrl}
