@@ -11,6 +11,8 @@ import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
+import { authClient } from '@/lib/auth-client'
+import { cn } from '@/lib/utils'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
 import { ArrowLeft } from 'lucide-react'
@@ -30,6 +32,7 @@ function RouteComponent() {
     cityItineraryId: cityId,
   })
   const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
+  const { data } = authClient.useSession()
 
   const start = itineraryDaysQuery.data[0]
   const end = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
@@ -45,6 +48,8 @@ function RouteComponent() {
     })
   }
 
+  const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
+
   return (
     <div className="flex flex-col h-full gap-2 p-2">
       <Button variant="link" asChild className="self-start">
@@ -56,13 +61,25 @@ function RouteComponent() {
           {folderQuery.data.title}
         </Link>
       </Button>
-      <EditableItineraryTitle
-        title={itineraryQuery.data.title}
-        id={cityId}
-        type="City"
-        onSubmit={updateTitle}
-        className="text-start"
-      />
+      {authorIsSessionUser ? (
+        <EditableItineraryTitle
+          title={itineraryQuery.data.title}
+          id={cityId}
+          type="City"
+          onSubmit={updateTitle}
+          className="text-start"
+        />
+      ) : (
+        <p
+          className={cn(
+            'h-min w-full col-start-1 col-span-2 md:col-start-2 md:col-span-1',
+            'flex flex-wrap justify-between items-center',
+            'line-clamp-2text-center text-3xl md:text-4xl font-extrabold',
+          )}
+        >
+          {itineraryQuery.data.title}
+        </p>
+      )}
       <TypographyH2>
         {formatDate(start.date, 'MMMM do, y')} -{' '}
         {formatDate(end.date, 'MMMM do, y')}
