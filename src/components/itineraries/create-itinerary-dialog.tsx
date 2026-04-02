@@ -16,6 +16,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
@@ -115,8 +116,9 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {userFoldersQuery.data.length < 0 && (
+                  {userFoldersQuery.data.length > 0 && (
                     <SelectGroup>
+                      <SelectLabel>Your existing itineraries</SelectLabel>
                       {userFoldersQuery.data.map((folder) => (
                         <SelectItem key={folder.id} value={folder.id}>
                           {folder.title}
