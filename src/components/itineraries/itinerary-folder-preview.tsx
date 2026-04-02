@@ -28,7 +28,9 @@ export function ItineraryFolderPreview({
     <Card>
       <CardHeader>
         <CardTitle>{multipleCities ? folder.title : firstCity.title}</CardTitle>
-        <CardDescription>{folder.description}</CardDescription>
+        <CardDescription>
+          {multipleCities ? folder.description : firstCity.description}
+        </CardDescription>
       </CardHeader>
       {multipleCities && <CardContent>{cityCount} cities</CardContent>}
       <CardFooter className="justify-end">

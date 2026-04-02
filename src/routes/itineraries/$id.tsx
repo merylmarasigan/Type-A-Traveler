@@ -1,3 +1,4 @@
+import { CityItineraryDetails } from '@/components/itineraries/city-itinerary-details'
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { EditableItineraryTitle } from '@/components/itineraries/editable-itinerary-title'
 import { SearchCitiesDialog } from '@/components/search-cities-dialog'
@@ -36,6 +37,8 @@ function RouteComponent() {
     folderQuery.data.description ?? cityItineraries.data[0].description
   const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
 
+  const folderOnlyHasOneCity = cityItineraries.data.length === 1
+
   return (
     <div className="flex flex-col gap-2 p-2">
       {authorIsSessionUser ? (
@@ -65,14 +68,20 @@ function RouteComponent() {
 
       <SearchCitiesDialog className="self-start" />
 
-      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 self-center">
-        {cityItineraries.data.map((cityItinerary) => (
-          <CityItineraryPreview
-            key={cityItinerary.id}
-            cityItinerary={cityItinerary}
-          />
-        ))}
-      </div>
+      {folderOnlyHasOneCity ? (
+        <div className="flex flex-col h-full gap-2 p-2">
+          <CityItineraryDetails id={cityItineraries.data[0].id} />
+        </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 self-center">
+          {cityItineraries.data.map((cityItinerary) => (
+            <CityItineraryPreview
+              key={cityItinerary.id}
+              cityItinerary={cityItinerary}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

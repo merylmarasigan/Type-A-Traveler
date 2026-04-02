@@ -17,7 +17,7 @@ export function SearchCitiesDialog(props: ComponentProps<'button'>) {
       <DialogTrigger asChild>
         <Button variant="outline" {...props}>
           <Plus />
-          Add another
+          Add another city
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
