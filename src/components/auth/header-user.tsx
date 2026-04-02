@@ -13,7 +13,7 @@ import { authClient } from '@/lib/auth-client'
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { User } from 'better-auth'
-import { LogOut } from 'lucide-react'
+import { Bookmark, Folder, LogOut } from 'lucide-react'
 import { HoverCard as HoverCardPrimitive } from 'radix-ui'
 import { ComponentProps } from 'react'
 
@@ -29,9 +29,19 @@ function AuthHeaderHover({ user, children }: AuthHeaderHoverProps) {
       <HoverCardTrigger>{children}</HoverCardTrigger>
       <HoverCardContent className="flex flex-col gap-2">
         <TypographyLarge>{user.name}</TypographyLarge>
-        <Link to="/my-itineraries">
-          My Itineraries
-        </Link>
+        <Button asChild variant="link">
+          <Link to="/my-itineraries" className="justify-start">
+            <Folder />
+            My Itineraries
+          </Link>
+        </Button>
+        <Button variant="link" className="justify-start">
+          {/* TODO: implement the saved-activities page */}
+          {/* <Link to="/my-saved-activities" className="justify-start"> */}
+          <Bookmark />
+          My Saved Activities
+          {/* </Link> */}
+        </Button>
         <Button variant="destructive" onClick={() => authClient.signOut()}>
           <LogOut />
           Sign out
