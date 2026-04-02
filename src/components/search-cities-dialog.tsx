@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Plus } from 'lucide-react'
+import { MapPinPlus } from 'lucide-react'
 import { ComponentProps } from 'react'
 
 export function SearchCitiesDialog(props: ComponentProps<'button'>) {
@@ -16,7 +16,7 @@ export function SearchCitiesDialog(props: ComponentProps<'button'>) {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" {...props}>
-          <Plus />
+          <MapPinPlus />
           Add another city
         </Button>
       </DialogTrigger>

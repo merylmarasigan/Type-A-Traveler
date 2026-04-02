@@ -1,18 +1,23 @@
-import { EditableItineraryTitle } from '@/components/itineraries/editable-itinerary-title'
+import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
 import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
 import { ItineraryDaySchedule } from '@/components/itineraries/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import { TypographyH3, TypographyLarge } from '@/components/ui/typography'
+import {
+  TypographyBlockquote,
+  TypographyH1,
+  TypographyH3,
+  TypographyLarge,
+} from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { authClient } from '@/lib/auth-client'
-import { cn } from '@/lib/utils'
 import { formatDate } from 'date-fns'
+import { MapPin } from 'lucide-react'
 import { useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
 
@@ -52,26 +57,26 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
 
   return (
     <>
-      {authorIsSessionUser ? (
-        <EditableItineraryTitle
+      <div className="self-start flex gap-2 items-center justify-between">
+        <MapPin />
+        <TypographyH1>{itineraryQuery.data.title}</TypographyH1>
+      </div>
+      {itineraryQuery.data.description && (
+        <TypographyBlockquote>
+          {itineraryQuery.data.description}
+        </TypographyBlockquote>
+      )}
+      {authorIsSessionUser && (
+        <EditItineraryDialog
           title={itineraryQuery.data.title}
           description={itineraryQuery.data.description}
           id={id}
           type="City"
           onSubmit={updateTitle}
-          className="text-start"
+          className="self-start"
         />
-      ) : (
-        <p
-          className={cn(
-            'h-min w-full col-start-1 col-span-2 md:col-start-2 md:col-span-1',
-            'flex flex-wrap justify-between items-center',
-            'line-clamp-2text-center text-3xl md:text-4xl font-extrabold',
-          )}
-        >
-          {itineraryQuery.data.title}
-        </p>
       )}
+
       <TypographyH3>
         {formatDate(start.date, 'MMMM do, y')} -{' '}
         {formatDate(end.date, 'MMMM do, y')}

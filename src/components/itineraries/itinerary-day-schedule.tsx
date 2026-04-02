@@ -14,7 +14,9 @@ import { TypographyLarge } from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
+import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useTimeSlots } from '@/hooks/use-time-slots'
+import { authClient } from '@/lib/auth-client'
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon } from 'lucide-react'
 
@@ -32,6 +34,8 @@ export function ItineraryDaySchedule({
   const { itineraryQuery } = useSingleCityItinerary(
     itineraryDay.cityItineraryId,
   )
+  const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
+  const { data } = authClient.useSession()
 
   const todayTimeSlotIds = timeSlotsQuery.data
     .filter((timeSlot) => timeSlot.itineraryDayId === itineraryDay.id)
@@ -43,6 +47,8 @@ export function ItineraryDaySchedule({
   )
 
   const dayOfWeek = formatDate(itineraryDay.date, 'EEEE')
+
+  const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
 
   return (
     <Card className="w-full">
@@ -59,7 +65,9 @@ export function ItineraryDaySchedule({
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <TypographyLarge>Time Slots</TypographyLarge>
-              <CreateTimeSlot itineraryDay={itineraryDay} />
+              {authorIsSessionUser && (
+                <CreateTimeSlot itineraryDay={itineraryDay} />
+              )}
             </div>
 
             {timeSlotsQuery.data.length === 0 ? (
@@ -83,7 +91,9 @@ export function ItineraryDaySchedule({
                     cityItineraryId={itineraryDay.cityItineraryId}
                     city={itineraryQuery.data.city}
                   />
-                  <CreateTimeSlot itineraryDay={itineraryDay} iconOnly />
+                  {authorIsSessionUser && (
+                    <CreateTimeSlot itineraryDay={itineraryDay} />
+                  )}
                 </div>
               ))
             )}
