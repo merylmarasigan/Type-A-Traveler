@@ -45,6 +45,7 @@ export const savedActivities = pgTable('saved_activities', {
   imageUrl: text(),
   fsq_place_id: text(),
   trp_location_id: text(),
+  ...timestamps,
 })
 
 export const lodging = pgTable('lodging', {
