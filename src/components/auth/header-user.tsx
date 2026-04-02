@@ -29,6 +29,9 @@ function AuthHeaderHover({ user, children }: AuthHeaderHoverProps) {
       <HoverCardTrigger>{children}</HoverCardTrigger>
       <HoverCardContent className="flex flex-col gap-2">
         <TypographyLarge>{user.name}</TypographyLarge>
+        <Link to="/my-itineraries">
+          My Itineraries
+        </Link>
         <Button variant="destructive" onClick={() => authClient.signOut()}>
           <LogOut />
           Sign out
