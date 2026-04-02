@@ -15,7 +15,7 @@ export function SearchCitiesDialog(props: ComponentProps<'button'>) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button {...props}>
+        <Button variant="outline" {...props}>
           <Plus />
           Add another
         </Button>

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import { TypographyH2, TypographyLarge } from '@/components/ui/typography'
+import { TypographyH3, TypographyLarge } from '@/components/ui/typography'
 import { ItineraryDay } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
@@ -41,10 +41,14 @@ function RouteComponent() {
     itineraryDaysQuery.data[0],
   )
 
-  const updateTitle = async (value: { title: string | null }) => {
+  const updateTitle = async (value: {
+    title: string | null
+    description: string | null
+  }) => {
     await updateItineraryMutation.mutateAsync({
       id: cityId,
       title: value.title,
+      description: value.description,
     })
   }
 
@@ -64,6 +68,7 @@ function RouteComponent() {
       {authorIsSessionUser ? (
         <EditableItineraryTitle
           title={itineraryQuery.data.title}
+          description={itineraryQuery.data.description}
           id={cityId}
           type="City"
           onSubmit={updateTitle}
@@ -80,10 +85,10 @@ function RouteComponent() {
           {itineraryQuery.data.title}
         </p>
       )}
-      <TypographyH2>
+      <TypographyH3>
         {formatDate(start.date, 'MMMM do, y')} -{' '}
         {formatDate(end.date, 'MMMM do, y')}
-      </TypographyH2>
+      </TypographyH3>
 
       <div className="flex items-center gap-2">
         <TypographyLarge>Schedule</TypographyLarge>
