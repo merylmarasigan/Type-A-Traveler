@@ -16,7 +16,7 @@ import { AlertCircleIcon, MapPinPlus } from 'lucide-react'
 interface SavedActivitySuggestionsProps {
   cityItineraryId: string
   timeSlotId: string
-  btnLabel: 'Add activity' | 'Add another'
+  btnLabel: 'Add activity' | 'Add another activity'
   align?: 'start' | 'center'
   city?: string
 }

@@ -32,7 +32,7 @@ export function TimeSlotDetails({
           <Alert>
             <AlertCircleIcon />
             <AlertTitle>No Activities</AlertTitle>
-            <AlertDescription className="flex flex-col gap-2">
+            <AlertDescription className="flex flex-col gap-2 line-clamp-4">
               <p>This time slot has no activities yet.</p>
               <SavedActivitySuggestions
                 cityItineraryId={cityItineraryId}
@@ -53,13 +53,15 @@ export function TimeSlotDetails({
             ))}
           </div>
         )}
-        <SavedActivitySuggestions
-          cityItineraryId={cityItineraryId}
-          timeSlotId={timeSlot.id}
-          btnLabel="Add another"
-          align="start"
-          city={city}
-        />
+        {activities.length > 0 && (
+          <SavedActivitySuggestions
+            cityItineraryId={cityItineraryId}
+            timeSlotId={timeSlot.id}
+            btnLabel="Add another activity"
+            align="start"
+            city={city}
+          />
+        )}
       </div>
     </div>
   )

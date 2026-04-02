@@ -2,6 +2,14 @@ import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dia
 import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
 import { ItineraryDaySchedule } from '@/components/itineraries/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -56,55 +64,66 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
   const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
 
   return (
-    <>
-      <div className="self-start flex gap-2 items-center justify-between">
-        <MapPin />
-        <TypographyH1>{itineraryQuery.data.title}</TypographyH1>
-      </div>
-      {itineraryQuery.data.description && (
-        <TypographyBlockquote>
-          {itineraryQuery.data.description}
-        </TypographyBlockquote>
-      )}
-      {authorIsSessionUser && (
-        <EditItineraryDialog
-          title={itineraryQuery.data.title}
-          description={itineraryQuery.data.description}
-          id={id}
-          type="City"
-          onSubmit={updateTitle}
-          className="self-start"
-        />
-      )}
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle className="self-start flex gap-2 items-center justify-start">
+          <MapPin />
+          <TypographyH1 className="text-start">
+            {itineraryQuery.data.title}
+          </TypographyH1>
+        </CardTitle>
 
-      <TypographyH3>
-        {formatDate(start.date, 'MMMM do, y')} -{' '}
-        {formatDate(end.date, 'MMMM do, y')}
-      </TypographyH3>
+        {itineraryQuery.data.description && (
+          <CardDescription>
+            <TypographyBlockquote>
+              {itineraryQuery.data.description}
+            </TypographyBlockquote>
+          </CardDescription>
+        )}
 
-      <div className="flex items-center gap-2">
-        <TypographyLarge>Schedule</TypographyLarge>
-        <Badge>{cityActivitiesQuery.data.length ?? 0} activities</Badge>
-      </div>
+        {authorIsSessionUser && (
+          <CardAction>
+            <EditItineraryDialog
+              title={itineraryQuery.data.title}
+              description={itineraryQuery.data.description}
+              id={id}
+              type="City"
+              onSubmit={updateTitle}
+              className="self-start"
+            />
+          </CardAction>
+        )}
+      </CardHeader>
+      <CardContent>
+        <TypographyH3>
+          {formatDate(start.date, 'MMMM do, y')} -{' '}
+          {formatDate(end.date, 'MMMM do, y')}
+        </TypographyH3>
 
-      <div className="flex gap-2 flex-1 min-h-0">
-        <ScrollArea className="h-full">
-          <div className="flex flex-col gap-2 w-36">
-            {itineraryDaysQuery.data.map((day, i) => (
-              <Fragment key={day.id}>
-                <ItineraryDayPreview
-                  itineraryDay={day}
-                  selected={day.id === selectedDay.id}
-                  onClick={() => setSelectedDay(day)}
-                />
-                {i !== itineraryDaysQuery.data.length - 1 && <Separator />}
-              </Fragment>
-            ))}
-          </div>
-        </ScrollArea>
+        <div className="flex items-center gap-2">
+          <TypographyLarge>Schedule</TypographyLarge>
+          <Badge>{cityActivitiesQuery.data.length ?? 0} activities</Badge>
+        </div>
 
-        <ItineraryDaySchedule itineraryDay={selectedDay} />
-      </div>
-    </>
+        <div className="flex gap-2 flex-1 min-h-0">
+          <ScrollArea className="h-full">
+            <div className="flex flex-col gap-2 w-36">
+              {itineraryDaysQuery.data.map((day, i) => (
+                <Fragment key={day.id}>
+                  <ItineraryDayPreview
+                    itineraryDay={day}
+                    selected={day.id === selectedDay.id}
+                    onClick={() => setSelectedDay(day)}
+                  />
+                  {i !== itineraryDaysQuery.data.length - 1 && <Separator />}
+                </Fragment>
+              ))}
+            </div>
+          </ScrollArea>
+
+          <ItineraryDaySchedule itineraryDay={selectedDay} />
+        </div>
+      </CardContent>
+    </Card>
   )
 }
