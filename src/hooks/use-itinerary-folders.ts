@@ -5,8 +5,10 @@ import {
 } from '@/services/backend/itinerary-folders.options'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useItineraryFolders = (userId?: string) => {
-  const foldersQuery = useSuspenseQuery(multipleItineraryFoldersQueryOptions())
+export const useItineraryFolders = (userId?: string, limit?: number) => {
+  const foldersQuery = useSuspenseQuery(
+    multipleItineraryFoldersQueryOptions(limit),
+  )
 
   const userFoldersQuery = useSuspenseQuery(
     userItineraryFoldersQueryOptions(userId),

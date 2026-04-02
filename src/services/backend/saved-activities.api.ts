@@ -1,6 +1,7 @@
 import {
   createSavedActivity,
   deleteSavedActivity,
+  getCityItinerarySavedActivities,
   getSavedActivity,
   getUserSavedActivities,
   updateSavedActivity,
@@ -17,12 +18,32 @@ export const getUserSavedActivitiesFn = createServerFn({
 })
   .inputValidator(
     z.object({
-      userId: z.string(),
+      userId: z.string().optional(),
       city: z.string().optional(),
     }),
   )
   .handler(async ({ data }) => {
+    if (!data.userId) return []
+
     const activities = await getUserSavedActivities(data.userId, data.city)
+
+    return activities
+  })
+
+export const getCityItinerarySavedActivitiesFn = createServerFn({
+  method: 'GET',
+})
+  .inputValidator(
+    z.object({
+      cityItineraryId: z.string().optional(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    if (!data.cityItineraryId) return []
+
+    const activities = await getCityItinerarySavedActivities(
+      data.cityItineraryId,
+    )
 
     return activities
   })

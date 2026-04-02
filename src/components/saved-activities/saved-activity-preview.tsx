@@ -1,21 +1,53 @@
+import { Button } from '@/components/ui/button'
 import {
   Card,
+  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { TypographySmall } from '@/components/ui/typography'
-import { SavedActivity } from '@/db/types'
+import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
+import { authClient } from '@/lib/auth-client'
 import { Image } from '@unpic/react'
+import { Plus } from 'lucide-react'
 
 interface SavedActivityPreviewProps {
-  activity: SavedActivity
+  id: string
+  timeSlotId?: string
+  cityItineraryId?: string
+  city?: string
 }
 
-export function SavedActivityPreview({ activity }: SavedActivityPreviewProps) {
+export function SavedActivityPreview({
+  id,
+  timeSlotId,
+  cityItineraryId,
+  city,
+}: SavedActivityPreviewProps) {
+  const { data } = authClient.useSession()
+
+  const { activityQuery, updateActivityMutation } = useSingleSavedActivity(
+    id,
+    cityItineraryId,
+    data?.user.id,
+    city,
+  )
+
+  const addToTimeSlot = async () => {
+    if (!timeSlotId) return
+
+    await updateActivityMutation.mutateAsync({
+      id,
+      timeSlotId,
+    })
+  }
+
+  const activity = activityQuery.data
+
   return (
-    <Card className="relative mx-auto w-full max-w-sm max-h-fit pt-0 hover:bg-muted hover:cursor-pointer">
+    <Card className="pt-0 max-w-sm">
       {activity.imageUrl && (
         <Image
           src={activity.imageUrl}
@@ -31,10 +63,20 @@ export function SavedActivityPreview({ activity }: SavedActivityPreviewProps) {
         <CardDescription className="line-clamp-2">
           {activity.description}
         </CardDescription>
+        {timeSlotId && (
+          <CardAction>
+            <Button onClick={addToTimeSlot}>
+              <Plus />
+              Add
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
-      <CardFooter>
-        <TypographySmall>{activity.city}</TypographySmall>
-      </CardFooter>
+      {!timeSlotId && (
+        <CardFooter>
+          <TypographySmall>{activity.city}</TypographySmall>
+        </CardFooter>
+      )}
     </Card>
   )
 }

@@ -27,7 +27,7 @@ export function TypographyH2({
   return (
     <h2
       className={cn(
-        'scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0',
+        'scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0',
         className,
       )}
       {...props}
@@ -146,11 +146,11 @@ export function TypographyLarge({
   className,
   children,
   ...props
-}: ComponentProps<'div'>) {
+}: ComponentProps<'p'>) {
   return (
-    <div className={cn('text-lg font-semibold', className)} {...props}>
+    <p className={cn('text-lg font-semibold', className)} {...props}>
       {children}
-    </div>
+    </p>
   )
 }
 

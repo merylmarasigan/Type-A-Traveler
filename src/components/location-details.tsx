@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { authClient } from '@/lib/auth-client'
 import { LocationDetails } from '@/services/tripadvisor/schema'
 import { Link } from '@tanstack/react-router'
 import { Eye, SquareArrowOutUpRight } from 'lucide-react'
@@ -25,12 +24,10 @@ export function LocationDetailsDialog({
   details,
   imageUrl,
 }: LocationDetailsProps) {
-  const { data, isPending: authPending } = authClient.useSession()
-
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="flex-1 hover:cursor-pointer">
+        <Button variant="secondary" className="flex-1">
           <Eye />
           View
         </Button>
@@ -51,7 +48,7 @@ export function LocationDetailsDialog({
           {details.description}
         </div>
         <DialogFooter className="gap-2 justify-between">
-          <Button variant="link" className="flex-1 hover:cursor-pointer">
+          <Button variant="link" className="flex-1">
             <Link target="_blank" to={details.web_url}>
               See more on TripAdvisor.com
             </Link>
@@ -59,9 +56,7 @@ export function LocationDetailsDialog({
           </Button>
           <SaveActivityButton
             activity={details}
-            user={data?.user}
             city={city}
-            disabled={authPending || !data?.user}
             imageUrl={imageUrl}
           />
         </DialogFooter>

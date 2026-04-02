@@ -31,19 +31,27 @@ export const useItineraryDays = (cityItineraryId?: string) => {
   /**
    * Create the initial `ItineraryDays` based on the given `DateRange` when creating a new `CityItinerary`
    */
-  const createInitialDays = async (dateRange: DateRange, city: string) => {
+  const createInitialDays = async (
+    dateRange: DateRange,
+    city: string,
+    existingFolderId?: string,
+  ) => {
     // TODO: show toast or throw a redirect
     if (!data?.user) throw new Error('Unauthorized')
     if (!dateRange.from || !dateRange.to) throw new Error('Date range required')
 
-    const itineraryFolder = await createFolderMutation.mutateAsync({
-      authorId: data.user.id,
-      title: 'My Itinerary',
-    })
+    const itineraryFolderId =
+      existingFolderId ??
+      (
+        await createFolderMutation.mutateAsync({
+          authorId: data.user.id,
+          title: 'My Itinerary',
+        })
+      ).id
 
     const cityItinerary = await createCityItineraryMutation.mutateAsync({
       city,
-      folderId: itineraryFolder.id,
+      folderId: itineraryFolderId,
       title: `Itinerary for ${city}`,
     })
 
@@ -58,7 +66,7 @@ export const useItineraryDays = (cityItineraryId?: string) => {
       })),
     )
 
-    return { createdDates, itineraryFolder }
+    return { createdDates, itineraryFolderId }
   }
 
   /**
