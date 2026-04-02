@@ -1,4 +1,5 @@
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
+import { EditScheduleDialog } from '@/components/itineraries/edit-schedule-dialog'
 import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
 import { ItineraryDaySchedule } from '@/components/itineraries/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
@@ -108,6 +109,7 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
         <div className="flex gap-2 flex-1 min-h-0">
           <ScrollArea className="h-full">
             <div className="flex flex-col gap-2 w-36">
+              <EditScheduleDialog cityItineraryId={id} />
               {itineraryDaysQuery.data.map((day, i) => (
                 <Fragment key={day.id}>
                   <ItineraryDayPreview

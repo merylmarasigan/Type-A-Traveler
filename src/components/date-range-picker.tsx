@@ -28,6 +28,7 @@ export function DateRangePicker({
             selected={dateRange}
             onSelect={setDateRange}
             numberOfMonths={2}
+            showOutsideDays={false}
           />
         </CardContent>
       </Card>
