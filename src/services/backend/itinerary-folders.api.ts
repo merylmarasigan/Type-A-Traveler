@@ -10,6 +10,7 @@ import {
   insertItineraryFolderSchema,
   updateItineraryFolderSchema,
 } from '@/db/types'
+import { ensureSession } from '@/services/backend/auth.functions'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod/v4'
 
@@ -46,6 +47,8 @@ export const getSingleItineraryFolderFn = createServerFn({ method: 'GET' })
 export const createItineraryFolderFn = createServerFn({ method: 'POST' })
   .inputValidator(insertItineraryFolderSchema)
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const newFolder = await createItineraryFolder(data)
 
     return newFolder
@@ -54,6 +57,8 @@ export const createItineraryFolderFn = createServerFn({ method: 'POST' })
 export const updateItineraryFolderFn = createServerFn({ method: 'POST' })
   .inputValidator(updateItineraryFolderSchema)
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const updatedFolder = await updateItineraryFolder(data)
 
     return updatedFolder
@@ -64,5 +69,7 @@ export const deleteItineraryFolderFn = createServerFn({
 })
   .inputValidator(z.object({ itineraryFolderId: z.string() }))
   .handler(async ({ data }) => {
+    await ensureSession()
+
     await deleteItineraryFolder(data.itineraryFolderId)
   })

@@ -9,6 +9,7 @@ import {
   insertCityItinerarySchema,
   updateCityItinerarySchema,
 } from '@/db/types'
+import { ensureSession } from '@/services/backend/auth.functions'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod/v4'
 
@@ -35,6 +36,8 @@ export const getSingleCityItineraryFn = createServerFn({ method: 'GET' })
 export const createCityItineraryFn = createServerFn({ method: 'POST' })
   .inputValidator(insertCityItinerarySchema)
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const newCityItinerary = await createCityItinerary(data)
 
     return newCityItinerary
@@ -43,6 +46,8 @@ export const createCityItineraryFn = createServerFn({ method: 'POST' })
 export const updateCityItineraryFn = createServerFn({ method: 'POST' })
   .inputValidator(updateCityItinerarySchema)
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const updatedFolder = await updateCityItinerary(data)
 
     return updatedFolder
@@ -53,6 +58,8 @@ export const deleteCityItineraryFn = createServerFn({
 })
   .inputValidator(z.object({ cityItineraryId: z.string() }))
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const deletedCityItinerary = await deleteCityItinerary(data.cityItineraryId)
 
     return deletedCityItinerary

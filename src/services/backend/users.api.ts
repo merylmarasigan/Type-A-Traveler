@@ -5,6 +5,7 @@ import {
   getUsers,
 } from '@/db/queries/users'
 import { updateUserSchema } from '@/db/types'
+import { ensureSession } from '@/services/backend/auth.functions'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod/v4'
 
@@ -26,6 +27,8 @@ export const getSingleUserFn = createServerFn({ method: 'GET' })
 export const updateUserFn = createServerFn({ method: 'POST' })
   .inputValidator(updateUserSchema)
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const updatedUser = await updateUser(data)
 
     return updatedUser
@@ -36,6 +39,8 @@ export const deleteUserFn = createServerFn({
 })
   .inputValidator(z.object({ userId: z.string() }))
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const deletedUser = await deleteUser(data.userId)
 
     return deletedUser
