@@ -1,10 +1,12 @@
 import { CityItineraryDetails } from '@/components/itineraries/city-itinerary-details'
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
+import { ItineraryFolderOverview } from '@/components/itineraries/itinerary-folder-overview'
 import { SearchCitiesDialog } from '@/components/search-cities-dialog'
 import {
   TypographyBlockquote,
   TypographyH1,
+  TypographyH2,
   TypographySmall,
 } from '@/components/ui/typography'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
@@ -76,18 +78,23 @@ function RouteComponent() {
         </div>
       )}
 
+      <ItineraryFolderOverview folder={folderQuery.data} />
+
       {folderOnlyHasOneCity ? (
         <div className="flex flex-col h-full gap-2 p-2">
           <CityItineraryDetails id={cityItineraries.data[0].id} />
         </div>
       ) : (
-        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 self-center">
-          {cityItineraries.data.map((cityItinerary) => (
-            <CityItineraryPreview
-              key={cityItinerary.id}
-              cityItinerary={cityItinerary}
-            />
-          ))}
+        <div className="flex flex-col items-center">
+          <TypographyH2 className="w-full">Cities</TypographyH2>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 self-center">
+            {cityItineraries.data.map((cityItinerary) => (
+              <CityItineraryPreview
+                key={cityItinerary.id}
+                cityItinerary={cityItinerary}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
