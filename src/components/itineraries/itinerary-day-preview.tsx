@@ -22,20 +22,24 @@ export function ItineraryDayPreview({
   return (
     <div
       className={cn(
-        'flex justify-between items-center gap-2 p-2 rounded-md hover:bg-accent hover:cursor-pointer',
+        'grid grid-flow-row md:grid-flow-col  gap-2 p-2 rounded-md hover:bg-accent hover:cursor-pointer w-24 md:w-full',
         selected && 'bg-accent',
         className,
       )}
       {...props}
     >
-      {timeSlotsQuery.data.length > 0 && (
-        <Badge>{timeSlotsQuery.data.length}</Badge>
+      {timeSlotsQuery.data.length > 0 ? (
+        <Badge className="place-self-center">
+          {timeSlotsQuery.data.length}
+        </Badge>
+      ) : (
+        <div className=""></div>
       )}
-      <div className="flex flex-col gap-1 flex-1">
-        <TypographyLarge className="text-end">
+      <div className="flex flex-col gap-1 flex-1 row-start-2 md:row-start-1 place-self-end w-full">
+        <TypographyLarge className="text-center md:text-end">
           {formatDate(itineraryDay.date, 'MMM d')}
         </TypographyLarge>
-        <TypographySmall className="text-muted-foreground text-end">
+        <TypographySmall className="text-muted-foreground text-center md:text-end">
           {formatDate(itineraryDay.date, 'EEEE')}
         </TypographySmall>
       </div>

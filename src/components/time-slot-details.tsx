@@ -1,7 +1,7 @@
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import { SavedActivitySuggestions } from '@/components/saved-activities/saved-activity-suggestions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { TypographySmall } from '@/components/ui/typography'
+import { Badge } from '@/components/ui/badge'
 import { SavedActivity, TimeSlot } from '@/db/types'
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon } from 'lucide-react'
@@ -23,10 +23,10 @@ export function TimeSlotDetails({
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <TypographySmall>
+      <Badge variant="secondary" className="font-mono">
         {formatDate(timeSlot.startTime, 'p')} -{' '}
         {formatDate(timeSlot.endTime, 'p')}
-      </TypographySmall>
+      </Badge>
       <div className="flex flex-col gap-2 w-full">
         {activities.length === 0 ? (
           <Alert>

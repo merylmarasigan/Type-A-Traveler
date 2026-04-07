@@ -40,7 +40,11 @@ export function EditScheduleDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)} variant="secondary">
+        <Button
+          className="w-full"
+          onClick={() => setOpen(true)}
+          variant="secondary"
+        >
           <CalendarCog />
           Adjust dates
         </Button>

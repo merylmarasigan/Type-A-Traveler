@@ -39,7 +39,8 @@ export function CityItineraryPreview({
       </CardHeader>
       <CardContent>
         <TypographySmall>
-          {cityActivitiesQuery.data.length} activities
+          {cityActivitiesQuery.data.length}{' '}
+          {cityActivitiesQuery.data.length === 1 ? 'activity' : 'activities'}
         </TypographySmall>
       </CardContent>
       <CardFooter className="justify-between">

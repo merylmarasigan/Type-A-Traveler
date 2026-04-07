@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
   TypographyBlockquote,
@@ -68,7 +68,7 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="self-start flex gap-2 items-center justify-start">
-          <MapPin />
+          <MapPin className="size-12 md:size-6 self-start md:self-center" />
           <TypographyH1 className="text-start">
             {itineraryQuery.data.title}
           </TypographyH1>
@@ -103,26 +103,36 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
 
         <div className="flex items-center gap-2">
           <TypographyLarge>Schedule</TypographyLarge>
-          <Badge>{cityActivitiesQuery.data.length ?? 0} activities</Badge>
+          <Badge>
+            {cityActivitiesQuery.data.length ?? 0}{' '}
+            {cityActivitiesQuery.data.length === 1 ? 'activity' : 'activities'}
+          </Badge>
         </div>
 
-        <div className="flex gap-2 flex-1 min-h-0">
-          <ScrollArea className="h-full">
-            <div className="flex flex-col gap-2 w-36">
-              <EditScheduleDialog cityItineraryId={id} />
-              {itineraryDaysQuery.data.map((day, i) => (
-                <Fragment key={day.id}>
-                  <ItineraryDayPreview
-                    itineraryDay={day}
-                    selected={day.id === selectedDay.id}
-                    onClick={() => setSelectedDay(day)}
-                  />
-                  {i !== itineraryDaysQuery.data.length - 1 && <Separator />}
-                </Fragment>
-              ))}
-            </div>
-          </ScrollArea>
-
+        <div className="flex gap-2 flex-col md:flex-row flex-1 min-h-0">
+          <div className="flex flex-col gap-2 items-center justify">
+            <EditScheduleDialog cityItineraryId={id} />
+            <ScrollArea className="w-full md:w-auto md:h-full border rounded-md p-2">
+              <div className="grid grid-flow-col md:grid-flow-row gap-2 md:w-36 pb-2 md:pb-0">
+                {itineraryDaysQuery.data.map((day, i) => (
+                  <Fragment key={day.id}>
+                    <ItineraryDayPreview
+                      itineraryDay={day}
+                      selected={day.id === selectedDay.id}
+                      onClick={() => setSelectedDay(day)}
+                    />
+                    {i !== itineraryDaysQuery.data.length - 1 && (
+                      <Separator
+                        orientation={undefined}
+                        className="hidden md:block"
+                      />
+                    )}
+                  </Fragment>
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" className="md:hidden" />
+            </ScrollArea>
+          </div>
           <ItineraryDaySchedule itineraryDay={selectedDay} />
         </div>
       </CardContent>

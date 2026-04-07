@@ -57,7 +57,8 @@ export function ItineraryDaySchedule({
           <CardTitle>{dayOfWeek}</CardTitle>
           <CardDescription>
             <Badge variant="secondary">
-              {todaysActivities.length} activities
+              {todaysActivities.length}{' '}
+              {todaysActivities.length === 1 ? 'activity' : 'activities'}
             </Badge>
           </CardDescription>
         </CardHeader>
