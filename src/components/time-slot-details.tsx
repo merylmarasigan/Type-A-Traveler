@@ -1,7 +1,7 @@
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import { SavedActivitySuggestions } from '@/components/saved-activities/saved-activity-suggestions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { TypographySmall } from '@/components/ui/typography'
+import { Badge } from '@/components/ui/badge'
 import { SavedActivity, TimeSlot } from '@/db/types'
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon } from 'lucide-react'
@@ -23,16 +23,16 @@ export function TimeSlotDetails({
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <TypographySmall>
+      <Badge variant="secondary" className="font-mono">
         {formatDate(timeSlot.startTime, 'p')} -{' '}
         {formatDate(timeSlot.endTime, 'p')}
-      </TypographySmall>
+      </Badge>
       <div className="flex flex-col gap-2 w-full">
         {activities.length === 0 ? (
           <Alert>
             <AlertCircleIcon />
             <AlertTitle>No Activities</AlertTitle>
-            <AlertDescription className="flex flex-col gap-2">
+            <AlertDescription className="flex flex-col gap-2 line-clamp-4">
               <p>This time slot has no activities yet.</p>
               <SavedActivitySuggestions
                 cityItineraryId={cityItineraryId}
@@ -53,13 +53,15 @@ export function TimeSlotDetails({
             ))}
           </div>
         )}
-        <SavedActivitySuggestions
-          cityItineraryId={cityItineraryId}
-          timeSlotId={timeSlot.id}
-          btnLabel="Add another"
-          align="start"
-          city={city}
-        />
+        {activities.length > 0 && (
+          <SavedActivitySuggestions
+            cityItineraryId={cityItineraryId}
+            timeSlotId={timeSlot.id}
+            btnLabel="Add another activity"
+            align="start"
+            city={city}
+          />
+        )}
       </div>
     </div>
   )

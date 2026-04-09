@@ -6,6 +6,7 @@ import {
   getUsersFn,
 } from '@/services/backend/users.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const multipleUsersQueryKey = () => ['users'] as const
 
@@ -28,18 +29,24 @@ export const updateUserMutationOptions = () =>
   mutationOptions({
     mutationKey: ['updateUser'],
     mutationFn: (data: UpdateUser) => updateUserFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) => {
+      toast.success(`Updated ${data.name}`)
+
       await ctx.client.invalidateQueries({
         queryKey: singleUserQueryKey(data.id),
-      }),
+      })
+    },
   })
 
 export const deleteUserMutationOptions = () =>
   mutationOptions({
     mutationKey: ['deleteUser'],
     mutationFn: (userId: string) => deleteUserFn({ data: { userId } }),
-    onSuccess: async (_data, _variables, _result, ctx) =>
+    onSuccess: async (_data, _variables, _result, ctx) => {
+      toast.success('Deleted user')
+
       await ctx.client.invalidateQueries({
         queryKey: multipleUsersQueryKey(),
-      }),
+      })
+    },
   })

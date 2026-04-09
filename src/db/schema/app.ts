@@ -7,6 +7,7 @@ export const itineraryFolders = pgTable('itinerary_folders', {
   title: text(),
   description: text(),
   flightNumbers: text().array(),
+  notes: text(),
   ...timestamps,
 })
 
@@ -17,6 +18,7 @@ export const cityItineraries = pgTable('city_itineraries', {
   description: text(),
   city: text().notNull(),
   budget: integer(),
+  notes: text(),
   ...timestamps,
 })
 
@@ -45,6 +47,7 @@ export const savedActivities = pgTable('saved_activities', {
   imageUrl: text(),
   fsq_place_id: text(),
   trp_location_id: text(),
+  ...timestamps,
 })
 
 export const lodging = pgTable('lodging', {

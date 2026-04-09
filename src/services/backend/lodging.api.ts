@@ -6,6 +6,7 @@ import {
   updateLodging,
 } from '@/db/queries/lodging'
 import { insertLodgingSchema, updateLodgingSchema } from '@/db/types'
+import { ensureSession } from '@/services/backend/auth.functions'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod/v4'
 
@@ -30,6 +31,8 @@ export const getSingleLodgingFn = createServerFn({ method: 'GET' })
 export const createLodgingFn = createServerFn({ method: 'POST' })
   .inputValidator(insertLodgingSchema)
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const newLodging = await createLodging(data)
 
     return newLodging
@@ -38,6 +41,8 @@ export const createLodgingFn = createServerFn({ method: 'POST' })
 export const updateLodgingFn = createServerFn({ method: 'POST' })
   .inputValidator(updateLodgingSchema)
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const updatedLodging = await updateLodging(data)
 
     return updatedLodging
@@ -48,6 +53,8 @@ export const deleteLodgingFn = createServerFn({
 })
   .inputValidator(z.object({ lodgingId: z.string() }))
   .handler(async ({ data }) => {
+    await ensureSession()
+
     const deletedLodging = await deleteLodging(data.lodgingId)
 
     return deletedLodging

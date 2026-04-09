@@ -1,13 +1,20 @@
+import { CityItineraryDetails } from '@/components/itineraries/city-itinerary-details'
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
-import { EditableItineraryTitle } from '@/components/itineraries/editable-itinerary-title'
+import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
+import { ItineraryFolderOverview } from '@/components/itineraries/itinerary-folder-overview'
 import { SearchCitiesDialog } from '@/components/search-cities-dialog'
-import { TypographyH2, TypographySmall } from '@/components/ui/typography'
+import {
+  TypographyBlockquote,
+  TypographyH1,
+  TypographyH2,
+  TypographySmall,
+} from '@/components/ui/typography'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { authClient } from '@/lib/auth-client'
-import { cn } from '@/lib/utils'
 import { createFileRoute } from '@tanstack/react-router'
+import { Folder } from 'lucide-react'
 
 export const Route = createFileRoute('/itineraries/$id')({
   component: RouteComponent,
@@ -20,59 +27,76 @@ function RouteComponent() {
   const { data } = authClient.useSession()
   const { userQuery } = useSingleUser(folderQuery.data.authorId)
 
-  const updateTitle = async (value: { title: string | null }) => {
+  const updateTitle = async (value: {
+    title: string | null
+    description: string | null
+  }) => {
     await updateFolderMutation.mutateAsync({
       id,
       title: value.title,
+      description: value.description,
     })
   }
 
   const title = folderQuery.data?.title ?? cityItineraries.data[0].title
+  const description =
+    folderQuery.data.description ?? cityItineraries.data[0].description
   const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
+
+  const folderOnlyHasOneCity = cityItineraries.data.length === 1
 
   return (
     <div className="flex flex-col gap-2 p-2">
-      <div className="grid grid-cols-3">
-        {authorIsSessionUser ? (
-          <>
-            <EditableItineraryTitle
-              title={title}
-              id={id}
-              type="Folder"
-              onSubmit={updateTitle}
-            />
-            <SearchCitiesDialog className="col-start-3 justify-self-end" />
-          </>
-        ) : (
-          <p
-            className={cn(
-              'h-min w-full col-start-1 col-span-2 md:col-start-2 md:col-span-1',
-              'flex flex-wrap justify-between items-center',
-              'line-clamp-2text-center text-3xl md:text-4xl font-extrabold',
-            )}
-          >
-            {title}
-          </p>
-        )}
+      <div className="self-center flex gap-2 items-center justify-between">
+        <Folder />
+        <TypographyH1>{title}</TypographyH1>
       </div>
-
-      {cityItineraries.data.length > 1 && (
-        <TypographyH2 className="text-center">
-          {cityItineraries.data.length} cities
-        </TypographyH2>
+      {description && (
+        <TypographyBlockquote className="text-center">
+          {description}
+        </TypographyBlockquote>
       )}
       <TypographySmall className="text-center">
         by {userQuery.data.name}
       </TypographySmall>
+      {cityItineraries.data.length > 1 && (
+        <TypographySmall className="self-center text-center text-muted-foreground">
+          {cityItineraries.data.length} cities
+        </TypographySmall>
+      )}
 
-      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 self-center">
-        {cityItineraries.data.map((cityItinerary) => (
-          <CityItineraryPreview
-            key={cityItinerary.id}
-            cityItinerary={cityItinerary}
+      {authorIsSessionUser && (
+        <div className="self-center flex justify-between items-center gap-2 w-min">
+          <EditItineraryDialog
+            title={title}
+            description={description}
+            id={id}
+            type="Folder"
+            onSubmit={updateTitle}
           />
-        ))}
-      </div>
+          <SearchCitiesDialog className="self-start" />
+        </div>
+      )}
+
+      <ItineraryFolderOverview folder={folderQuery.data} />
+
+      {folderOnlyHasOneCity ? (
+        <div className="flex flex-col h-full gap-2 p-2">
+          <CityItineraryDetails id={cityItineraries.data[0].id} />
+        </div>
+      ) : (
+        <div className="flex flex-col items-center">
+          <TypographyH2 className="w-full">Cities</TypographyH2>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 self-center">
+            {cityItineraries.data.map((cityItinerary) => (
+              <CityItineraryPreview
+                key={cityItinerary.id}
+                cityItinerary={cityItinerary}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

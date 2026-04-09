@@ -13,7 +13,7 @@ import { authClient } from '@/lib/auth-client'
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
 import { User } from 'better-auth'
-import { Bookmark, Folder, LogOut } from 'lucide-react'
+import { Bookmark, Folders, LogOut } from 'lucide-react'
 import { HoverCard as HoverCardPrimitive } from 'radix-ui'
 import { ComponentProps } from 'react'
 
@@ -31,7 +31,7 @@ function AuthHeaderHover({ user, children }: AuthHeaderHoverProps) {
         <TypographyLarge>{user.name}</TypographyLarge>
         <Button asChild variant="link">
           <Link to="/my-itineraries" className="justify-start">
-            <Folder />
+            <Folders />
             My Itineraries
           </Link>
         </Button>

@@ -9,6 +9,7 @@ export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
     .select()
     .from(timeSlots)
     .where(eq(timeSlots.itineraryDayId, itineraryDayId))
+    .orderBy(timeSlots.startTime)
 
   return result
 }

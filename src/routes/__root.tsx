@@ -14,6 +14,7 @@ import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { NotFound } from '@/components/not-found'
+import { Toaster } from '@/components/ui/sonner'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -51,9 +52,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="h-svh overflow-hidden flex flex-col">
+      <body className="h-full flex flex-col">
         <Header />
         <main className="flex-1 min-h-0">{children}</main>
+        <Toaster />
         <TanStackDevtools
           config={{
             position: 'bottom-right',
