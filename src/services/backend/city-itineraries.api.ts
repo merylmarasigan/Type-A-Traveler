@@ -60,7 +60,9 @@ export const deleteCityItineraryFn = createServerFn({
   .handler(async ({ data }) => {
     await ensureSession()
 
-    const deletedCityItinerary = await deleteCityItinerary(data.cityItineraryId)
+    const { deletedCityItinerary, remainingCities } = await deleteCityItinerary(
+      data.cityItineraryId,
+    )
 
-    return deletedCityItinerary
+    return { deletedCityItinerary, remainingCities }
   })

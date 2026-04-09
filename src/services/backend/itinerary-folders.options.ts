@@ -15,6 +15,12 @@ const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
 const singleItineraryFolderQueryKey = (itineraryFolderId?: string) =>
   ['itinerary_folders', itineraryFolderId] as const
 
+export const userItineraryFoldersQueryKey = (userId?: string) => [
+  'users',
+  userId,
+  ...multipleItineraryFoldersQueryKey(),
+]
+
 export const multipleItineraryFoldersQueryOptions = (limit?: number) =>
   queryOptions({
     queryKey: multipleItineraryFoldersQueryKey(),
@@ -23,7 +29,7 @@ export const multipleItineraryFoldersQueryOptions = (limit?: number) =>
 
 export const userItineraryFoldersQueryOptions = (userId?: string) =>
   queryOptions({
-    queryKey: ['users', userId, ...multipleItineraryFoldersQueryKey()],
+    queryKey: userItineraryFoldersQueryKey(userId),
     queryFn: () => getUserItineraryFoldersFn({ data: { userId } }),
     enabled: userId !== undefined && userId !== '',
   })

@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { FolderPen, MapPinPen } from 'lucide-react'
+import { FolderPen, MapPinPen, Trash } from 'lucide-react'
 import { useState } from 'react'
 
 interface EditItineraryDialogProps {
@@ -21,6 +21,7 @@ interface EditItineraryDialogProps {
     title: string | null
     description: string | null
   }) => Promise<void>
+  onDelete: () => Promise<void>
   className?: string
 }
 
@@ -33,6 +34,10 @@ export function EditItineraryDialog(props: EditItineraryDialogProps) {
   }) => {
     await props.onSubmit({ title: value.title, description: value.description })
     setOpen(false)
+  }
+
+  const handleDelete = async () => {
+    await props.onDelete()
   }
 
   return (
@@ -54,7 +59,13 @@ export function EditItineraryDialog(props: EditItineraryDialogProps) {
             {props.type === 'Folder' ? 'Itinerary Folder' : 'City Itinerary'}
           </DialogDescription>
         </DialogHeader>
-        <EditItineraryForm {...props} onSubmit={handleSubmit} />
+        <div className="flex flex-col gap-2">
+          <EditItineraryForm {...props} onSubmit={handleSubmit} />
+          <Button onClick={handleDelete} variant="destructive">
+            <Trash />
+            Delete
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   )

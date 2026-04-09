@@ -13,7 +13,7 @@ import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { authClient } from '@/lib/auth-client'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { Folder } from 'lucide-react'
 
 export const Route = createFileRoute('/itineraries/$id')({
@@ -22,10 +22,12 @@ export const Route = createFileRoute('/itineraries/$id')({
 
 function RouteComponent() {
   const { id } = Route.useParams()
-  const { folderQuery, updateFolderMutation } = useSingleItineraryFolder(id)
+  const { folderQuery, updateFolderMutation, deleteFolderMutation } =
+    useSingleItineraryFolder(id)
   const { itinerariesQuery: cityItineraries } = useCityItineraries(id)
   const { data } = authClient.useSession()
   const { userQuery } = useSingleUser(folderQuery.data.authorId)
+  const router = useRouter()
 
   const updateTitle = async (value: {
     title: string | null
@@ -36,6 +38,11 @@ function RouteComponent() {
       title: value.title,
       description: value.description,
     })
+  }
+
+  const deleteFolder = async () => {
+    await deleteFolderMutation.mutateAsync(id)
+    await router.navigate({ to: '/my-itineraries' })
   }
 
   const title = folderQuery.data?.title ?? cityItineraries.data[0].title
@@ -73,6 +80,7 @@ function RouteComponent() {
             id={id}
             type="Folder"
             onSubmit={updateTitle}
+            onDelete={deleteFolder}
           />
           <SearchCitiesDialog className="self-start" />
         </div>

@@ -1,5 +1,5 @@
 import { db } from '@/db'
-import { cityItineraries } from '@/db/schema/app'
+import { cityItineraries, itineraryFolders } from '@/db/schema/app'
 import { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
 import { generateId } from 'better-auth'
 import { eq } from 'drizzle-orm'
@@ -50,5 +50,16 @@ export const deleteCityItinerary = async (id: string) => {
     .where(eq(cityItineraries.id, id))
     .returning()
 
-  return deletedCityItinerary
+  const remainingCities = await db
+    .select()
+    .from(cityItineraries)
+    .where(eq(cityItineraries.folderId, deletedCityItinerary.folderId))
+
+  if (remainingCities.length === 0) {
+    await db
+      .delete(itineraryFolders)
+      .where(eq(itineraryFolders.id, deletedCityItinerary.folderId))
+  }
+
+  return { deletedCityItinerary, remainingCities }
 }

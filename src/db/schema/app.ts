@@ -13,7 +13,9 @@ export const itineraryFolders = pgTable('itinerary_folders', {
 
 export const cityItineraries = pgTable('city_itineraries', {
   id: text().primaryKey(),
-  folderId: text().notNull(),
+  folderId: text()
+    .notNull()
+    .references(() => itineraryFolders.id, { onDelete: 'cascade' }),
   title: text(),
   description: text(),
   city: text().notNull(),
@@ -24,14 +26,18 @@ export const cityItineraries = pgTable('city_itineraries', {
 
 export const itineraryDays = pgTable('itinerary_days', {
   id: text().primaryKey(),
-  cityItineraryId: text().notNull(),
+  cityItineraryId: text()
+    .notNull()
+    .references(() => cityItineraries.id, { onDelete: 'cascade' }),
   date: date({ mode: 'date' }).notNull(),
   ...timestamps,
 })
 
 export const timeSlots = pgTable('time_slots', {
   id: text().primaryKey(),
-  itineraryDayId: text().notNull(),
+  itineraryDayId: text()
+    .notNull()
+    .references(() => itineraryDays.id, { onDelete: 'cascade' }),
   notes: text(),
   ...startEndTimestamps,
   ...timestamps,
@@ -40,7 +46,7 @@ export const timeSlots = pgTable('time_slots', {
 export const savedActivities = pgTable('saved_activities', {
   id: text().primaryKey(),
   userId: text().notNull(),
-  timeSlotId: text(),
+  timeSlotId: text().references(() => timeSlots.id, { onDelete: 'cascade' }),
   name: text().notNull(),
   city: text().notNull(),
   description: text(),
@@ -52,7 +58,9 @@ export const savedActivities = pgTable('saved_activities', {
 
 export const lodging = pgTable('lodging', {
   id: text().primaryKey(),
-  itineraryId: text().notNull(),
+  itineraryId: text()
+    .notNull()
+    .references(() => itineraryFolders.id, { onDelete: 'cascade' }),
   name: text().notNull(),
   address: text(),
   ...timestamps,

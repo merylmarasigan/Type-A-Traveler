@@ -1,5 +1,5 @@
 import { db } from '@/db'
-import { itineraryFolders } from '@/db/schema/app'
+import { cityItineraries, itineraryFolders } from '@/db/schema/app'
 import { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
 import { generateId } from 'better-auth'
 import { eq } from 'drizzle-orm'
@@ -55,5 +55,8 @@ export const updateItineraryFolder = async (values: UpdateItineraryFolder) => {
 }
 
 export const deleteItineraryFolder = async (id: string) => {
-  await db.delete(itineraryFolders).where(eq(itineraryFolders.id, id))
+  await db.transaction(async (tx) => {
+    await tx.delete(itineraryFolders).where(eq(itineraryFolders.id, id))
+    await tx.delete(cityItineraries).where(eq(cityItineraries.folderId, id))
+  })
 }

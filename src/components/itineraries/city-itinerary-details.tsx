@@ -25,6 +25,7 @@ import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { authClient } from '@/lib/auth-client'
+import { useRouter } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
 import { MapPin } from 'lucide-react'
 import { useState } from 'react'
@@ -35,13 +36,14 @@ interface CityItineraryDetailsProps {
 }
 
 export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
-  const { itineraryQuery, updateItineraryMutation } = useSingleCityItinerary(id)
+  const { itineraryQuery, updateItineraryMutation, deleteItineraryMutation } =
+    useSingleCityItinerary(id)
   const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
   const { itineraryDaysQuery } = useItineraryDays(id)
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: id,
   })
-
+  const router = useRouter()
   const { data } = authClient.useSession()
 
   const start = itineraryDaysQuery.data[0]
@@ -60,6 +62,19 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
       title: value.title,
       description: value.description,
     })
+  }
+
+  const deleteCityItinerary = async () => {
+    const { remainingCities } = await deleteItineraryMutation.mutateAsync(id)
+
+    if (remainingCities.length >= 1) {
+      await router.navigate({
+        to: '/itineraries/$id',
+        params: { id: folderQuery.data.id },
+      })
+    } else {
+      await router.navigate({ to: '/my-itineraries' })
+    }
   }
 
   const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
@@ -90,6 +105,7 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
               id={id}
               type="City"
               onSubmit={updateTitle}
+              onDelete={deleteCityItinerary}
               className="self-start"
             />
           </CardAction>
