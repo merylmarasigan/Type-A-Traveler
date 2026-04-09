@@ -8,6 +8,7 @@ import {
   deleteItineraryFolderFn,
 } from '@/services/backend/itinerary-folders.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
 
@@ -38,10 +39,11 @@ export const createItineraryFolderMutationOptions = () =>
   mutationOptions({
     mutationKey: ['createItineraryFolder'],
     mutationFn: (data: NewItineraryFolder) => createItineraryFolderFn({ data }),
-    onSuccess: async (_data, _variables, _result, ctx) =>
+    onSuccess: async (_data, _variables, _result, ctx) => {
       await ctx.client.invalidateQueries({
         queryKey: multipleItineraryFoldersQueryKey(),
-      }),
+      })
+    },
   })
 
 export const updateItineraryFolderMutationOptions = () =>
@@ -49,10 +51,13 @@ export const updateItineraryFolderMutationOptions = () =>
     mutationKey: ['updateItineraryFolder'],
     mutationFn: (data: UpdateItineraryFolder) =>
       updateItineraryFolderFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) => {
+      toast.success(`Updated ${data.title}`)
+
       await ctx.client.invalidateQueries({
         queryKey: singleItineraryFolderQueryKey(data.id),
-      }),
+      })
+    },
   })
 
 export const deleteItineraryFolderMutationOptions = () =>
@@ -60,8 +65,11 @@ export const deleteItineraryFolderMutationOptions = () =>
     mutationKey: ['deleteItineraryFolder'],
     mutationFn: (itineraryFolderId: string) =>
       deleteItineraryFolderFn({ data: { itineraryFolderId } }),
-    onSuccess: async (_data, _variables, _result, ctx) =>
+    onSuccess: async (_data, _variables, _result, ctx) => {
+      toast.success('Deleted itinerary folder')
+
       await ctx.client.invalidateQueries({
         queryKey: multipleItineraryFoldersQueryKey(),
-      }),
+      })
+    },
   })

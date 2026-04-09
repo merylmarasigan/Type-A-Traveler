@@ -7,6 +7,7 @@ import {
   getFolderCityItinerariesFn,
 } from '@/services/backend/city-itineraries.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const multipleCityItinerariesQueryKey = (folderId?: string) =>
   ['itinerary_folders', folderId, 'city_itineraries'] as const
@@ -32,20 +33,26 @@ export const createCityItineraryMutationOptions = () =>
   mutationOptions({
     mutationKey: ['createCityItinerary'],
     mutationFn: (data: NewCityItinerary) => createCityItineraryFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) => {
+      toast.success(`Created new itinerary for ${data.city}!`)
+
       await ctx.client.invalidateQueries({
         queryKey: multipleCityItinerariesQueryKey(data.folderId),
-      }),
+      })
+    },
   })
 
 export const updateCityItineraryMutationOptions = () =>
   mutationOptions({
     mutationKey: ['updateCityItinerary'],
     mutationFn: (data: UpdateCityItinerary) => updateCityItineraryFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) => {
+      toast.success(`Updated itinerary for ${data.city}`)
+
       await ctx.client.invalidateQueries({
         queryKey: singleCityItineraryQueryKey(data.id),
-      }),
+      })
+    },
   })
 
 export const deleteCityItineraryMutationOptions = () =>
@@ -53,8 +60,11 @@ export const deleteCityItineraryMutationOptions = () =>
     mutationKey: ['deleteCityItinerary'],
     mutationFn: (cityItineraryId: string) =>
       deleteCityItineraryFn({ data: { cityItineraryId } }),
-    onSuccess: async (data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) => {
+      toast.success(`Deleted itinerary for ${data.city}`)
+
       await ctx.client.invalidateQueries({
         queryKey: multipleCityItinerariesQueryKey(data.folderId),
-      }),
+      })
+    },
   })

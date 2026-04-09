@@ -8,6 +8,7 @@ import {
   getCityItinerarySavedActivitiesFn,
 } from '@/services/backend/saved-activities.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const userSavedActivitiesQueryKey = (userId?: string, city?: string) =>
   ['users', userId, 'saved_activities', city] as const
@@ -51,10 +52,14 @@ export const createSavedActivityMutationOptions = (cityItineraryId?: string) =>
     mutationFn: (data: NewSavedActivity) => createSavedActivityFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) => {
       if (cityItineraryId) {
+        toast.success(`Added ${data.name} to your itinerary`)
+
         await ctx.client.invalidateQueries({
           queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
         })
       } else {
+        toast.success(`Saved ${data.name} to your bookmarks`)
+
         await ctx.client.invalidateQueries({
           queryKey: userSavedActivitiesQueryKey(data.userId, data.city),
         })
@@ -71,6 +76,8 @@ export const updateSavedActivityMutationOptions = (
     mutationKey: ['updateSavedActivity'],
     mutationFn: (data: UpdateSavedActivity) => updateSavedActivityFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) => {
+      toast.success(`Updated details for ${data.name}`)
+
       await ctx.client.invalidateQueries({
         queryKey: singleSavedActivityQueryKey(data.id),
       })
@@ -88,8 +95,11 @@ export const deleteSavedActivityMutationOptions = () =>
     mutationKey: ['deleteSavedActivity'],
     mutationFn: (savedActivityId: string) =>
       deleteSavedActivityFn({ data: { savedActivityId } }),
-    onSuccess: async (data, _variables, _result, ctx) =>
+    onSuccess: async (data, _variables, _result, ctx) => {
+      toast.success(`Deleted ${data.name}`)
+
       await ctx.client.invalidateQueries({
         queryKey: userSavedActivitiesQueryKey(data.userId),
-      }),
+      })
+    },
   })
