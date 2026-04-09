@@ -53,6 +53,7 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
     useState<ItineraryFolder | null>(null)
 
   const handleConfirmDates = async () => {
+    console.log(dateRange)
     const { itineraryFolderId } = await createInitialDays(
       dateRange,
       city,
