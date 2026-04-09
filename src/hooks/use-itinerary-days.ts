@@ -1,6 +1,7 @@
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
 import { authClient } from '@/lib/auth-client'
+import { toLocalDateString } from '@/lib/utils'
 import {
   cityItineraryDaysQueryOptions,
   createItineraryDaysMutationOptions,
@@ -59,10 +60,11 @@ export const useItineraryDays = (cityItineraryId?: string) => {
       start: dateRange.from,
       end: dateRange.to,
     })
+
     const createdDates = await createItineraryDaysMutation.mutateAsync(
       intervalDates.map((date) => ({
         cityItineraryId: cityItinerary.id,
-        date,
+        date: toLocalDateString(date),
       })),
     )
 
@@ -84,7 +86,7 @@ export const useItineraryDays = (cityItineraryId?: string) => {
     const newDays = await updateMultipleItineraryDaysMutation.mutateAsync(
       intervalDates.map((date) => ({
         cityItineraryId,
-        date,
+        date: toLocalDateString(date),
       })),
     )
 

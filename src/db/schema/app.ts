@@ -25,7 +25,7 @@ export const cityItineraries = pgTable('city_itineraries', {
 export const itineraryDays = pgTable('itinerary_days', {
   id: text().primaryKey(),
   cityItineraryId: text().notNull(),
-  date: date({ mode: 'date' }).notNull(),
+  date: date({ mode: 'string' }).notNull(),
   ...timestamps,
 })
 
