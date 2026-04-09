@@ -1,4 +1,16 @@
 import { EditItineraryForm } from '@/components/itineraries/edit-itinerary-form'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -9,7 +21,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { FolderPen, MapPinPen, Trash } from 'lucide-react'
+import { FolderPen, MapPinPen, Trash, Trash2Icon } from 'lucide-react'
 import { useState } from 'react'
 
 interface EditItineraryDialogProps {
@@ -36,10 +48,6 @@ export function EditItineraryDialog(props: EditItineraryDialogProps) {
     setOpen(false)
   }
 
-  const handleDelete = async () => {
-    await props.onDelete()
-  }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -61,10 +69,36 @@ export function EditItineraryDialog(props: EditItineraryDialogProps) {
         </DialogHeader>
         <div className="flex flex-col gap-2">
           <EditItineraryForm {...props} onSubmit={handleSubmit} />
-          <Button onClick={handleDelete} variant="destructive">
-            <Trash />
-            Delete
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">
+                <Trash />
+                Delete {props.type}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent size="sm">
+              <AlertDialogHeader>
+                <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                  <Trash2Icon />
+                </AlertDialogMedia>
+                <AlertDialogTitle>Delete "{props.title}"?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete the {props.type.toLowerCase()}{' '}
+                  and any data within the {props.type.toLowerCase()}.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={props.onDelete}
+                  variant="destructive"
+                >
+                  <Trash />
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </DialogContent>
     </Dialog>
