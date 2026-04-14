@@ -1,3 +1,9 @@
+import { useRouter } from '@tanstack/react-router'
+import { formatDate } from 'date-fns'
+import { MapPin } from 'lucide-react'
+import { useState } from 'react'
+import { Fragment } from 'react/jsx-runtime'
+import type { ItineraryDay } from '@/db/types'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
 import { EditScheduleDialog } from '@/components/itineraries/edit-schedule-dialog'
 import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
@@ -19,17 +25,11 @@ import {
   TypographyH3,
   TypographyLarge,
 } from '@/components/ui/typography'
-import { ItineraryDay } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { authClient } from '@/lib/auth-client'
-import { useRouter } from '@tanstack/react-router'
-import { formatDate } from 'date-fns'
-import { MapPin } from 'lucide-react'
-import { useState } from 'react'
-import { Fragment } from 'react/jsx-runtime'
 
 interface CityItineraryDetailsProps {
   id: string
@@ -120,14 +120,14 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
         <div className="flex items-center gap-2">
           <TypographyLarge>Schedule</TypographyLarge>
           <Badge>
-            {cityActivitiesQuery.data.length ?? 0}{' '}
+            {cityActivitiesQuery.data.length}{' '}
             {cityActivitiesQuery.data.length === 1 ? 'activity' : 'activities'}
           </Badge>
         </div>
 
         <div className="flex gap-2 flex-col md:flex-row flex-1 min-h-0">
           <div className="flex flex-col gap-2 items-center justify">
-            <EditScheduleDialog cityItineraryId={id} />
+            {authorIsSessionUser && <EditScheduleDialog cityItineraryId={id} />}
             <ScrollArea className="w-full md:w-auto md:h-full border rounded-md p-2">
               <div className="grid grid-flow-col md:grid-flow-row gap-2 md:w-36 pb-2 md:pb-0">
                 {itineraryDaysQuery.data.map((day, i) => (

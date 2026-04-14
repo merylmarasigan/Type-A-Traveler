@@ -98,6 +98,7 @@ export function ItineraryDaySchedule({
                     )}
                     cityItineraryId={itineraryDay.cityItineraryId}
                     city={itineraryQuery.data.city}
+                    showActions={authorIsSessionUser}
                   />
                   {authorIsSessionUser && (
                     <TimeSlotForm itineraryDay={itineraryDay} slotId={slot.id}>

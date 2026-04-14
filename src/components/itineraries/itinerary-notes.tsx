@@ -24,6 +24,7 @@ import {
   TypographyMuted,
 } from '@/components/ui/typography'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
+import { authClient } from '@/lib/auth-client'
 
 interface ItineraryNotesProps {
   id: string
@@ -36,6 +37,7 @@ const formSchema = z.object({
 export function ItineraryNotes({ id }: ItineraryNotesProps) {
   const { folderQuery, updateFolderMutation } = useSingleItineraryFolder(id)
   const [isEditing, setIsEditing] = useState(false)
+  const { data } = authClient.useSession()
 
   const form = useForm({
     defaultValues: {
@@ -56,18 +58,22 @@ export function ItineraryNotes({ id }: ItineraryNotesProps) {
     },
   })
 
+  const isOwner = data?.user.id === folderQuery.data.authorId
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Notes</CardTitle>
-        <CardAction>
-          <Button
-            onClick={() => setIsEditing((prev) => !prev)}
-            variant="secondary"
-          >
-            <Edit />
-          </Button>
-        </CardAction>
+        {isOwner && (
+          <CardAction>
+            <Button
+              onClick={() => setIsEditing((prev) => !prev)}
+              variant="secondary"
+            >
+              <Edit />
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       <CardContent>
         {isEditing ? (

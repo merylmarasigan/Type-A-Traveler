@@ -1,13 +1,20 @@
+import { generateId } from 'better-auth'
+import { eq, getTableColumns } from 'drizzle-orm'
+import type { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
 import { db } from '@/db'
 import { cityItineraries, itineraryFolders } from '@/db/schema/app'
-import { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
-import { generateId } from 'better-auth'
-import { eq } from 'drizzle-orm'
 
 export const getFolderCityItineraries = async (folderId: string) => {
   const result = await db
-    .select()
+    .select({
+      ...getTableColumns(cityItineraries),
+      authorId: itineraryFolders.authorId,
+    })
     .from(cityItineraries)
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(cityItineraries.folderId, folderId))
 
   return result
@@ -15,8 +22,15 @@ export const getFolderCityItineraries = async (folderId: string) => {
 
 export const getCityItinerary = async (id: string) => {
   const [result] = await db
-    .select()
+    .select({
+      ...getTableColumns(cityItineraries),
+      authorId: itineraryFolders.authorId,
+    })
     .from(cityItineraries)
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(cityItineraries.id, id))
     .limit(1)
 

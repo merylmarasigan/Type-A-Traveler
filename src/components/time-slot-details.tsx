@@ -27,6 +27,7 @@ interface TimeSlotDetailsProps {
   activities: Array<SavedActivity>
   cityItineraryId: string
   city: string
+  showActions: boolean
 }
 
 export function TimeSlotDetails({
@@ -35,6 +36,7 @@ export function TimeSlotDetails({
   activities,
   cityItineraryId,
   city,
+  showActions,
 }: TimeSlotDetailsProps) {
   const { deleteTimeSlotMutation } = useSingleTimeSlot(timeSlot.id)
 
@@ -50,39 +52,51 @@ export function TimeSlotDetails({
           {formatDate(timeSlot.startTime, 'p')} -{' '}
           {formatDate(timeSlot.endTime, 'p')}
         </Button>
-        <ButtonGroupSeparator />
-        <TimeSlotForm itineraryDay={itineraryDay} existingTimeSlot={timeSlot}>
-          <Button className="rounded-none" variant="secondary">
-            <Edit />
-          </Button>
-        </TimeSlotForm>
-        <ButtonGroupSeparator />
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="secondary">
-              <Trash />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent size="sm">
-            <AlertDialogHeader>
-              <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                <Trash2Icon />
-              </AlertDialogMedia>
-              <AlertDialogTitle>Delete this time slot?</AlertDialogTitle>
-              <AlertDialogDescription>
-                {formatDate(timeSlot.startTime, 'p')} -{' '}
-                {formatDate(timeSlot.endTime, 'p')}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={deleteTimeSlot} variant="destructive">
-                <Trash />
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {showActions && (
+          <>
+            <ButtonGroupSeparator />
+            <TimeSlotForm
+              itineraryDay={itineraryDay}
+              existingTimeSlot={timeSlot}
+            >
+              <Button className="rounded-none" variant="secondary">
+                <Edit />
+              </Button>
+            </TimeSlotForm>
+            <ButtonGroupSeparator />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="secondary">
+                  <Trash />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent size="sm">
+                <AlertDialogHeader>
+                  <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                    <Trash2Icon />
+                  </AlertDialogMedia>
+                  <AlertDialogTitle>Delete this time slot?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {formatDate(timeSlot.startTime, 'p')} -{' '}
+                    {formatDate(timeSlot.endTime, 'p')}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel variant="outline">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={deleteTimeSlot}
+                    variant="destructive"
+                  >
+                    <Trash />
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </>
+        )}
       </ButtonGroup>
       <div className="flex flex-col gap-2 w-full">
         {activities.length === 0 ? (
@@ -110,7 +124,7 @@ export function TimeSlotDetails({
             ))}
           </div>
         )}
-        {activities.length > 0 && (
+        {showActions && activities.length > 0 && (
           <SavedActivitySuggestions
             cityItineraryId={cityItineraryId}
             timeSlotId={timeSlot.id}
