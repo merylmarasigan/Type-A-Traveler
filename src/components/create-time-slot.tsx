@@ -1,3 +1,10 @@
+import { useForm } from '@tanstack/react-form'
+import { addHours, format, setHours, setMinutes } from 'date-fns'
+import { ClockCheck } from 'lucide-react'
+import { useState } from 'react'
+import z from 'zod/v4'
+import type { ReactNode } from 'react'
+import type { ItineraryDay, TimeSlot } from '@/db/types'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -11,18 +18,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { ItineraryDay } from '@/db/types'
 import { useTimeSlots } from '@/hooks/use-time-slots'
-import { cn } from '@/lib/utils'
-import { useForm } from '@tanstack/react-form'
-import { addHours, format, setHours, setMinutes } from 'date-fns'
-import { ClockCheck, ClockPlus } from 'lucide-react'
-import { useState } from 'react'
-import z from 'zod/v4'
 
 interface CreateTimeSlotProps {
   itineraryDay: ItineraryDay
-  iconOnly?: boolean
+  existingTimeSlot?: TimeSlot
+  children: ReactNode
 }
 
 const formSchema = z.object({
@@ -32,25 +33,36 @@ const formSchema = z.object({
 
 export function CreateTimeSlot({
   itineraryDay,
-  iconOnly,
+  existingTimeSlot,
+  children,
 }: CreateTimeSlotProps) {
   const [open, setOpen] = useState(false)
 
-  const { createTimeSlotMutation } = useTimeSlots(itineraryDay.id)
+  const { createTimeSlotMutation, updateTimeSlotMutation } = useTimeSlots(
+    itineraryDay.id,
+  )
 
   const form = useForm({
     defaultValues: {
-      startTime: new Date(),
-      endTime: addHours(new Date(), 1),
+      startTime: existingTimeSlot?.startTime ?? new Date(),
+      endTime: existingTimeSlot?.endTime ?? addHours(new Date(), 1),
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      await createTimeSlotMutation.mutateAsync({
-        itineraryDayId: itineraryDay.id,
-        ...value,
-      })
+      if (existingTimeSlot) {
+        await updateTimeSlotMutation.mutateAsync({
+          id: existingTimeSlot.id,
+          ...value,
+        })
+      } else {
+        console.log('creating...')
+        await createTimeSlotMutation.mutateAsync({
+          itineraryDayId: itineraryDay.id,
+          ...value,
+        })
+      }
 
       setOpen(false)
     },
@@ -63,24 +75,20 @@ export function CreateTimeSlot({
     return updatedDate
   }
 
+  const formId = existingTimeSlot
+    ? 'edit-time-slot-form'
+    : 'create-time-slot-form'
+
   return (
     <form
-      id="create-time-slot-form"
+      id={formId}
       onSubmit={(e) => {
         e.preventDefault()
         form.handleSubmit()
       }}
     >
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant={iconOnly ? 'outline' : 'default'}
-            className={cn(iconOnly && 'w-full')}
-          >
-            <ClockPlus />
-            {!iconOnly && 'Add time slot'}
-          </Button>
-        </PopoverTrigger>
+        <PopoverTrigger asChild>{children}</PopoverTrigger>
         <PopoverContent className="flex flex-col gap-4">
           <FieldGroup className="flex flex-row gap-4">
             <form.Field
@@ -153,7 +161,7 @@ export function CreateTimeSlot({
           </FieldGroup>
 
           <Button
-            form="create-time-slot-form"
+            form={formId}
             type="submit"
             className="self-center justify-between"
           >

@@ -1,8 +1,8 @@
-import { db } from '@/db'
-import { timeSlots } from '@/db/schema/app'
-import { NewTimeSlot, UpdateTimeSlot } from '@/db/types'
 import { generateId } from 'better-auth'
 import { eq } from 'drizzle-orm'
+import type { NewTimeSlot, UpdateTimeSlot } from '@/db/types'
+import { db } from '@/db'
+import { timeSlots } from '@/db/schema/app'
 
 export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
   const result = await db

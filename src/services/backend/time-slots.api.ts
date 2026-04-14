@@ -1,14 +1,14 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod/v4'
 import {
   createTimeSlot,
   deleteTimeSlot,
-  getTimeSlot,
   getItineraryDayTimeSlots,
+  getTimeSlot,
   updateTimeSlot,
 } from '@/db/queries/time-slots'
 import { insertTimeSlotSchema, updateTimeSlotSchema } from '@/db/types'
 import { ensureSession } from '@/services/backend/auth.functions'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod/v4'
 
 export const getItineraryDayTimeSlotsFn = createServerFn({
   method: 'GET',

@@ -1,20 +1,24 @@
+import { formatDate } from 'date-fns'
+import { AlertCircleIcon, Edit, Trash } from 'lucide-react'
+import type { ItineraryDay, SavedActivity, TimeSlot } from '@/db/types'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import { SavedActivitySuggestions } from '@/components/saved-activities/saved-activity-suggestions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { SavedActivity, TimeSlot } from '@/db/types'
-import { formatDate } from 'date-fns'
-import { AlertCircleIcon } from 'lucide-react'
+import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
+import { Button } from '@/components/ui/button'
+import { CreateTimeSlot } from '@/components/create-time-slot'
 
 interface TimeSlotDetailsProps {
   timeSlot: TimeSlot
-  activities: SavedActivity[]
+  itineraryDay: ItineraryDay
+  activities: Array<SavedActivity>
   cityItineraryId: string
   city: string
 }
 
 export function TimeSlotDetails({
   timeSlot,
+  itineraryDay,
   activities,
   cityItineraryId,
   city,
@@ -23,10 +27,22 @@ export function TimeSlotDetails({
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <Badge variant="secondary" className="font-mono">
-        {formatDate(timeSlot.startTime, 'p')} -{' '}
-        {formatDate(timeSlot.endTime, 'p')}
-      </Badge>
+      <ButtonGroup>
+        <Button variant="secondary" className="font-mono hover:cursor-default">
+          {formatDate(timeSlot.startTime, 'p')} -{' '}
+          {formatDate(timeSlot.endTime, 'p')}
+        </Button>
+        <ButtonGroupSeparator />
+        <CreateTimeSlot itineraryDay={itineraryDay} existingTimeSlot={timeSlot}>
+          <Button className="rounded-none" variant="secondary">
+            <Edit />
+          </Button>
+        </CreateTimeSlot>
+        <ButtonGroupSeparator />
+        <Button variant="secondary">
+          <Trash />
+        </Button>
+      </ButtonGroup>
       <div className="flex flex-col gap-2 w-full">
         {activities.length === 0 ? (
           <Alert>

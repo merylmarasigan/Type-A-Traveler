@@ -1,6 +1,9 @@
+import { formatDate } from 'date-fns'
+import { AlertCircleIcon, ClockPlus } from 'lucide-react'
+import type { ItineraryDay } from '@/db/types'
 import { CreateTimeSlot } from '@/components/create-time-slot'
 import { TimeSlotDetails } from '@/components/time-slot-details'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -11,14 +14,12 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { TypographyLarge } from '@/components/ui/typography'
-import { ItineraryDay } from '@/db/types'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useTimeSlots } from '@/hooks/use-time-slots'
 import { authClient } from '@/lib/auth-client'
-import { formatDate } from 'date-fns'
-import { AlertCircleIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface ItineraryDayScheduleProps {
   itineraryDay: ItineraryDay
@@ -67,7 +68,12 @@ export function ItineraryDaySchedule({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
               <TypographyLarge>Time Slots</TypographyLarge>
               {authorIsSessionUser && (
-                <CreateTimeSlot itineraryDay={itineraryDay} />
+                <CreateTimeSlot itineraryDay={itineraryDay}>
+                  <Button>
+                    <ClockPlus />
+                    Add time slot
+                  </Button>
+                </CreateTimeSlot>
               )}
             </div>
 
@@ -86,6 +92,7 @@ export function ItineraryDaySchedule({
                 <div key={slot.id} className="flex flex-col gap-2">
                   <TimeSlotDetails
                     timeSlot={slot}
+                    itineraryDay={itineraryDay}
                     activities={cityActivitiesQuery.data.filter(
                       (activity) => activity.timeSlotId === slot.id,
                     )}
@@ -93,7 +100,12 @@ export function ItineraryDaySchedule({
                     city={itineraryQuery.data.city}
                   />
                   {authorIsSessionUser && (
-                    <CreateTimeSlot itineraryDay={itineraryDay} />
+                    <CreateTimeSlot itineraryDay={itineraryDay}>
+                      <Button>
+                        <ClockPlus />
+                        Add time slot
+                      </Button>
+                    </CreateTimeSlot>
                   )}
                 </div>
               ))

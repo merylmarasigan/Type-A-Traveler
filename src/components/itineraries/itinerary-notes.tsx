@@ -1,3 +1,7 @@
+import { useForm } from '@tanstack/react-form'
+import { Edit, Save, SaveOff } from 'lucide-react'
+import { useState } from 'react'
+import z from 'zod/v4'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -20,10 +24,6 @@ import {
   TypographyMuted,
 } from '@/components/ui/typography'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
-import { useForm } from '@tanstack/react-form'
-import { Edit, Save, SaveOff } from 'lucide-react'
-import { useState } from 'react'
-import z from 'zod/v4'
 
 interface ItineraryNotesProps {
   id: string
@@ -124,7 +124,7 @@ export function ItineraryNotes({ id }: ItineraryNotesProps) {
               </Button>
             </div>
           </form>
-        ) : folderQuery.data.notes === '' ? (
+        ) : !folderQuery.data.notes || folderQuery.data.notes === '' ? (
           <TypographyBlockquote className="text-muted-foreground">
             No notes yet
           </TypographyBlockquote>
