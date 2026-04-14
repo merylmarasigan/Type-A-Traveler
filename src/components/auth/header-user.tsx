@@ -1,55 +1,21 @@
-import { Button } from '@/components/ui/button'
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
+import { Link } from '@tanstack/react-router'
+import { Bookmark, Folders, LogOutIcon } from 'lucide-react'
+import { authClient } from '@/lib/auth-client'
 import {
   NavigationMenuLink,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
-import { TypographyLarge } from '@/components/ui/typography'
-import { authClient } from '@/lib/auth-client'
-import { Link } from '@tanstack/react-router'
-import { Image } from '@unpic/react'
-import { User } from 'better-auth'
-import { Bookmark, Folders, LogOut } from 'lucide-react'
-import { HoverCard as HoverCardPrimitive } from 'radix-ui'
-import { ComponentProps } from 'react'
-
-interface AuthHeaderHoverProps extends ComponentProps<
-  typeof HoverCardPrimitive.Root
-> {
-  user: User
-}
-
-function AuthHeaderHover({ user, children }: AuthHeaderHoverProps) {
-  return (
-    <HoverCard openDelay={100}>
-      <HoverCardTrigger>{children}</HoverCardTrigger>
-      <HoverCardContent className="flex flex-col gap-2">
-        <TypographyLarge>{user.name}</TypographyLarge>
-        <Button asChild variant="link">
-          <Link to="/my-itineraries" className="justify-start">
-            <Folders />
-            My Itineraries
-          </Link>
-        </Button>
-        <Button variant="link" className="justify-start">
-          {/* TODO: implement the saved-activities page */}
-          {/* <Link to="/my-saved-activities" className="justify-start"> */}
-          <Bookmark />
-          My Saved Activities
-          {/* </Link> */}
-        </Button>
-        <Button variant="destructive" onClick={() => authClient.signOut()}>
-          <LogOut />
-          Sign out
-        </Button>
-      </HoverCardContent>
-    </HoverCard>
-  )
-}
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function AuthHeader() {
   const { data: session, isPending } = authClient.useSession()
@@ -62,26 +28,46 @@ export function AuthHeader() {
 
   if (session?.user) {
     return (
-      <AuthHeaderHover user={session.user}>
-        <div className="flex items-center gap-2">
-          {session.user.image ? (
-            <Image
-              src={session.user.image}
-              layout="constrained"
-              width={32}
-              height={32}
-              alt={session.user.image}
-              className="rounded-full"
-            />
-          ) : (
-            <div className="h-8 w-8 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center rounded-full">
-              <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
-                {session.user.name?.charAt(0).toUpperCase() || 'U'}
-              </span>
-            </div>
-          )}
-        </div>
-      </AuthHeaderHover>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Avatar>
+              {session.user.image && (
+                <AvatarImage src={session.user.image} alt={session.user.name} />
+              )}
+              <AvatarFallback>
+                {session.user.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
+            <DropdownMenuItem asChild>
+              <Link to="/my-itineraries" className="justify-start">
+                <Folders />
+                My Itineraries
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              {/* TODO: implement the saved-activities page */}
+              {/* <Link to="/my-saved-activities" className="justify-start"> */}
+              <Bookmark />
+              My Saved Activities
+              {/* </Link> */}
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => authClient.signOut()}
+          >
+            <LogOutIcon />
+            Sign Out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     )
   }
 

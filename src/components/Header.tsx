@@ -1,13 +1,13 @@
+import { Link } from '@tanstack/react-router'
+import { Image } from '@unpic/react'
 import {
   NavigationMenu,
-  NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { AuthHeader } from '@/components/auth/header-user'
-import { Link } from '@tanstack/react-router'
-import { Image } from '@unpic/react'
 
 export function Header() {
   return (
@@ -31,12 +31,7 @@ export function Header() {
                   asChild
                   className={navigationMenuTriggerStyle()}
                 >
-                  <Link
-                    to="/community"
-                    className={navigationMenuTriggerStyle()}
-                  >
-                    Community
-                  </Link>
+                  <Link to="/community">Community</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -49,25 +44,3 @@ export function Header() {
     </header>
   )
 }
-
-// export default function Header() {
-//   return (
-//     <header className="p-2">
-//       <NavigationMenu>
-//         <NavigationMenuList>
-//           <NavigationMenuItem>
-//             <NavigationMenuLink
-//               asChild
-//               className={navigationMenuTriggerStyle()}
-//             >
-//               <Link to="/">Type A Traveler</Link>
-//             </NavigationMenuLink>
-//           </NavigationMenuItem>
-//           <NavigationMenuItem>
-//             <AuthHeader />
-//           </NavigationMenuItem>
-//         </NavigationMenuList>
-//       </NavigationMenu>
-//     </header>
-//   )
-// }
