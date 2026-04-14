@@ -1,17 +1,20 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
+import { authClient } from '@/lib/auth-client'
 import {
   createItineraryFolderMutationOptions,
   multipleItineraryFoldersQueryOptions,
   userItineraryFoldersQueryOptions,
 } from '@/services/backend/itinerary-folders.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useItineraryFolders = (userId?: string, limit?: number) => {
+export const useItineraryFolders = (limit?: number) => {
+  const { data } = authClient.useSession()
+
   const foldersQuery = useSuspenseQuery(
     multipleItineraryFoldersQueryOptions(limit),
   )
 
   const userFoldersQuery = useSuspenseQuery(
-    userItineraryFoldersQueryOptions(userId),
+    userItineraryFoldersQueryOptions(data?.session.userId),
   )
 
   const createFolderMutation = useMutation(

@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import { addDays } from 'date-fns'
 import { useState } from 'react'
-import { CalendarCheck2, ChevronDown } from 'lucide-react'
+import { CalendarCheck2, CalendarPlus, ChevronDown } from 'lucide-react'
 import type { DateRange } from 'react-day-picker'
 import type { ItineraryFolder } from '@/db/types'
 import {
@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
-import { authClient } from '@/lib/auth-client'
 import {
   Select,
   SelectContent,
@@ -45,9 +44,8 @@ export function CreateItineraryDialog({
   lat,
   lng,
 }: CreateItineraryDialogProps) {
-  const { data } = authClient.useSession()
   const { userActivitiesQuery } = useSavedActivities({ city })
-  const { userFoldersQuery } = useItineraryFolders(data?.user.id, 50)
+  const { userFoldersQuery } = useItineraryFolders(50)
   const { createInitialDays, createIsPending } = useItineraryDays()
   const router = useRouter()
 
@@ -84,7 +82,10 @@ export function CreateItineraryDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button disabled={noSavedActivities}>Create your itinerary</Button>
+        <Button disabled={noSavedActivities}>
+          Create new itinerary
+          <CalendarPlus />
+        </Button>
       </DialogTrigger>
       <DialogContent className="w-auto sm:max-w-xl p-0">
         <DialogHeader className="px-4 pt-4">

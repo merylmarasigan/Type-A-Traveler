@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import z from 'zod/v4'
-import { SearchAlertIcon } from 'lucide-react'
+import { ChevronDown, SearchAlertIcon } from 'lucide-react'
 import { LocationPreview } from '@/components/location-preview'
 import { ErrorComponent } from '@/components/error'
 import { TypographyH2 } from '@/components/ui/typography'
@@ -13,6 +13,15 @@ import {
 import { LocationCategoryEnum } from '@/services/tripadvisor/api'
 import { CreateItineraryDialog } from '@/components/itineraries/create-itinerary-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
+import { ItineraryFolderDropdownItem } from '@/components/itinerary-folder-dropdown-item'
 
 const categorySearchSchema = z.object({
   category: LocationCategoryEnum.catch('hotels'),
@@ -39,6 +48,8 @@ function RouteComponent() {
     locationsQueryOptions(city, category, lat, lng),
   )
 
+  const { userFoldersQuery } = useItineraryFolders()
+
   const defaultLocationQuery = useSuspenseQuery(
     defaultLocationQueryOptions(city, lat, lng),
   )
@@ -57,7 +68,31 @@ function RouteComponent() {
           <TypographyH2 className="text-start">
             Suggested {category} for {city}
           </TypographyH2>
-          <CreateItineraryDialog city={city} lat={lat} lng={lng} />
+
+          <div className="flex items-center gap-2">
+            {userFoldersQuery.data.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="secondary">
+                    My existing itineraries
+                    <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44">
+                  <DropdownMenuGroup>
+                    {userFoldersQuery.data.map((folder) => (
+                      <ItineraryFolderDropdownItem
+                        key={folder.id}
+                        folder={folder}
+                      />
+                    ))}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            <CreateItineraryDialog city={city} lat={lat} lng={lng} />
+          </div>
         </div>
         {cityLocationsQuery.data.length === 0 ? (
           <Alert>
