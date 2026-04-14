@@ -1,24 +1,25 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod'
+import type {
+  LocationDetails,
+  PhotosResponse,
+  SearchResponse,
+} from '@/services/tripadvisor/schema'
 import { serverEnv } from '@/config/env'
 import {
   fetchErrorMiddleware,
   fetchOrThrow,
 } from '@/services/tripadvisor/middleware'
-import {
-  LocationDetails,
-  PhotosResponse,
-  SearchResponse,
-} from '@/services/tripadvisor/schema'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod'
 
 const TRIPADVISOR_API_URL =
   'https://api.content.tripadvisor.com/api/v1' as const
 
-export const LocationCategoryEnum = z.enum([
+export const locationCategories = [
   'hotels',
   'attractions',
   'restaurants',
-])
+] as const
+export const LocationCategoryEnum = z.enum(locationCategories)
 export type LocationCategory = z.infer<typeof LocationCategoryEnum>
 
 export const getLocationsFn = createServerFn({ method: 'GET' })
@@ -28,7 +29,7 @@ export const getLocationsFn = createServerFn({ method: 'GET' })
       location: z.string(),
       category: LocationCategoryEnum,
       lat: z.string(),
-      lng: z.string()
+      lng: z.string(),
     }),
   )
   .handler(async ({ data }) => {
@@ -77,14 +78,12 @@ export const getSingleLocationPhotoFn = createServerFn({ method: 'GET' })
     //   return null
     // }
 
-    if(images.length == 0)
-    {
+    if (images.length == 0) {
       return null
     }
-    
-    const url = images[0].original
-      ? images[0].original.url
-      : images[0].medium.url
+
+    const url =
+      images.length > 0 ? images[0].original.url : images[0].medium.url
     return url
   })
 
@@ -94,7 +93,7 @@ export const getDefaultLocationFn = createServerFn({ method: 'GET' })
     z.object({
       location: z.string(),
       lat: z.string(),
-      lng: z.string()
+      lng: z.string(),
     }),
   )
   .handler(async ({ data }) => {

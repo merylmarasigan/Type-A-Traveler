@@ -2,6 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import z from 'zod/v4'
 import { ChevronDown, SearchAlertIcon } from 'lucide-react'
+import type { LocationCategory } from '@/services/tripadvisor/api'
 import { LocationPreview } from '@/components/location-preview'
 import { ErrorComponent } from '@/components/error'
 import { TypographyH2 } from '@/components/ui/typography'
@@ -22,6 +23,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
 import { ItineraryFolderDropdownItem } from '@/components/itinerary-folder-dropdown-item'
+import { FilterButtons } from '@/components/filter-buttons'
 
 const categorySearchSchema = z.object({
   category: LocationCategoryEnum.catch('hotels'),
@@ -43,6 +45,7 @@ export const Route = createFileRoute('/activities/$city')({
 function RouteComponent() {
   const { city } = Route.useParams()
   const { category, lat, lng } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   const cityLocationsQuery = useSuspenseQuery(
     locationsQueryOptions(city, category, lat, lng),
@@ -61,9 +64,15 @@ function RouteComponent() {
     ),
   )
 
+  const updateCategory = (newCategory: LocationCategory) => {
+    navigate({
+      search: { category: newCategory, lat, lng },
+    })
+  }
+
   return (
     <div className="flex flex-col items-center">
-      <div className="max-w-7xl flex flex-col gap-2 md:gap-4 p-2">
+      <div className="max-w-7xl flex flex-col gap-2 p-2">
         <div className="self-start w-full flex justify-between items-center p-2 gap-2">
           <TypographyH2 className="text-start">
             Suggested {category} for {city}
@@ -94,6 +103,12 @@ function RouteComponent() {
             <CreateItineraryDialog city={city} lat={lat} lng={lng} />
           </div>
         </div>
+
+        <FilterButtons
+          currentCategory={category}
+          setCurrentCategory={updateCategory}
+        />
+
         {cityLocationsQuery.data.length === 0 ? (
           <Alert>
             <SearchAlertIcon />
