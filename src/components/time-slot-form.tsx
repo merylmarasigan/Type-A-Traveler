@@ -20,9 +20,10 @@ import {
 } from '@/components/ui/popover'
 import { useTimeSlots } from '@/hooks/use-time-slots'
 
-interface CreateTimeSlotProps {
+interface TimeSlotFormProps {
   itineraryDay: ItineraryDay
   existingTimeSlot?: TimeSlot
+  slotId?: string
   children: ReactNode
 }
 
@@ -31,11 +32,12 @@ const formSchema = z.object({
   endTime: z.date(),
 })
 
-export function CreateTimeSlot({
+export function TimeSlotForm({
   itineraryDay,
   existingTimeSlot,
+  slotId,
   children,
-}: CreateTimeSlotProps) {
+}: TimeSlotFormProps) {
   const [open, setOpen] = useState(false)
 
   const { createTimeSlotMutation, updateTimeSlotMutation } = useTimeSlots(
@@ -44,8 +46,12 @@ export function CreateTimeSlot({
 
   const form = useForm({
     defaultValues: {
-      startTime: existingTimeSlot?.startTime ?? new Date(),
-      endTime: existingTimeSlot?.endTime ?? addHours(new Date(), 1),
+      startTime: existingTimeSlot?.startTime
+        ? existingTimeSlot.startTime
+        : new Date(),
+      endTime: existingTimeSlot?.endTime
+        ? existingTimeSlot.endTime
+        : addHours(new Date(), 1),
     },
     validators: {
       onSubmit: formSchema,
@@ -57,7 +63,6 @@ export function CreateTimeSlot({
           ...value,
         })
       } else {
-        console.log('creating...')
         await createTimeSlotMutation.mutateAsync({
           itineraryDayId: itineraryDay.id,
           ...value,
@@ -76,8 +81,8 @@ export function CreateTimeSlot({
   }
 
   const formId = existingTimeSlot
-    ? 'edit-time-slot-form'
-    : 'create-time-slot-form'
+    ? `edit-time-slot-form-${existingTimeSlot.id}`
+    : `create-time-slot-form-${itineraryDay.id}-${slotId}`
 
   return (
     <form

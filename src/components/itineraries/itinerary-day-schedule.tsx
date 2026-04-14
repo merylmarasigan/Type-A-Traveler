@@ -1,7 +1,7 @@
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon, ClockPlus } from 'lucide-react'
 import type { ItineraryDay } from '@/db/types'
-import { CreateTimeSlot } from '@/components/create-time-slot'
+import { TimeSlotForm } from '@/components/time-slot-form'
 import { TimeSlotDetails } from '@/components/time-slot-details'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -68,12 +68,12 @@ export function ItineraryDaySchedule({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
               <TypographyLarge>Time Slots</TypographyLarge>
               {authorIsSessionUser && (
-                <CreateTimeSlot itineraryDay={itineraryDay}>
+                <TimeSlotForm itineraryDay={itineraryDay}>
                   <Button>
                     <ClockPlus />
                     Add time slot
                   </Button>
-                </CreateTimeSlot>
+                </TimeSlotForm>
               )}
             </div>
 
@@ -100,12 +100,12 @@ export function ItineraryDaySchedule({
                     city={itineraryQuery.data.city}
                   />
                   {authorIsSessionUser && (
-                    <CreateTimeSlot itineraryDay={itineraryDay}>
+                    <TimeSlotForm itineraryDay={itineraryDay} slotId={slot.id}>
                       <Button>
                         <ClockPlus />
                         Add time slot
                       </Button>
-                    </CreateTimeSlot>
+                    </TimeSlotForm>
                   )}
                 </div>
               ))

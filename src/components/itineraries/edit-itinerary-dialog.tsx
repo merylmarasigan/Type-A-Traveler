@@ -1,3 +1,5 @@
+import { FolderPen, MapPinPen, Trash, Trash2Icon } from 'lucide-react'
+import { useState } from 'react'
 import { EditItineraryForm } from '@/components/itineraries/edit-itinerary-form'
 import {
   AlertDialog,
@@ -21,8 +23,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { FolderPen, MapPinPen, Trash, Trash2Icon } from 'lucide-react'
-import { useState } from 'react'
 
 interface EditItineraryDialogProps {
   title: string | null
