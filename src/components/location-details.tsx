@@ -1,3 +1,6 @@
+import { Link } from '@tanstack/react-router'
+import { Eye, SquareArrowOutUpRight } from 'lucide-react'
+import type { LocationDetails } from '@/services/tripadvisor/schema'
 import { SaveActivityButton } from '@/components/saved-activities/save-activity-button'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,18 +12,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { LocationDetails } from '@/services/tripadvisor/schema'
-import { Link } from '@tanstack/react-router'
-import { Eye, SquareArrowOutUpRight } from 'lucide-react'
 
 interface LocationDetailsProps {
   city: string
+  lat: string
+  lng: string
   details: LocationDetails
   imageUrl: string
 }
 
 export function LocationDetailsDialog({
   city,
+  lat,
+  lng,
   details,
   imageUrl,
 }: LocationDetailsProps) {
@@ -57,6 +61,8 @@ export function LocationDetailsDialog({
           <SaveActivityButton
             activity={details}
             city={city}
+            lat={lat}
+            lng={lng}
             imageUrl={imageUrl}
           />
         </DialogFooter>

@@ -1,3 +1,7 @@
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
+import z from 'zod/v4'
+import { SearchAlertIcon } from 'lucide-react'
 import { LocationPreview } from '@/components/location-preview'
 import { ErrorComponent } from '@/components/error'
 import { TypographyH2 } from '@/components/ui/typography'
@@ -6,13 +10,9 @@ import {
   locationsQueryOptions,
   singleLocationPhotoQueryOptions,
 } from '@/services/tripadvisor/query-options'
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
 import { LocationCategoryEnum } from '@/services/tripadvisor/api'
-import z from 'zod/v4'
 import { CreateItineraryDialog } from '@/components/itineraries/create-itinerary-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { SearchAlertIcon } from 'lucide-react'
 
 const categorySearchSchema = z.object({
   category: LocationCategoryEnum.catch('hotels'),
@@ -57,7 +57,7 @@ function RouteComponent() {
           <TypographyH2 className="text-start">
             Suggested {category} for {city}
           </TypographyH2>
-          <CreateItineraryDialog city={city} />
+          <CreateItineraryDialog city={city} lat={lat} lng={lng} />
         </div>
         {cityLocationsQuery.data.length === 0 ? (
           <Alert>
@@ -71,6 +71,8 @@ function RouteComponent() {
               <LocationPreview
                 key={location.location_id}
                 city={city}
+                lat={lat}
+                lng={lng}
                 cityPhoto={
                   defaultCityPhoto
                     ? defaultCityPhoto

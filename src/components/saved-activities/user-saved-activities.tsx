@@ -1,17 +1,23 @@
+import { Link } from '@tanstack/react-router'
+import { Search, SearchAlertIcon } from 'lucide-react'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { TypographyH3 } from '@/components/ui/typography'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { authClient } from '@/lib/auth-client'
-import { Link } from '@tanstack/react-router'
-import { Search, SearchAlertIcon } from 'lucide-react'
 
 interface UserSavedActivitiesProps {
   city: string
+  lat: string
+  lng: string
 }
 
-export function UserSavedActivities({ city }: UserSavedActivitiesProps) {
+export function UserSavedActivities({
+  city,
+  lat,
+  lng,
+}: UserSavedActivitiesProps) {
   const { userActivitiesQuery } = useSavedActivities({ city })
   const { data: savedActivities } = userActivitiesQuery
 
@@ -23,7 +29,11 @@ export function UserSavedActivities({ city }: UserSavedActivitiesProps) {
         <TypographyH3>My saved activities</TypographyH3>
         <Button asChild>
           {/* TODO: add lat and long - perhaps save in db schema */}
-          <Link to="/activities/$city" params={{ city }}>
+          <Link
+            to="/activities/$city"
+            params={{ city }}
+            search={{ category: 'hotels', lat, lng }}
+          >
             <Search />
             Find more
           </Link>

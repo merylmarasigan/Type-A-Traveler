@@ -1,3 +1,9 @@
+import { useRouter } from '@tanstack/react-router'
+import { addDays } from 'date-fns'
+import { useState } from 'react'
+import { CalendarCheck2, ChevronDown } from 'lucide-react'
+import type { DateRange } from 'react-day-picker'
+import type { ItineraryFolder } from '@/db/types'
 import {
   Dialog,
   DialogContent,
@@ -21,24 +27,24 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
-import { useRouter } from '@tanstack/react-router'
-import { addDays } from 'date-fns'
-import { useState } from 'react'
-import { DateRange } from 'react-day-picker'
 import { Spinner } from '@/components/ui/spinner'
-import { CalendarCheck2, ChevronDown } from 'lucide-react'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
-import { ItineraryFolder } from '@/db/types'
 
 interface CreateItineraryDialogProps {
   city: string
+  lat: string
+  lng: string
 }
 
-export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
+export function CreateItineraryDialog({
+  city,
+  lat,
+  lng,
+}: CreateItineraryDialogProps) {
   const { data } = authClient.useSession()
   const { userActivitiesQuery } = useSavedActivities({ city })
   const { userFoldersQuery } = useItineraryFolders(data?.user.id, 50)
@@ -56,6 +62,8 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
     const { itineraryFolderId } = await createInitialDays(
       dateRange,
       city,
+      lat,
+      lng,
       selectedItinerary?.id,
     )
 
@@ -66,8 +74,7 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
   }
 
   const handleSelectItinerary = (id: string) => {
-    const folder =
-      userFoldersQuery.data.find((folder) => folder.id === id) ?? null
+    const folder = userFoldersQuery.data.find((f) => f.id === id) ?? null
     setSelectedItinerary(folder)
   }
 

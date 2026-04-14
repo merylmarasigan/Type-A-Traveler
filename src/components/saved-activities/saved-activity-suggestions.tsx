@@ -1,17 +1,23 @@
+import { AlertCircleIcon, MapPinPlus } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
+  Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-  Collapsible,
 } from '@/components/ui/collapsible'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { cn } from '@/lib/utils'
-import { AlertCircleIcon, MapPinPlus } from 'lucide-react'
 
 interface SavedActivitySuggestionsProps {
   cityItineraryId: string
@@ -67,6 +73,21 @@ export function SavedActivitySuggestions({
                   You have no more activities saved for{' '}
                   {itineraryQuery.data.city}.
                 </AlertDescription>
+                <AlertAction>
+                  <Button size="xs" variant="default" asChild>
+                    <Link
+                      to="/activities/$city"
+                      params={{ city: itineraryQuery.data.city }}
+                      search={{
+                        category: 'hotels',
+                        lat: itineraryQuery.data.city,
+                        lng: itineraryQuery.data.lng,
+                      }}
+                    >
+                      Search
+                    </Link>
+                  </Button>
+                </AlertAction>
               </Alert>
             ) : (
               notYetAddedActivities.map((activity) => (

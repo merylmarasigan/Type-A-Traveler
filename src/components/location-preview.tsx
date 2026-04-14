@@ -1,21 +1,25 @@
+import { useSuspenseQuery } from '@tanstack/react-query'
+import type { Location } from '@/services/tripadvisor/schema'
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   singleLocationPhotoQueryOptions,
   singleLocationQueryOptions,
 } from '@/services/tripadvisor/query-options'
-import { Location } from '@/services/tripadvisor/schema'
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { SaveActivityButton } from '@/components/saved-activities/save-activity-button'
 import { LocationDetailsDialog } from '@/components/location-details'
 
 interface LocationPreviewProps {
   city: string
+  lat: string
+  lng: string
   location: Location
   cityPhoto: string
 }
 
 export function LocationPreview({
   city,
+  lat,
+  lng,
   location,
   cityPhoto,
 }: LocationPreviewProps) {
@@ -40,12 +44,16 @@ export function LocationPreview({
       <CardFooter className="gap-2 justify-between">
         <LocationDetailsDialog
           city={city}
+          lat={lat}
+          lng={lng}
           details={details}
           imageUrl={photo ? photo : cityPhoto}
         />
         <SaveActivityButton
           activity={details}
           city={city}
+          lat={lat}
+          lng={lng}
           imageUrl={photo ? photo : cityPhoto}
         />
       </CardFooter>

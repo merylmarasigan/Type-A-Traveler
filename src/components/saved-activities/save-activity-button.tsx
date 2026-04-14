@@ -1,19 +1,23 @@
+import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
+import type { LocationDetails } from '@/services/tripadvisor/schema'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
-import { LocationDetails } from '@/services/tripadvisor/schema'
-import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
 
 interface SaveActivityButtonProps {
   activity: LocationDetails
   city: string
+  lat: string
+  lng: string
   imageUrl?: string
 }
 export function SaveActivityButton({
   activity,
   city,
+  lat,
+  lng,
   imageUrl,
 }: SaveActivityButtonProps) {
   const { data, isPending: authIsPending } = authClient.useSession()
@@ -37,6 +41,8 @@ export function SaveActivityButton({
       userId: data.user.id,
       name: activity.name,
       city,
+      lat,
+      lng,
       description: activity.description,
       imageUrl,
       trp_location_id: `${activity.location_id}`,
