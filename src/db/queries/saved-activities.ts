@@ -1,8 +1,8 @@
-import { db } from '@/db'
-import { itineraryDays, savedActivities, timeSlots } from '@/db/schema/app'
-import { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
 import { generateId } from 'better-auth'
 import { and, eq, getTableColumns } from 'drizzle-orm'
+import type { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
+import { db } from '@/db'
+import { itineraryDays, savedActivities, timeSlots } from '@/db/schema/app'
 
 export const getUserSavedActivities = async (userId: string, city?: string) => {
   const userIdClause = eq(savedActivities.userId, userId)

@@ -1,7 +1,7 @@
+import { eq } from 'drizzle-orm'
+import type { UpdateUser } from '@/db/types'
 import { db } from '@/db'
 import { user } from '@/db/schema/auth'
-import { UpdateUser } from '@/db/types'
-import { eq } from 'drizzle-orm'
 
 /**
  * @param limit Defaults to 10
