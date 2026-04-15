@@ -91,6 +91,7 @@ export function TimeSlotForm({
         e.preventDefault()
         form.handleSubmit()
       }}
+      className="flex justify-center"
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{children}</PopoverTrigger>

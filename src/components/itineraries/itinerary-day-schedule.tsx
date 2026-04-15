@@ -20,6 +20,7 @@ import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useTimeSlots } from '@/hooks/use-time-slots'
 import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 
 interface ItineraryDayScheduleProps {
   itineraryDay: ItineraryDay
@@ -88,7 +89,7 @@ export function ItineraryDaySchedule({
                 </Alert>
               </div>
             ) : (
-              timeSlotsQuery.data.map((slot) => (
+              timeSlotsQuery.data.map((slot, index) => (
                 <div key={slot.id} className="flex flex-col gap-2">
                   <TimeSlotDetails
                     timeSlot={slot}
@@ -101,12 +102,20 @@ export function ItineraryDaySchedule({
                     showActions={authorIsSessionUser}
                   />
                   {authorIsSessionUser && (
-                    <TimeSlotForm itineraryDay={itineraryDay} slotId={slot.id}>
-                      <Button>
-                        <ClockPlus />
-                        Add time slot
-                      </Button>
-                    </TimeSlotForm>
+                    <>
+                      <TimeSlotForm
+                        itineraryDay={itineraryDay}
+                        slotId={slot.id}
+                      >
+                        <Button variant="ghost">
+                          <ClockPlus />
+                          Add time slot
+                        </Button>
+                      </TimeSlotForm>
+                      {index !== timeSlotsQuery.data.length - 1 && (
+                        <Separator />
+                      )}
+                    </>
                   )}
                 </div>
               ))

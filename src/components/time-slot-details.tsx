@@ -1,5 +1,12 @@
 import { formatDate } from 'date-fns'
-import { AlertCircleIcon, Edit, Trash, Trash2Icon } from 'lucide-react'
+import {
+  AlertCircleIcon,
+  Edit,
+  MapPinOff,
+  MapPinPlus,
+  Trash,
+  Trash2Icon,
+} from 'lucide-react'
 import type { ItineraryDay, SavedActivity, TimeSlot } from '@/db/types'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import { SavedActivitySuggestions } from '@/components/saved-activities/saved-activity-suggestions'
@@ -20,6 +27,9 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { useSingleTimeSlot } from '@/hooks/use-single-time-slot'
+import { TimeSlotActivityOptions } from '@/components/time-slot-activity-options'
+import { TypographySmall } from '@/components/ui/typography'
+import { useState } from 'react'
 
 interface TimeSlotDetailsProps {
   timeSlot: TimeSlot
@@ -39,6 +49,7 @@ export function TimeSlotDetails({
   showActions,
 }: TimeSlotDetailsProps) {
   const { deleteTimeSlotMutation } = useSingleTimeSlot(timeSlot.id)
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const deleteTimeSlot = async () => {
     await deleteTimeSlotMutation.mutateAsync(timeSlot.id)
@@ -46,8 +57,8 @@ export function TimeSlotDetails({
 
   if (!timeSlot.startTime || !timeSlot.endTime) return null
   return (
-    <div className="flex flex-col gap-2 w-full">
-      <ButtonGroup>
+    <div className="flex flex-col gap-2 w-full p-2 border rounded-md">
+      <ButtonGroup className="self-center md:self-start md:w-full">
         <Button variant="secondary" className="font-mono hover:cursor-default">
           {formatDate(timeSlot.startTime, 'p')} -{' '}
           {formatDate(timeSlot.endTime, 'p')}
@@ -95,9 +106,30 @@ export function TimeSlotDetails({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+            <ButtonGroupSeparator />
+            <Button
+              onClick={() => setShowSuggestions((prev) => !prev)}
+              variant="secondary"
+            >
+              {showSuggestions ? <MapPinOff /> : <MapPinPlus />}
+              <span className="hidden md:block">
+                {showSuggestions
+                  ? 'Hide'
+                  : `Add ${activities.length > 0 ? 'another' : ''} activity`}
+              </span>
+            </Button>
           </>
         )}
       </ButtonGroup>
+      {showSuggestions && (
+        <SavedActivitySuggestions
+          cityItineraryId={cityItineraryId}
+          timeSlotId={timeSlot.id}
+          btnLabel="Add another activity"
+          align="start"
+          city={city}
+        />
+      )}
       <div className="flex flex-col gap-2 w-full">
         {activities.length === 0 ? (
           <Alert>
@@ -105,33 +137,20 @@ export function TimeSlotDetails({
             <AlertTitle>No Activities</AlertTitle>
             <AlertDescription className="flex flex-col gap-2 line-clamp-4">
               <p>This time slot has no activities yet.</p>
-              <SavedActivitySuggestions
-                cityItineraryId={cityItineraryId}
-                timeSlotId={timeSlot.id}
-                btnLabel="Add activity"
-                city={city}
-              />
             </AlertDescription>
           </Alert>
         ) : (
-          <div className="flex flex-wrap gap-2">
-            {activities.map((activity) => (
-              <SavedActivityPreview
-                key={activity.id}
-                id={activity.id}
-                city={activity.city}
-              />
-            ))}
+          <div className="flex flex-col gap-2">
+            <TypographySmall>Activities</TypographySmall>
+            <div className="flex flex-wrap gap-2">
+              {activities.map((activity) => (
+                <div key={activity.id} className="flex flex-col gap-1">
+                  <SavedActivityPreview id={activity.id} city={activity.city} />
+                  <TimeSlotActivityOptions activity={activity} />
+                </div>
+              ))}
+            </div>
           </div>
-        )}
-        {showActions && activities.length > 0 && (
-          <SavedActivitySuggestions
-            cityItineraryId={cityItineraryId}
-            timeSlotId={timeSlot.id}
-            btnLabel="Add another activity"
-            align="start"
-            city={city}
-          />
         )}
       </div>
     </div>
