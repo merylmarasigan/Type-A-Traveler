@@ -29,23 +29,25 @@ function AuthHeaderHover({ user, children }: AuthHeaderHoverProps) {
       <HoverCardTrigger>{children}</HoverCardTrigger>
       <HoverCardContent className="flex flex-col gap-2">
         <TypographyLarge>{user.name}</TypographyLarge>
+
         <Button asChild variant="link">
           <Link to="/my-itineraries" className="justify-start">
             <Folders />
             My Itineraries
           </Link>
         </Button>
-        <Button variant="link" className="justify-start">
-          {/* TODO: implement the saved-activities page */}
-          {/* <Link to="/my-saved-activities" className="justify-start"> */}
-          <Bookmark />
-          My Saved Activities
-          {/* </Link> */}
+        <Button asChild variant="link">
+          <Link to="/my-activities" className="justify-start">
+            <Bookmark />
+            My Saved Activities
+          </Link>
         </Button>
+
         <Button variant="destructive" onClick={() => authClient.signOut()}>
           <LogOut />
           Sign out
         </Button>
+
       </HoverCardContent>
     </HoverCard>
   )
