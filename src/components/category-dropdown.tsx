@@ -83,9 +83,6 @@ export function CategoryDropdown({ currentCategory, currentCity }: Props) {
     })
   }
 
-  console.log(`lat: ${currentParams.lat}`)
-  console.log(`lng: ${currentParams.lng}`)
-
   return (
     <Select
       defaultValue={currentCategory}
