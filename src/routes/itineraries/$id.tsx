@@ -41,10 +41,14 @@ function RouteComponent() {
 
 function RouteContent({ id }: { id: string }) {
   const { folderQuery, updateFolderMutation, deleteFolderMutation } =
-    useSingleItineraryFolder(id)
-  const { itinerariesQuery: cityItineraries } = useCityItineraries(id)
+    useSingleItineraryFolder({ itineraryFolderId: id })
+  const { itinerariesQuery: cityItineraries } = useCityItineraries({
+    folderId: id,
+  })
   const { data } = authClient.useSession()
-  const { userQuery } = useSingleUser(folderQuery.data.authorId)
+  const { userQuery } = useSingleUser({
+    userId: folderQuery.data.authorId,
+  })
   const router = useRouter()
 
   const updateTitle = async (value: {

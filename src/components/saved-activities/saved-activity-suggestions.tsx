@@ -53,7 +53,7 @@ function SavedActivitySuggestionsContent({
   cityItineraryId,
   city,
 }: SavedActivitySuggestionsProps) {
-  const { itineraryQuery } = useSingleCityItinerary(cityItineraryId)
+  const { itineraryQuery } = useSingleCityItinerary({ cityItineraryId })
 
   const { userActivitiesQuery } = useSavedActivities({
     city: itineraryQuery.data.city,

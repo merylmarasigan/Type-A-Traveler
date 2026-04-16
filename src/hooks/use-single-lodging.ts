@@ -5,7 +5,11 @@ import {
   updateLodgingMutationOptions,
 } from '@/services/backend/lodging.options'
 
-export const useSingleLodging = (lodgingId: string) => {
+type UseSingleLodgingParams = {
+  lodgingId: string
+}
+
+export const useSingleLodging = ({ lodgingId }: UseSingleLodgingParams) => {
   const lodgingQuery = useSuspenseQuery(singleLodgingQueryOptions(lodgingId))
 
   const updateLodgingMutation = useMutation(updateLodgingMutationOptions())

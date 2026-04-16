@@ -38,9 +38,9 @@ export function EditScheduleDialog(props: EditScheduleDialogProps) {
 function EditScheduleDialogContent({
   cityItineraryId,
 }: EditScheduleDialogProps) {
-  const { itineraryQuery } = useSingleCityItinerary(cityItineraryId)
+  const { itineraryQuery } = useSingleCityItinerary({ cityItineraryId })
   const { itineraryDaysQuery, updateExistingDays, updateIsPending } =
-    useItineraryDays(cityItineraryId)
+    useItineraryDays({ cityItineraryId })
   const { data } = authClient.useSession()
 
   const [dateRange, setDateRange] = useState<DateRange>({

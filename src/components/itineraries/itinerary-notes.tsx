@@ -57,7 +57,7 @@ function ItineraryNotesSkeleton() {
 }
 
 function ItineraryNotesContent({ id }: ItineraryNotesProps) {
-  const { folderQuery, updateFolderMutation } = useSingleItineraryFolder(id)
+  const { folderQuery, updateFolderMutation } = useSingleItineraryFolder({ itineraryFolderId: id })
   const [isEditing, setIsEditing] = useState(false)
   const { data } = authClient.useSession()
 

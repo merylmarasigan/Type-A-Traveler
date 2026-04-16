@@ -53,12 +53,12 @@ function SavedActivityPreviewContent({
 }: SavedActivityPreviewProps) {
   const { data } = authClient.useSession()
 
-  const { activityQuery, updateActivityMutation } = useSingleSavedActivity(
-    id,
+  const { activityQuery, updateActivityMutation } = useSingleSavedActivity({
+    savedActivityId: id,
     cityItineraryId,
-    data?.user.id,
+    userId: data?.user.id,
     city,
-  )
+  })
 
   const addToTimeSlot = async () => {
     if (!timeSlotId) return

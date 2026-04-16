@@ -5,7 +5,11 @@ import {
   updateTimeSlotMutationOptions,
 } from '@/services/backend/time-slots.options'
 
-export const useTimeSlots = (itineraryDayId: string) => {
+type UseTimeSlotsParams = {
+  itineraryDayId: string
+}
+
+export const useTimeSlots = ({ itineraryDayId }: UseTimeSlotsParams) => {
   const timeSlotsQuery = useSuspenseQuery(
     itineraryDayTimeSlotsQueryOptions(itineraryDayId),
   )

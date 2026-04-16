@@ -31,8 +31,10 @@ function RouteComponent() {
 }
 
 function RouteContent({ cityId }: { cityId: string }) {
-  const { itineraryQuery } = useSingleCityItinerary(cityId)
-  const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
+  const { itineraryQuery } = useSingleCityItinerary({ cityItineraryId: cityId })
+  const { folderQuery } = useSingleItineraryFolder({
+    itineraryFolderId: itineraryQuery.data.folderId,
+  })
 
   return (
     <div className="flex flex-col h-full gap-2 p-2">

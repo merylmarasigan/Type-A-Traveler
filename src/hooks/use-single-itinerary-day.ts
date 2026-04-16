@@ -5,7 +5,13 @@ import {
   updateItineraryDayMutationOptions,
 } from '@/services/backend/itinerary-days.options'
 
-export const useSingleItineraryDay = (itineraryDayId: string) => {
+type UseSingleItineraryDayParams = {
+  itineraryDayId: string
+}
+
+export const useSingleItineraryDay = ({
+  itineraryDayId,
+}: UseSingleItineraryDayParams) => {
   const dayQuery = useSuspenseQuery(
     singleItineraryDayQueryOptions(itineraryDayId),
   )

@@ -21,7 +21,7 @@ interface TimeSlotDeleteDialogProps {
 }
 
 export function TimeSlotDeleteDialog({ timeSlot }: TimeSlotDeleteDialogProps) {
-  const { deleteTimeSlotMutation } = useSingleTimeSlot(timeSlot.id)
+  const { deleteTimeSlotMutation } = useSingleTimeSlot({ timeSlotId: timeSlot.id })
 
   const deleteTimeSlot = async () => {
     await deleteTimeSlotMutation.mutateAsync(timeSlot.id)

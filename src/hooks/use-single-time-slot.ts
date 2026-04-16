@@ -5,7 +5,11 @@ import {
   updateTimeSlotMutationOptions,
 } from '@/services/backend/time-slots.options'
 
-export const useSingleTimeSlot = (timeSlotId: string) => {
+type UseSingleTimeSlotParams = {
+  timeSlotId: string
+}
+
+export const useSingleTimeSlot = ({ timeSlotId }: UseSingleTimeSlotParams) => {
   const timeSlotQuery = useSuspenseQuery(singleTimeSlotQueryOptions(timeSlotId))
 
   const updateTimeSlotMutation = useMutation(updateTimeSlotMutationOptions())

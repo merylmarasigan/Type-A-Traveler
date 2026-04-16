@@ -22,7 +22,7 @@ export function ItineraryFolderDropdownItem(
 function ItineraryFolderDropdownItemContent({
   folder,
 }: ItineraryFolderDropdownItemProps) {
-  const { itinerariesQuery } = useCityItineraries(folder.id)
+  const { itinerariesQuery } = useCityItineraries({ folderId: folder.id })
 
   return itinerariesQuery.data.map((itinerary) => (
     <DropdownMenuItem key={itinerary.id}>

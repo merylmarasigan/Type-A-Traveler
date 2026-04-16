@@ -58,8 +58,8 @@ function ItineraryFolderPreviewContent({
   folder,
   showAuthor,
 }: ItineraryFolderPreviewProps) {
-  const { itinerariesQuery } = useCityItineraries(folder.id)
-  const { userQuery } = useSingleUser(folder.authorId)
+  const { itinerariesQuery } = useCityItineraries({ folderId: folder.id })
+  const { userQuery } = useSingleUser({ userId: folder.authorId })
 
   const cityCount = itinerariesQuery.data.length
   const multipleCities = itinerariesQuery.data.length > 1
@@ -81,7 +81,7 @@ function ItineraryFolderPreviewContent({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <TypographyBlockquote className="line-clamp-1 text-ellipsis overflow-hidden">
+        <TypographyBlockquote className="line-clamp-2 text-wrap text-ellipsis overflow-hidden">
           {multipleCities ? folder.description : firstCity.description}
         </TypographyBlockquote>
       </CardContent>

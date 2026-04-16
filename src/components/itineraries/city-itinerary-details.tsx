@@ -71,9 +71,11 @@ export function CityItineraryDetailsSkeleton() {
 
 function CityItineraryDetailsContent({ id }: CityItineraryDetailsProps) {
   const { itineraryQuery, updateItineraryMutation, deleteItineraryMutation } =
-    useSingleCityItinerary(id)
-  const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
-  const { itineraryDaysQuery } = useItineraryDays(id)
+    useSingleCityItinerary({ cityItineraryId: id })
+  const { folderQuery } = useSingleItineraryFolder({
+    itineraryFolderId: itineraryQuery.data.folderId,
+  })
+  const { itineraryDaysQuery } = useItineraryDays({ cityItineraryId: id })
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: id,
   })

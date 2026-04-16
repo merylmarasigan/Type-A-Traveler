@@ -5,7 +5,11 @@ import {
   updateUserMutationOptions,
 } from '@/services/backend/users.options'
 
-export const useSingleUser = (userId: string) => {
+type UseSingleUserParams = {
+  userId: string
+}
+
+export const useSingleUser = ({ userId }: UseSingleUserParams) => {
   const userQuery = useSuspenseQuery(singleUserQueryOptions(userId))
 
   const updateUserMutation = useMutation(updateUserMutationOptions())

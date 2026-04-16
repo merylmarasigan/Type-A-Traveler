@@ -11,11 +11,17 @@ import {
   updateMultipleItineraryDaysMutationOptions,
 } from '@/services/backend/itinerary-days.options'
 
-export const useItineraryDays = (cityItineraryId?: string) => {
+type UseItineraryDaysParams = {
+  cityItineraryId?: string
+}
+
+export const useItineraryDays = ({
+  cityItineraryId,
+}: UseItineraryDaysParams = {}) => {
   const { data } = authClient.useSession()
 
-  const { createFolderMutation } = useItineraryFolders()
-  const { createCityItineraryMutation } = useCityItineraries()
+  const { createFolderMutation } = useItineraryFolders({})
+  const { createCityItineraryMutation } = useCityItineraries({})
 
   const itineraryDaysQuery = useSuspenseQuery(
     cityItineraryDaysQueryOptions(cityItineraryId),

@@ -26,7 +26,7 @@ function ItineraryDaysListSkeleton() {
 }
 
 function ItineraryDaysListContent({ cityItineraryId }: ItineraryDaysListProps) {
-  const { itineraryDaysQuery } = useItineraryDays(cityItineraryId)
+  const { itineraryDaysQuery } = useItineraryDays({ cityItineraryId })
 
   return itineraryDaysQuery.data.map((day) => (
     <Card key={day.id}>

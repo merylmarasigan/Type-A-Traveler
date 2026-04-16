@@ -5,7 +5,13 @@ import {
   updateItineraryFolderMutationOptions,
 } from '@/services/backend/itinerary-folders.options'
 
-export const useSingleItineraryFolder = (itineraryFolderId: string) => {
+type UseSingleItineraryFolderParams = {
+  itineraryFolderId: string
+}
+
+export const useSingleItineraryFolder = ({
+  itineraryFolderId,
+}: UseSingleItineraryFolderParams) => {
   const folderQuery = useSuspenseQuery(
     singleItineraryFolderQueryOptions(itineraryFolderId),
   )

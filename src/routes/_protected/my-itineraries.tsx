@@ -44,7 +44,7 @@ function myItinerariesPage() {
 }
 
 function MyItinerariesPageContent() {
-  const { userFoldersQuery } = useItineraryFolders()
+  const { userFoldersQuery } = useItineraryFolders({})
   const { data: folders } = userFoldersQuery
 
   return (

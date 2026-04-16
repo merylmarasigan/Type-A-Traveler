@@ -4,7 +4,13 @@ import {
   folderCityItinerariesQueryOptions,
 } from '@/services/backend/city-itineraries.options'
 
-export const useCityItineraries = (folderId?: string) => {
+type UseCityItinerariesParams = {
+  folderId?: string
+}
+
+export const useCityItineraries = ({
+  folderId,
+}: UseCityItinerariesParams = {}) => {
   const itinerariesQuery = useSuspenseQuery(
     folderCityItinerariesQueryOptions(folderId),
   )

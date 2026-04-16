@@ -48,9 +48,9 @@ function TimeSlotFormContent({
 }: TimeSlotFormProps) {
   const [open, setOpen] = useState(false)
 
-  const { createTimeSlotMutation, updateTimeSlotMutation } = useTimeSlots(
-    itineraryDay.id,
-  )
+  const { createTimeSlotMutation, updateTimeSlotMutation } = useTimeSlots({
+    itineraryDayId: itineraryDay.id,
+  })
 
   const form = useForm({
     defaultValues: {

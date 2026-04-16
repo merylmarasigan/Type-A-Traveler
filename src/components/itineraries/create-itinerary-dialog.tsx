@@ -60,8 +60,8 @@ function CreateItineraryDialogContent({
   lng,
 }: CreateItineraryDialogProps) {
   const { userActivitiesQuery } = useSavedActivities({ city })
-  const { userFoldersQuery } = useItineraryFolders(50)
-  const { createInitialDays, createIsPending } = useItineraryDays()
+  const { userFoldersQuery } = useItineraryFolders({ limit: 50 })
+  const { createInitialDays, createIsPending } = useItineraryDays({})
   const router = useRouter()
 
   const [dateRange, setDateRange] = useState<DateRange>({

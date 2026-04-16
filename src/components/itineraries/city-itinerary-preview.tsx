@@ -53,7 +53,9 @@ function CityItineraryPreviewSkeleton() {
 function CityItineraryPreviewContent({
   cityItinerary,
 }: CityItineraryPreviewProps) {
-  const { itineraryDaysQuery } = useItineraryDays(cityItinerary.id)
+  const { itineraryDaysQuery } = useItineraryDays({
+    cityItineraryId: cityItinerary.id,
+  })
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: cityItinerary.id,
   })

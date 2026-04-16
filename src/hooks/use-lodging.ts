@@ -4,7 +4,11 @@ import {
   folderLodgingQueryOptions,
 } from '@/services/backend/lodging.options'
 
-export const useLodging = (folderId: string) => {
+type UseLodgingParams = {
+  folderId: string
+}
+
+export const useLodging = ({ folderId }: UseLodgingParams) => {
   const lodgingQuery = useSuspenseQuery(folderLodgingQueryOptions(folderId))
 
   const createLodgingMutation = useMutation(createLodgingMutationOptions())

@@ -93,7 +93,7 @@ function RouteContent({
     locationsQueryOptions(city, category, lat, lng),
   )
 
-  const { userFoldersQuery } = useItineraryFolders()
+  const { userFoldersQuery } = useItineraryFolders({})
 
   const defaultLocationQuery = useSuspenseQuery(
     defaultLocationQueryOptions(city, lat, lng),

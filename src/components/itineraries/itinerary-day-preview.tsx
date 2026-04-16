@@ -39,7 +39,7 @@ function ItineraryDayPreviewContent({
   className,
   ...props
 }: ItineraryDayPreviewProps) {
-  const { timeSlotsQuery } = useTimeSlots(itineraryDay.id)
+  const { timeSlotsQuery } = useTimeSlots({ itineraryDayId: itineraryDay.id })
 
   return (
     <div

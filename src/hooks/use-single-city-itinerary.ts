@@ -6,7 +6,13 @@ import {
   updateCityItineraryMutationOptions,
 } from '@/services/backend/city-itineraries.options'
 
-export const useSingleCityItinerary = (cityItineraryId: string) => {
+type UseSingleCityItineraryParams = {
+  cityItineraryId: string
+}
+
+export const useSingleCityItinerary = ({
+  cityItineraryId,
+}: UseSingleCityItineraryParams) => {
   const { data } = authClient.useSession()
 
   const itineraryQuery = useSuspenseQuery(

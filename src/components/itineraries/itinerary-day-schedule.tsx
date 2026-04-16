@@ -60,14 +60,16 @@ function ItineraryDayScheduleSkeleton() {
 function ItineraryDayScheduleContent({
   itineraryDay,
 }: ItineraryDayScheduleProps) {
-  const { timeSlotsQuery } = useTimeSlots(itineraryDay.id)
+  const { timeSlotsQuery } = useTimeSlots({ itineraryDayId: itineraryDay.id })
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: itineraryDay.cityItineraryId,
   })
-  const { itineraryQuery } = useSingleCityItinerary(
-    itineraryDay.cityItineraryId,
-  )
-  const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
+  const { itineraryQuery } = useSingleCityItinerary({
+    cityItineraryId: itineraryDay.cityItineraryId,
+  })
+  const { folderQuery } = useSingleItineraryFolder({
+    itineraryFolderId: itineraryQuery.data.folderId,
+  })
   const { data } = authClient.useSession()
 
   const todayTimeSlotIds = timeSlotsQuery.data

@@ -13,11 +13,14 @@ export function FeaturedItineraries() {
       <TypographyH3>Featured Itineraries</TypographyH3>
       <Suspense
         fallback={
-          <div className="self-center mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <ItineraryFolderPreviewSkeleton key={i} />
-            ))}
-          </div>
+          <ScrollArea className="self-center w-full min-w-0 max-w-full px-2 rounded-md border whitespace-nowrap md:max-w-5xl">
+            <div className="flex w-max space-x-4 p-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <ItineraryFolderPreviewSkeleton key={i} />
+              ))}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         }
       >
         <FeaturedItinerariesContent />
@@ -27,7 +30,7 @@ export function FeaturedItineraries() {
 }
 
 function FeaturedItinerariesContent() {
-  const { foldersQuery } = useItineraryFolders(20)
+  const { foldersQuery } = useItineraryFolders({ limit: 20 })
   const { data: folders } = foldersQuery
 
   return (

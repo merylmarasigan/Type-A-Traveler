@@ -6,7 +6,13 @@ import {
   userItineraryFoldersQueryOptions,
 } from '@/services/backend/itinerary-folders.options'
 
-export const useItineraryFolders = (limit?: number) => {
+type UseItineraryFoldersParams = {
+  limit?: number
+}
+
+export const useItineraryFolders = ({
+  limit,
+}: UseItineraryFoldersParams = {}) => {
   const { data } = authClient.useSession()
 
   const foldersQuery = useSuspenseQuery(
