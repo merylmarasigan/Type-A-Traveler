@@ -55,7 +55,7 @@ function RouteComponent() {
     <div className="flex flex-col items-center">
       <div className="max-w-7xl flex flex-col gap-2 md:gap-4 p-2">
         <div className="self-start w-full flex justify-between items-center p-2 gap-2">
-          <span className='w-full inline-flex align-middle'>
+          <span className='w-full inline-flex align-bottom'>
             <TypographyH2 className="text-start pr-4">Suggested</TypographyH2>
             <CategoryDropdown currentCategory={category} currentCity={city}/>
             <TypographyH2 className="text-start pl-4">for {city}</TypographyH2>
