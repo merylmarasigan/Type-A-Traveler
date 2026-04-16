@@ -1,7 +1,10 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { Folder } from 'lucide-react'
 import { Suspense } from 'react'
-import { CityItineraryDetails } from '@/components/itineraries/city-itinerary-details'
+import {
+  CityItineraryDetails,
+  CityItineraryDetailsSkeleton,
+} from '@/components/itineraries/city-itinerary-details'
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
 import { ItineraryFolderOverview } from '@/components/itineraries/itinerary-folder-overview'
@@ -24,7 +27,13 @@ export const Route = createFileRoute('/itineraries/$id')({
 function RouteComponent() {
   const { id } = Route.useParams()
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense
+      fallback={
+        <div className="flex flex-col gap-2 p-2">
+          <CityItineraryDetailsSkeleton />
+        </div>
+      }
+    >
       <RouteContent id={id} />
     </Suspense>
   )

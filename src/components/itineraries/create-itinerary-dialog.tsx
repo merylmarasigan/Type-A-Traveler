@@ -41,7 +41,14 @@ interface CreateItineraryDialogProps {
 
 export function CreateItineraryDialog(props: CreateItineraryDialogProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <Button disabled>
+          <Spinner />
+          Create new itinerary
+        </Button>
+      }
+    >
       <CreateItineraryDialogContent {...props} />
     </Suspense>
   )

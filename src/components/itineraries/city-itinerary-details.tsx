@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   TypographyBlockquote,
   TypographyH1,
@@ -38,9 +39,33 @@ interface CityItineraryDetailsProps {
 
 export function CityItineraryDetails(props: CityItineraryDetailsProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<CityItineraryDetailsSkeleton />}>
       <CityItineraryDetailsContent {...props} />
     </Suspense>
+  )
+}
+
+export function CityItineraryDetailsSkeleton() {
+  return (
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle className="flex gap-2 items-center">
+          <Skeleton className="size-6" />
+          <Skeleton className="h-8 w-48" />
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-6 w-64 mb-4" />
+        <div className="flex items-center gap-2 mb-4">
+          <Skeleton className="h-5 w-16" />
+          <Skeleton className="h-5 w-20" />
+        </div>
+        <div className="flex gap-2 flex-col md:flex-row">
+          <Skeleton className="h-64 w-full md:w-36 shrink-0" />
+          <Skeleton className="h-64 flex-1" />
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 

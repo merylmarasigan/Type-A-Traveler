@@ -2,6 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import type { Location } from '@/services/tripadvisor/schema'
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   singleLocationPhotoQueryOptions,
   singleLocationQueryOptions,
@@ -19,9 +20,24 @@ interface LocationPreviewProps {
 
 export function LocationPreview(props: LocationPreviewProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<LocationPreviewSkeleton />}>
       <LocationPreviewContent {...props} />
     </Suspense>
+  )
+}
+
+export function LocationPreviewSkeleton() {
+  return (
+    <Card className="relative mx-auto w-full max-w-sm pt-0">
+      <Skeleton className="aspect-video w-full rounded-t-md rounded-b-none" />
+      <CardHeader>
+        <Skeleton className="h-5 w-3/4" />
+      </CardHeader>
+      <CardFooter className="gap-2 justify-between">
+        <Skeleton className="h-9 flex-1" />
+        <Skeleton className="h-9 flex-1" />
+      </CardFooter>
+    </Card>
   )
 }
 

@@ -3,6 +3,7 @@ import { formatDate } from 'date-fns'
 import type { ComponentProps } from 'react';
 import type { ItineraryDay } from '@/db/types'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyLarge, TypographySmall } from '@/components/ui/typography'
 import { useTimeSlots } from '@/hooks/use-time-slots'
 import { cn, parseLocalDate  } from '@/lib/utils'
@@ -14,9 +15,21 @@ interface ItineraryDayPreviewProps extends ComponentProps<'div'> {
 
 export function ItineraryDayPreview(props: ItineraryDayPreviewProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<ItineraryDayPreviewSkeleton />}>
       <ItineraryDayPreviewContent {...props} />
     </Suspense>
+  )
+}
+
+function ItineraryDayPreviewSkeleton() {
+  return (
+    <div className="grid grid-flow-row md:grid-flow-col gap-2 p-2 w-24 md:w-full">
+      <Skeleton className="h-5 w-8 place-self-center" />
+      <div className="flex flex-col gap-1 w-full">
+        <Skeleton className="h-5 w-12 self-end" />
+        <Skeleton className="h-3 w-16 self-end" />
+      </div>
+    </div>
   )
 }
 

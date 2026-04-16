@@ -1,11 +1,9 @@
-import { authClient } from '@/lib/auth-client' // lets us check if the user is logged in (We don't want to try fetching activities for a user that doesn't exist.)
 import { useSavedActivities } from '@/hooks/use-saved-activities' // hook that fetches the activities from the database
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import { TypographyH3 } from '@/components/ui/typography'
 
 export function ActivitiesByCity() {
-  const { data: session } = authClient.useSession()
   const { userActivitiesQuery } = useSavedActivities({}) // fetches all activities for the logged in user, regardless of city. We will filter by city in the UI. We could also create a new hook that accepts a city parameter and only fetches activities for that city, but this is simpler for now.
   const activities = userActivitiesQuery.data // is an array of activity objects
   /*
@@ -21,17 +19,6 @@ export function ActivitiesByCity() {
         fsq_place_id: string | null
     }
      */
-
-  if (!session?.user) {
-    return (
-      <Alert>
-        <AlertTitle>You are not signed in!</AlertTitle>
-        <AlertDescription>
-          Sign in to see your saved activities.
-        </AlertDescription>
-      </Alert>
-    )
-  }
 
   const grouped = activities.reduce<Record<string, typeof activities>>(
     (acc, activity) => {

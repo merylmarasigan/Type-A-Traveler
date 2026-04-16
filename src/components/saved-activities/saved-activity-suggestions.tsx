@@ -9,8 +9,8 @@ import {
   AlertTitle,
 } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { TypographySmall } from '@/components/ui/typography'
@@ -25,9 +25,26 @@ interface SavedActivitySuggestionsProps {
 
 export function SavedActivitySuggestions(props: SavedActivitySuggestionsProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<SavedActivitySuggestionsSkeleton />}>
       <SavedActivitySuggestionsContent {...props} />
     </Suspense>
+  )
+}
+
+function SavedActivitySuggestionsSkeleton() {
+  return (
+    <div className="flex flex-col gap-2 w-full">
+      <div className="w-32 md:w-3xl 2xl:w-6xl rounded-md border">
+        <TypographySmall className="text-primary p-2">
+          Suggestions
+        </TypographySmall>
+        <div className="flex space-x-4 p-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-48 w-32 shrink-0 rounded-md" />
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 

@@ -17,7 +17,14 @@ interface SaveActivityButtonProps {
 
 export function SaveActivityButton(props: SaveActivityButtonProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <Button disabled className="flex-1">
+          <Spinner />
+          Save
+        </Button>
+      }
+    >
       <SaveActivityButtonContent {...props} />
     </Suspense>
   )

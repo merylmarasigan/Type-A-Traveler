@@ -2,7 +2,10 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { FolderClosed, FolderPlus } from 'lucide-react'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
-import { ItineraryFolderPreview } from '@/components/itineraries/itinerary-folder-preview'
+import {
+  ItineraryFolderPreview,
+  ItineraryFolderPreviewSkeleton,
+} from '@/components/itineraries/itinerary-folder-preview'
 import { TypographyH1, TypographySmall } from '@/components/ui/typography'
 import {
   Empty,
@@ -25,7 +28,15 @@ function myItinerariesPage() {
       <TypographySmall>
         Where your past, present, and future trip plans live!
       </TypographySmall>
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense
+        fallback={
+          <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <ItineraryFolderPreviewSkeleton key={i} />
+            ))}
+          </div>
+        }
+      >
         <MyItinerariesPageContent />
       </Suspense>
     </div>

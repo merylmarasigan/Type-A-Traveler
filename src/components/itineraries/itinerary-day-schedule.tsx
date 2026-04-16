@@ -6,6 +6,7 @@ import { TimeSlotForm } from '@/components/time-slot-form'
 import { TimeSlotDetails } from '@/components/time-slot-details'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -14,14 +15,14 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyLarge } from '@/components/ui/typography'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useTimeSlots } from '@/hooks/use-time-slots'
 import { authClient } from '@/lib/auth-client'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 
 interface ItineraryDayScheduleProps {
   itineraryDay: ItineraryDay
@@ -29,9 +30,30 @@ interface ItineraryDayScheduleProps {
 
 export function ItineraryDaySchedule(props: ItineraryDayScheduleProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<ItineraryDayScheduleSkeleton />}>
       <ItineraryDayScheduleContent {...props} />
     </Suspense>
+  )
+}
+
+function ItineraryDayScheduleSkeleton() {
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <Skeleton className="h-5 w-24" />
+        <CardDescription>
+          <Skeleton className="h-5 w-20" />
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-4">
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-5 w-24" />
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-md" />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 

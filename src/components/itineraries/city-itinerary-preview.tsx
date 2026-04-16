@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyMuted, TypographySmall } from '@/components/ui/typography'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
@@ -23,9 +24,29 @@ interface CityItineraryPreviewProps {
 
 export function CityItineraryPreview(props: CityItineraryPreviewProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<CityItineraryPreviewSkeleton />}>
       <CityItineraryPreviewContent {...props} />
     </Suspense>
+  )
+}
+
+function CityItineraryPreviewSkeleton() {
+  return (
+    <Card className="w-full md:w-96 md:max-w-md">
+      <CardHeader>
+        <Skeleton className="h-5 w-1/2" />
+        <CardDescription>
+          <Skeleton className="h-4 w-1/3" />
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-4 w-24" />
+      </CardContent>
+      <CardFooter className="justify-between">
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-9 w-16" />
+      </CardFooter>
+    </Card>
   )
 }
 

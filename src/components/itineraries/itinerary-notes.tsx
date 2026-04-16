@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Field,
   FieldDescription,
@@ -36,9 +37,22 @@ const formSchema = z.object({
 
 export function ItineraryNotes(props: ItineraryNotesProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<ItineraryNotesSkeleton />}>
       <ItineraryNotesContent {...props} />
     </Suspense>
+  )
+}
+
+function ItineraryNotesSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 w-16" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-20 w-full" />
+      </CardContent>
+    </Card>
   )
 }
 

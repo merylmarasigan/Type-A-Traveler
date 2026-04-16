@@ -22,10 +22,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
 import { ItineraryFolderDropdownItem } from '@/components/itinerary-folder-dropdown-item'
 import { FilterButtons } from '@/components/filter-buttons'
-import { LocationPreview } from '@/components/location-preview'
+import {
+  LocationPreview,
+  LocationPreviewSkeleton,
+} from '@/components/location-preview'
 
 const categorySearchSchema = z.object({
   category: LocationCategoryEnum.catch('hotels'),
@@ -48,7 +52,28 @@ function RouteComponent() {
   const { city } = Route.useParams()
   const { category, lat, lng } = Route.useSearch()
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center">
+          <div className="max-w-7xl flex flex-col gap-2 p-2 w-full">
+            <div className="self-start w-full flex justify-between items-center p-2 gap-2">
+              <Skeleton className="h-8 w-64" />
+              <Skeleton className="h-9 w-40" />
+            </div>
+            <div className="flex gap-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-9 w-20" />
+              ))}
+            </div>
+            <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 max-w-7xl">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <LocationPreviewSkeleton key={i} />
+              ))}
+            </ul>
+          </div>
+        </div>
+      }
+    >
       <RouteContent city={city} category={category} lat={lat} lng={lng} />
     </Suspense>
   )

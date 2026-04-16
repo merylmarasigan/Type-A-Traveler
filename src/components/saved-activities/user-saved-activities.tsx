@@ -1,9 +1,13 @@
 import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Search, SearchAlertIcon } from 'lucide-react'
-import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
+import {
+  SavedActivityPreview,
+  SavedActivityPreviewSkeleton,
+} from '@/components/saved-activities/saved-activity-preview'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyH3 } from '@/components/ui/typography'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { authClient } from '@/lib/auth-client'
@@ -16,9 +20,25 @@ interface UserSavedActivitiesProps {
 
 export function UserSavedActivities(props: UserSavedActivitiesProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<UserSavedActivitiesSkeleton />}>
       <UserSavedActivitiesContent {...props} />
     </Suspense>
+  )
+}
+
+function UserSavedActivitiesSkeleton() {
+  return (
+    <div className="flex flex-col gap-2 p-2">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-7 w-44" />
+        <Skeleton className="h-9 w-28" />
+      </div>
+      <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SavedActivityPreviewSkeleton key={i} />
+        ))}
+      </ul>
+    </div>
   )
 }
 

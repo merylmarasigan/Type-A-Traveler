@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   TypographyBlockquote,
   TypographyMuted,
@@ -26,9 +27,30 @@ interface ItineraryFolderPreviewProps {
 
 export function ItineraryFolderPreview(props: ItineraryFolderPreviewProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<ItineraryFolderPreviewSkeleton />}>
       <ItineraryFolderPreviewContent {...props} />
     </Suspense>
+  )
+}
+
+export function ItineraryFolderPreviewSkeleton() {
+  return (
+    <Card className="w-full md:w-96 md:max-w-md">
+      <CardHeader>
+        <CardTitle className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <Skeleton className="size-4" />
+            <Skeleton className="h-5 w-40" />
+          </div>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-14 w-full" />
+      </CardContent>
+      <CardFooter className="justify-end">
+        <Skeleton className="h-8 w-16" />
+      </CardFooter>
+    </Card>
   )
 }
 

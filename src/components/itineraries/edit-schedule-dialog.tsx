@@ -22,7 +22,14 @@ interface EditScheduleDialogProps {
 
 export function EditScheduleDialog(props: EditScheduleDialogProps) {
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <Button disabled variant="secondary" className="w-full">
+          <Spinner />
+          Adjust dates
+        </Button>
+      }
+    >
       <EditScheduleDialogContent {...props} />
     </Suspense>
   )

@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TypographySmall } from '@/components/ui/typography'
 import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
 import { authClient } from '@/lib/auth-client'
@@ -23,9 +24,24 @@ interface SavedActivityPreviewProps {
 
 export function SavedActivityPreview(props: SavedActivityPreviewProps) {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<SavedActivityPreviewSkeleton />}>
       <SavedActivityPreviewContent {...props} />
     </Suspense>
+  )
+}
+
+export function SavedActivityPreviewSkeleton() {
+  return (
+    <Card className="pt-0 max-w-sm">
+      <Skeleton className="aspect-video w-full rounded-t-md rounded-b-none" />
+      <CardHeader>
+        <Skeleton className="h-5 w-1/2" />
+        <CardDescription>
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="mt-1 h-4 w-3/4" />
+        </CardDescription>
+      </CardHeader>
+    </Card>
   )
 }
 
