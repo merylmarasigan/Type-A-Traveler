@@ -57,7 +57,6 @@ function UserSavedActivitiesContent({
       <div className="flex justify-between items-center">
         <TypographyH3>My saved activities</TypographyH3>
         <Button asChild>
-          {/* TODO: add lat and long - perhaps save in db schema */}
           <Link
             to="/activities/$city"
             params={{ city }}

@@ -80,7 +80,7 @@ function SavedActivityPreviewContent({
           layout="constrained"
           width={384}
           height={192}
-          className="relative aspect-video w-full object-cover dark:brightness-40 rounded-t-md"
+          className="relative aspect-video w-full object-cover rounded-t-md"
         />
       )}
       <CardHeader>

@@ -88,7 +88,7 @@ function SavedActivitySuggestionsContent({
                     params={{ city: itineraryQuery.data.city }}
                     search={{
                       category: 'hotels',
-                      lat: itineraryQuery.data.city,
+                      lat: itineraryQuery.data.lat,
                       lng: itineraryQuery.data.lng,
                     }}
                   >

@@ -91,11 +91,7 @@ function ItineraryFolderPreviewContent({
         {multipleCities && (
           <Badge variant="secondary">{cityCount} cities</Badge>
         )}
-        <Button
-          asChild
-          size="sm"
-          className="bg-blue-500 hover:bg-blue-600 text-white"
-        >
+        <Button asChild size="sm">
           <Link to="/itineraries/$id" params={{ id: folder.id }}>
             <Eye />
             View

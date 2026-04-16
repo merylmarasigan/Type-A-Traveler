@@ -42,7 +42,7 @@ export function LocationDetailsDialog({
         <img
           src={imageUrl}
           alt={details.name}
-          className="mt-4 relative aspect-video w-full object-cover dark:brightness-40 rounded-t-md"
+          className="mt-4 relative aspect-video w-full object-cover rounded-t-md"
         />
         <DialogHeader>
           <DialogTitle>{details.name}</DialogTitle>

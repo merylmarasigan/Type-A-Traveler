@@ -40,12 +40,7 @@ const categorySearchSchema = z.object({
 export const Route = createFileRoute('/activities/$city')({
   component: RouteComponent,
   validateSearch: categorySearchSchema,
-  errorComponent: (error) => (
-    <ErrorComponent
-      {...error}
-      description="No activities found for this city."
-    />
-  ),
+  errorComponent: (error) => <ErrorComponent {...error} />,
 })
 
 function RouteComponent() {
