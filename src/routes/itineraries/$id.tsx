@@ -1,3 +1,6 @@
+import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { Folder } from 'lucide-react'
+import { Suspense } from 'react'
 import { CityItineraryDetails } from '@/components/itineraries/city-itinerary-details'
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
@@ -13,8 +16,6 @@ import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { authClient } from '@/lib/auth-client'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { Folder } from 'lucide-react'
 
 export const Route = createFileRoute('/itineraries/$id')({
   component: RouteComponent,
@@ -22,6 +23,14 @@ export const Route = createFileRoute('/itineraries/$id')({
 
 function RouteComponent() {
   const { id } = Route.useParams()
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <RouteContent id={id} />
+    </Suspense>
+  )
+}
+
+function RouteContent({ id }: { id: string }) {
   const { folderQuery, updateFolderMutation, deleteFolderMutation } =
     useSingleItineraryFolder(id)
   const { itinerariesQuery: cityItineraries } = useCityItineraries(id)

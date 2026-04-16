@@ -1,4 +1,4 @@
-import { SavedActivity } from '@/db/types'
+import type { SavedActivity } from '@/db/types'
 
 interface TimeSlotActivityOptionsProps {
   activity: SavedActivity

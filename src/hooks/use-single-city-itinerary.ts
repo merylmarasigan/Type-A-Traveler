@@ -1,10 +1,10 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { authClient } from '@/lib/auth-client'
 import {
   deleteCityItineraryMutationOptions,
   singleCityItineraryQueryOptions,
   updateCityItineraryMutationOptions,
 } from '@/services/backend/city-itineraries.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
 export const useSingleCityItinerary = (cityItineraryId: string) => {
   const { data } = authClient.useSession()

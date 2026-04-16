@@ -1,4 +1,10 @@
 import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from 'drizzle-zod'
+import z from 'zod'
+import {
   cityItineraries,
   itineraryDays,
   itineraryFolders,
@@ -7,12 +13,6 @@ import {
   timeSlots,
 } from '@/db/schema/app'
 import { user } from '@/db/schema/auth'
-import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from 'drizzle-zod'
-import z from 'zod'
 
 // createdAt and updatedAt are for internal use only
 const omittedTimestamps = { createdAt: true, updatedAt: true } as const

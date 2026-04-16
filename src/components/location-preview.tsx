@@ -1,4 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
+import { Suspense } from 'react'
 import type { Location } from '@/services/tripadvisor/schema'
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -16,7 +17,15 @@ interface LocationPreviewProps {
   cityPhoto: string
 }
 
-export function LocationPreview({
+export function LocationPreview(props: LocationPreviewProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <LocationPreviewContent {...props} />
+    </Suspense>
+  )
+}
+
+function LocationPreviewContent({
   city,
   lat,
   lng,

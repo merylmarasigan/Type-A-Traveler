@@ -1,7 +1,7 @@
-import { Calendar } from '@/components/ui/calendar'
 import { formatDate } from 'date-fns'
-import { Dispatch, SetStateAction } from 'react'
-import { type DateRange } from 'react-day-picker'
+import type { Dispatch, SetStateAction } from 'react'
+import type {DateRange} from 'react-day-picker';
+import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent } from '@/components/ui/card'
 import { TypographyMuted, TypographySmall } from '@/components/ui/typography'
 

@@ -1,13 +1,13 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod/v4'
 import {
   deleteUser,
-  updateUser,
   getSingleUser,
   getUsers,
+  updateUser,
 } from '@/db/queries/users'
 import { updateUserSchema } from '@/db/types'
 import { ensureSession } from '@/services/backend/auth.functions'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod/v4'
 
 export const getUsersFn = createServerFn({ method: 'GET' }).handler(
   async () => {

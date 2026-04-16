@@ -1,8 +1,8 @@
-import { db } from '@/db'
-import { cityItineraries, itineraryFolders } from '@/db/schema/app'
-import { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
 import { generateId } from 'better-auth'
 import { eq, getTableColumns } from 'drizzle-orm'
+import type { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
+import { db } from '@/db'
+import { cityItineraries, itineraryFolders } from '@/db/schema/app'
 
 const { createdAt, updatedAt, ...itineraryFolderColumns } =
   getTableColumns(itineraryFolders)

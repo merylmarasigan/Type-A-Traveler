@@ -1,19 +1,26 @@
+import { Suspense } from 'react'
+import { formatDate } from 'date-fns'
+import type { ComponentProps } from 'react';
+import type { ItineraryDay } from '@/db/types'
 import { Badge } from '@/components/ui/badge'
 import { TypographyLarge, TypographySmall } from '@/components/ui/typography'
-import { ItineraryDay } from '@/db/types'
 import { useTimeSlots } from '@/hooks/use-time-slots'
-import { cn } from '@/lib/utils'
-import { formatDate } from 'date-fns'
-import { ComponentProps } from 'react'
-import { parseLocalDate } from '@/lib/utils'
-
+import { cn, parseLocalDate  } from '@/lib/utils'
 
 interface ItineraryDayPreviewProps extends ComponentProps<'div'> {
   itineraryDay: ItineraryDay
   selected: boolean
 }
 
-export function ItineraryDayPreview({
+export function ItineraryDayPreview(props: ItineraryDayPreviewProps) {
+  return (
+    <Suspense fallback={null}>
+      <ItineraryDayPreviewContent {...props} />
+    </Suspense>
+  )
+}
+
+function ItineraryDayPreviewContent({
   itineraryDay,
   selected,
   className,

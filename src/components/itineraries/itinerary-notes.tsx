@@ -1,6 +1,6 @@
 import { useForm } from '@tanstack/react-form'
 import { Edit, Save, SaveOff } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import z from 'zod/v4'
 import { Button } from '@/components/ui/button'
 import {
@@ -34,7 +34,15 @@ const formSchema = z.object({
   notes: z.string(),
 })
 
-export function ItineraryNotes({ id }: ItineraryNotesProps) {
+export function ItineraryNotes(props: ItineraryNotesProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <ItineraryNotesContent {...props} />
+    </Suspense>
+  )
+}
+
+function ItineraryNotesContent({ id }: ItineraryNotesProps) {
   const { folderQuery, updateFolderMutation } = useSingleItineraryFolder(id)
   const [isEditing, setIsEditing] = useState(false)
   const { data } = authClient.useSession()

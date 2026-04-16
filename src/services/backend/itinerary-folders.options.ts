@@ -1,14 +1,14 @@
-import { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
-import {
-  createItineraryFolderFn,
-  getSingleItineraryFolderFn,
-  getMultipleItineraryFoldersFn,
-  getUserItineraryFoldersFn,
-  updateItineraryFolderFn,
-  deleteItineraryFolderFn,
-} from '@/services/backend/itinerary-folders.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import type { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
+import {
+  createItineraryFolderFn,
+  deleteItineraryFolderFn,
+  getMultipleItineraryFoldersFn,
+  getSingleItineraryFolderFn,
+  getUserItineraryFoldersFn,
+  updateItineraryFolderFn,
+} from '@/services/backend/itinerary-folders.api'
 
 const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
 

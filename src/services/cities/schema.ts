@@ -9,7 +9,7 @@ export interface CityData {
 }
 
 export interface GeoNamesResult {
-  geonames: CityData[]
+  geonames: Array<CityData>
   totalResultsCount: number
 }
 

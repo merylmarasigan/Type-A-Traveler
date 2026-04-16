@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
 import { MapPin } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
 import type { ItineraryDay } from '@/db/types'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
@@ -36,7 +36,15 @@ interface CityItineraryDetailsProps {
   id: string
 }
 
-export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
+export function CityItineraryDetails(props: CityItineraryDetailsProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <CityItineraryDetailsContent {...props} />
+    </Suspense>
+  )
+}
+
+function CityItineraryDetailsContent({ id }: CityItineraryDetailsProps) {
   const { itineraryQuery, updateItineraryMutation, deleteItineraryMutation } =
     useSingleCityItinerary(id)
   const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)

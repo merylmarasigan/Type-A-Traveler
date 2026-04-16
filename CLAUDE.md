@@ -60,6 +60,7 @@ Components are placed in `src/components/ui/`.
 ### Database Schema
 
 Tables in `src/db/schema/`:
+
 - `auth.ts` — Better Auth managed tables (user, session, account, verification)
 - `app.ts` — App tables: `itinerary_folders` -> `city_itineraries` -> `itinerary_days` -> `time_slots`, plus `saved_activities` and `lodging`
 - `relations.ts` — Drizzle relationship definitions (cascade deletes throughout)

@@ -1,29 +1,32 @@
+import { queryOptions } from '@tanstack/react-query'
+import { getDefaultLocationFn } from './api'
+import type {
+  LocationCategory} from '@/services/tripadvisor';
 import {
-  LocationCategory,
   getLocationsFn,
   getSingleLocationFn,
   getSingleLocationPhotoFn,
 } from '@/services/tripadvisor'
-import { queryOptions } from '@tanstack/react-query'
-import { getDefaultLocationFn } from './api'
 
 export const locationsQueryOptions = (
   city: string,
   category: LocationCategory,
   lat: string,
-  lng: string
+  lng: string,
 ) =>
   queryOptions({
     queryKey: ['cities', city, 'tripadvisor_locations', category, lat, lng],
     queryFn: () =>
-      getLocationsFn({ data: { location: city, category: category, lat: lat, lng: lng } }),
+      getLocationsFn({
+        data: { location: city, category: category, lat: lat, lng: lng },
+      }),
     staleTime: Infinity, // TO PREVENT HITTING API LIMIT
   })
 
 export const defaultLocationQueryOptions = (
   city: string,
   lat: string,
-  lng: string
+  lng: string,
 ) =>
   queryOptions({
     queryKey: ['cities', city, 'tripadvisor_locations', lat, lng],

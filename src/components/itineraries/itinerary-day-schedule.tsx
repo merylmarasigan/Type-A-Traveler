@@ -1,5 +1,6 @@
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon, ClockPlus } from 'lucide-react'
+import { Suspense } from 'react'
 import type { ItineraryDay } from '@/db/types'
 import { TimeSlotForm } from '@/components/time-slot-form'
 import { TimeSlotDetails } from '@/components/time-slot-details'
@@ -26,7 +27,15 @@ interface ItineraryDayScheduleProps {
   itineraryDay: ItineraryDay
 }
 
-export function ItineraryDaySchedule({
+export function ItineraryDaySchedule(props: ItineraryDayScheduleProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <ItineraryDayScheduleContent {...props} />
+    </Suspense>
+  )
+}
+
+function ItineraryDayScheduleContent({
   itineraryDay,
 }: ItineraryDayScheduleProps) {
   const { timeSlotsQuery } = useTimeSlots(itineraryDay.id)

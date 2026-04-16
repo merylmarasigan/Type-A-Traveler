@@ -1,13 +1,13 @@
+import { relations } from 'drizzle-orm'
 import {
-  savedActivities,
   cityItineraries,
   itineraryDays,
   itineraryFolders,
   lodging,
+  savedActivities,
   timeSlots,
 } from '@/db/schema/app'
 import { user } from '@/db/schema/auth'
-import { relations } from 'drizzle-orm'
 
 export const userRelations = relations(user, ({ many }) => ({
   itineraries: many(itineraryFolders),

@@ -9,8 +9,7 @@ import {
   timeSlots,
 } from '@/db/schema/app'
 
-const { createdAt, updatedAt, ...timeSlotColumns } =
-  getTableColumns(timeSlots)
+const { createdAt, updatedAt, ...timeSlotColumns } = getTableColumns(timeSlots)
 
 export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
   const result = await db

@@ -1,7 +1,7 @@
 import { useForm } from '@tanstack/react-form'
 import { addHours, format, setHours, setMinutes } from 'date-fns'
 import { ClockCheck } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import z from 'zod/v4'
 import type { ReactNode } from 'react'
 import type { ItineraryDay, TimeSlot } from '@/db/types'
@@ -32,7 +32,15 @@ const formSchema = z.object({
   endTime: z.date(),
 })
 
-export function TimeSlotForm({
+export function TimeSlotForm(props: TimeSlotFormProps) {
+  return (
+    <Suspense fallback={null}>
+      <TimeSlotFormContent {...props} />
+    </Suspense>
+  )
+}
+
+function TimeSlotFormContent({
   itineraryDay,
   existingTimeSlot,
   slotId,

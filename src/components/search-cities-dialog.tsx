@@ -1,3 +1,5 @@
+import { MapPinPlus } from 'lucide-react'
+import type { ComponentProps } from 'react'
 import { SearchCities } from '@/components/search-cities'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,8 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { MapPinPlus } from 'lucide-react'
-import { ComponentProps } from 'react'
 
 export function SearchCitiesDialog(props: ComponentProps<'button'>) {
   return (

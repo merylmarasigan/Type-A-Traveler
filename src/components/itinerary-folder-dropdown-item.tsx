@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
 import { MapPin } from 'lucide-react'
 import type { ItineraryFolder } from '@/db/types'
@@ -8,7 +9,17 @@ interface ItineraryFolderDropdownItemProps {
   folder: ItineraryFolder
 }
 
-export function ItineraryFolderDropdownItem({
+export function ItineraryFolderDropdownItem(
+  props: ItineraryFolderDropdownItemProps,
+) {
+  return (
+    <Suspense fallback={null}>
+      <ItineraryFolderDropdownItemContent {...props} />
+    </Suspense>
+  )
+}
+
+function ItineraryFolderDropdownItemContent({
   folder,
 }: ItineraryFolderDropdownItemProps) {
   const { itinerariesQuery } = useCityItineraries(folder.id)

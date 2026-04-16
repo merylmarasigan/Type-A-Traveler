@@ -1,12 +1,12 @@
-import { UpdateUser } from '@/db/types'
-import {
-  getSingleUserFn,
-  updateUserFn,
-  deleteUserFn,
-  getUsersFn,
-} from '@/services/backend/users.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import type { UpdateUser } from '@/db/types'
+import {
+  deleteUserFn,
+  getSingleUserFn,
+  getUsersFn,
+  updateUserFn,
+} from '@/services/backend/users.api'
 
 const multipleUsersQueryKey = () => ['users'] as const
 

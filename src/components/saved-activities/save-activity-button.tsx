@@ -1,4 +1,5 @@
 import { BookmarkCheck, BookmarkPlus } from 'lucide-react'
+import { Suspense } from 'react'
 import type { LocationDetails } from '@/services/tripadvisor/schema'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
@@ -13,7 +14,16 @@ interface SaveActivityButtonProps {
   lng: string
   imageUrl?: string
 }
-export function SaveActivityButton({
+
+export function SaveActivityButton(props: SaveActivityButtonProps) {
+  return (
+    <Suspense fallback={null}>
+      <SaveActivityButtonContent {...props} />
+    </Suspense>
+  )
+}
+
+function SaveActivityButtonContent({
   activity,
   city,
   lat,

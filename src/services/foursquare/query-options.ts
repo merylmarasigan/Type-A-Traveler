@@ -1,5 +1,5 @@
-import { getPlacesFn } from '@/services/foursquare/api'
 import { queryOptions } from '@tanstack/react-query'
+import { getPlacesFn } from '@/services/foursquare/api'
 
 export const placesQueryOptions = (city: string, query?: string) =>
   queryOptions({

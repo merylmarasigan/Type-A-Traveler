@@ -1,14 +1,14 @@
-import { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
+import { mutationOptions, queryOptions } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import type { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
 import {
   createSavedActivityFn,
+  deleteSavedActivityFn,
+  getCityItinerarySavedActivitiesFn,
   getSingleSavedActivityFn,
   getUserSavedActivitiesFn,
   updateSavedActivityFn,
-  deleteSavedActivityFn,
-  getCityItinerarySavedActivitiesFn,
 } from '@/services/backend/saved-activities.api'
-import { mutationOptions, queryOptions } from '@tanstack/react-query'
-import { toast } from 'sonner'
 
 const userSavedActivitiesQueryKey = (userId?: string, city?: string) =>
   ['users', userId, 'saved_activities', city] as const

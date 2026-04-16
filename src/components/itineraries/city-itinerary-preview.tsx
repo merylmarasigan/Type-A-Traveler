@@ -1,3 +1,8 @@
+import { Suspense } from 'react'
+import { Link } from '@tanstack/react-router'
+import { formatDate } from 'date-fns'
+import { Eye } from 'lucide-react'
+import type { CityItinerary } from '@/db/types'
 import { Button } from '@/components/ui/button'
 import { parseLocalDate } from '@/lib/utils'
 import {
@@ -9,18 +14,22 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { TypographyMuted, TypographySmall } from '@/components/ui/typography'
-import { CityItinerary } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
-import { Link } from '@tanstack/react-router'
-import { formatDate } from 'date-fns'
-import { Eye } from 'lucide-react'
 
 interface CityItineraryPreviewProps {
   cityItinerary: CityItinerary
 }
 
-export function CityItineraryPreview({
+export function CityItineraryPreview(props: CityItineraryPreviewProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <CityItineraryPreviewContent {...props} />
+    </Suspense>
+  )
+}
+
+function CityItineraryPreviewContent({
   cityItinerary,
 }: CityItineraryPreviewProps) {
   const { itineraryDaysQuery } = useItineraryDays(cityItinerary.id)

@@ -1,14 +1,14 @@
-import { Button } from '@/components/ui/button'
-import {
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  Field,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
 import { useForm } from '@tanstack/react-form'
 import { Save } from 'lucide-react'
 import z from 'zod/v4'
+import { Button } from '@/components/ui/button'
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 
 interface EditItineraryFormProps {
   title: string | null

@@ -1,5 +1,5 @@
-import { db } from '@/db'
 import { sql } from 'drizzle-orm'
+import { db } from '@/db'
 
 const tables = [
   // Drop dependents first to respect foreign key constraints

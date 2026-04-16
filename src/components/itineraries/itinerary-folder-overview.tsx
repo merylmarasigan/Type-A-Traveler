@@ -1,8 +1,8 @@
+import { Hotel, NotepadText, PlaneTakeoff } from 'lucide-react'
+import type { ItineraryFolder } from '@/db/types'
 import { ItineraryNotes } from '@/components/itineraries/itinerary-notes'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TypographyH2 } from '@/components/ui/typography'
-import { ItineraryFolder } from '@/db/types'
-import { Hotel, NotepadText, PlaneTakeoff } from 'lucide-react'
 
 interface ItineraryFolderOverviewProps {
   folder: ItineraryFolder

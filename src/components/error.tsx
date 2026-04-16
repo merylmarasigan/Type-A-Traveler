@@ -1,6 +1,6 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { ErrorComponentProps } from '@tanstack/react-router'
 import { AlertCircleIcon } from 'lucide-react'
+import type { ErrorComponentProps } from '@tanstack/react-router'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 interface CustomErrorComponentProps extends ErrorComponentProps {
   description?: string

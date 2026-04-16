@@ -1,9 +1,9 @@
-import {
+import type {
   LocationDetails,
   Photo,
   SearchResponse,
 } from '@/services/tripadvisor/schema'
-import { LocationCategory } from '@/services/tripadvisor/api'
+import type { LocationCategory } from '@/services/tripadvisor/api'
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -3436,7 +3436,7 @@ export function getMockSearchResults(
   location: string,
   category: LocationCategory,
 ): SearchResponse['data'] {
-  const key = `${location}-${category}` as MockSearchKey
+  const key = `${location}-${category}`
   if (MOCK_SEARCH_RESULTS[key]) return MOCK_SEARCH_RESULTS[key]
 
   const cities = ['Los Angeles', 'San Francisco', 'Chicago', 'New York']
@@ -3444,7 +3444,7 @@ export function getMockSearchResults(
     location.toLowerCase().includes(c.toLowerCase()),
   )
   if (matched) {
-    return MOCK_SEARCH_RESULTS[`${matched}-${category}` as MockSearchKey] ?? []
+    return MOCK_SEARCH_RESULTS[`${matched}-${category}`] ?? []
   }
   return []
 }

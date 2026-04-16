@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ActivitiesByCity } from '@/components/saved-activities/activities-by-city'
 import { Suspense } from 'react'
+import { ActivitiesByCity } from '@/components/saved-activities/activities-by-city'
 import { TypographyH1, TypographySmall } from '@/components/ui/typography'
 
 export const Route = createFileRoute('/my-activities')({

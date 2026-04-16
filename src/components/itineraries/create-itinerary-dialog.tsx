@@ -1,6 +1,6 @@
 import { useRouter } from '@tanstack/react-router'
 import { addDays } from 'date-fns'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { CalendarCheck2, CalendarPlus, ChevronDown } from 'lucide-react'
 import type { DateRange } from 'react-day-picker'
 import type { ItineraryFolder } from '@/db/types'
@@ -39,7 +39,15 @@ interface CreateItineraryDialogProps {
   lng: string
 }
 
-export function CreateItineraryDialog({
+export function CreateItineraryDialog(props: CreateItineraryDialogProps) {
+  return (
+    <Suspense fallback={null}>
+      <CreateItineraryDialogContent {...props} />
+    </Suspense>
+  )
+}
+
+function CreateItineraryDialogContent({
   city,
   lat,
   lng,

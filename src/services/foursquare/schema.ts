@@ -17,7 +17,7 @@ export interface FsqPhotoLegacy {
   suffix: string
   width: number
   height: number
-  classifications?: string[]
+  classifications?: Array<string>
   tip?: FsqTipLegacy
 }
 
@@ -39,7 +39,7 @@ export interface FsqPhoto {
   suffix: string
   width: number
   height: number
-  classifications?: string[]
+  classifications?: Array<string>
   tip?: FsqTip
 }
 
@@ -50,7 +50,7 @@ export interface FsqCategoryIcon {
   suffix: string
   width: number
   height: number
-  classifications?: string[]
+  classifications?: Array<string>
   tip?: FsqTipLegacy
 }
 
@@ -79,7 +79,7 @@ export interface FsqHours {
   display?: string
   is_local_holiday?: boolean
   open_now?: boolean
-  regular?: FsqHoursPeriod[]
+  regular?: Array<FsqHoursPeriod>
 }
 
 export interface FsqLocation {
@@ -136,8 +136,8 @@ export interface FsqRelatedPlace {
   fsq_place_id: string
   latitude?: number
   longitude?: number
-  categories?: FsqCategory[]
-  chains?: FsqChain[]
+  categories?: Array<FsqCategory>
+  chains?: Array<FsqChain>
   date_closed?: string
   date_created?: string
   date_refreshed?: string
@@ -147,13 +147,13 @@ export interface FsqRelatedPlace {
   extended_location?: FsqExtendedLocation
   attributes?: FsqAttributes
   hours?: FsqHours
-  hours_popular?: FsqHoursPeriod[]
+  hours_popular?: Array<FsqHoursPeriod>
   link?: string
   location?: FsqLocation
   menu?: string
   name?: string
-  photos?: FsqPhotoLegacy[]
-  place_actions?: FsqPlaceAction[]
+  photos?: Array<FsqPhotoLegacy>
+  place_actions?: Array<FsqPlaceAction>
   popularity?: number
   placemaker_url?: string
   price?: number
@@ -161,9 +161,9 @@ export interface FsqRelatedPlace {
   social_media?: FsqSocialMedia
   stats?: FsqStats
   store_id?: string
-  tastes?: string[]
+  tastes?: Array<string>
   tel?: string
-  tips?: FsqTipLegacy[]
+  tips?: Array<FsqTipLegacy>
   verified?: boolean
   website?: string
 }
@@ -174,8 +174,8 @@ export interface FsqPlace {
   fsq_place_id: string
   latitude?: number
   longitude?: number
-  categories?: FsqCategory[]
-  chains?: FsqChain[]
+  categories?: Array<FsqCategory>
+  chains?: Array<FsqChain>
   date_closed?: string
   date_created?: string
   date_refreshed?: string
@@ -185,29 +185,29 @@ export interface FsqPlace {
   extended_location?: FsqExtendedLocation
   attributes?: FsqAttributes
   hours?: FsqHours
-  hours_popular?: FsqHoursPeriod[]
+  hours_popular?: Array<FsqHoursPeriod>
   link?: string
   location?: FsqLocation
   menu?: string
   name?: string
-  photos?: FsqPhoto[]
-  place_actions?: FsqPlaceAction[]
+  photos?: Array<FsqPhoto>
+  place_actions?: Array<FsqPlaceAction>
   popularity?: number
   placemaker_url?: string
   price?: number
   rating?: number
   related_places?: {
     parent?: FsqRelatedPlace
-    children?: FsqRelatedPlace[]
+    children?: Array<FsqRelatedPlace>
   }
   social_media?: FsqSocialMedia
   stats?: FsqStats
   store_id?: string
-  tastes?: string[]
+  tastes?: Array<string>
   tel?: string
-  tips?: FsqTip[]
+  tips?: Array<FsqTip>
   verified?: boolean
-  unresolved_flags?: string[]
+  unresolved_flags?: Array<string>
   veracity_rating?: Record<string, any>
   website?: string
   plugins?: {
@@ -219,7 +219,7 @@ export interface FsqPlace {
 // ─── Response ─────────────────────────────────────────────────────────────────
 
 export interface FsqPlaceSearchResponse {
-  results: FsqPlace[]
+  results: Array<FsqPlace>
   context?: {
     geo_bounds?: {
       circle?: {

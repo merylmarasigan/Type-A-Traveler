@@ -1,3 +1,6 @@
+import { formatDate } from 'date-fns'
+import { Trash, Trash2Icon } from 'lucide-react'
+import type { TimeSlot } from '@/db/types'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,10 +14,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { TimeSlot } from '@/db/types'
 import { useSingleTimeSlot } from '@/hooks/use-single-time-slot'
-import { formatDate } from 'date-fns'
-import { Trash, Trash2Icon } from 'lucide-react'
 
 interface TimeSlotDeleteDialogProps {
   timeSlot: TimeSlot

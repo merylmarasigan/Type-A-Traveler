@@ -1,4 +1,4 @@
-import { AnyCaaRecord } from 'dns'
+import type { AnyCaaRecord } from 'node:dns'
 
 export interface Location {
   location_id: string
@@ -7,7 +7,7 @@ export interface Location {
 }
 
 export interface SearchResponse {
-  data: Location[]
+  data: Array<Location>
 }
 
 export interface LocalizedName {
@@ -59,8 +59,8 @@ export interface HoursPeriod {
 }
 
 export interface Hours {
-  periods: HoursPeriod[]
-  weekday_text: string[]
+  periods: Array<HoursPeriod>
+  weekday_text: Array<string>
 }
 
 export interface Cuisine {
@@ -86,7 +86,7 @@ export interface AttractionCategory {
 export interface Group {
   name: string
   localized_name: string
-  categories: AttractionCategory[]
+  categories: Array<AttractionCategory>
 }
 
 export interface NeighborhoodInfo {
@@ -109,7 +109,7 @@ export interface Award {
   award_type: string
   year: number
   images: AwardImages
-  categories: string[]
+  categories: Array<string>
   display_name: string
 }
 
@@ -119,7 +119,7 @@ export interface LocationDetails {
   description?: string
   web_url?: string
   address_obj?: AddressObj
-  ancestors?: Ancestor[]
+  ancestors?: Array<Ancestor>
   latitude?: number
   longitude?: number
   timezone?: string
@@ -137,18 +137,18 @@ export interface LocationDetails {
   see_all_photos?: string
   price_level?: string
   hours?: Hours
-  amenities?: string[]
-  features?: string[]
-  cuisine?: Cuisine[]
+  amenities?: Array<string>
+  features?: Array<string>
+  cuisine?: Array<Cuisine>
   parent_brand?: string
   brand?: string
   category?: Category
-  subcategory?: Subcategory[]
-  groups?: Group[]
-  styles?: string[]
-  neighborhood_info?: NeighborhoodInfo[]
-  trip_types?: TripType[]
-  awards?: Award[]
+  subcategory?: Array<Subcategory>
+  groups?: Array<Group>
+  styles?: Array<string>
+  neighborhood_info?: Array<NeighborhoodInfo>
+  trip_types?: Array<TripType>
+  awards?: Array<Award>
 }
 
 export interface LocationDetailsError {
@@ -219,7 +219,7 @@ export interface PhotosError {
 }
 
 export interface PhotosResponse {
-  data: Photo[]
+  data: Array<Photo>
   paging: PhotosPaging
   error?: PhotosError
 }

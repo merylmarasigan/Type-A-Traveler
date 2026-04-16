@@ -1,14 +1,14 @@
-import { NewItineraryDay, UpdateItineraryDay } from '@/db/types'
-import {
-  getCityItineraryDaysFn,
-  getSingleItineraryDayFn,
-  createItineraryDaysFn,
-  updateSingleItineraryDayFn,
-  deleteItineraryDayFn,
-  updateMultipleItineraryDaysFn,
-} from '@/services/backend/itinerary-days.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import type { NewItineraryDay, UpdateItineraryDay } from '@/db/types'
+import {
+  createItineraryDaysFn,
+  deleteItineraryDayFn,
+  getCityItineraryDaysFn,
+  getSingleItineraryDayFn,
+  updateMultipleItineraryDaysFn,
+  updateSingleItineraryDayFn,
+} from '@/services/backend/itinerary-days.api'
 
 const multipleItineraryDaysQueryKey = (cityItineraryId?: string) =>
   ['city_itineraries', cityItineraryId, 'itinerary_days'] as const
@@ -33,7 +33,7 @@ export const singleItineraryDayQueryOptions = (itineraryDayId: string) =>
 export const createItineraryDaysMutationOptions = () =>
   mutationOptions({
     mutationKey: ['createItineraryDays'],
-    mutationFn: (data: NewItineraryDay[]) => createItineraryDaysFn({ data }),
+    mutationFn: (data: Array<NewItineraryDay>) => createItineraryDaysFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) => {
       toast.success(`New date added to itinerary!`)
 
@@ -60,7 +60,7 @@ export const updateSingleItineraryDayMutationOptions = () =>
 export const updateMultipleItineraryDaysMutationOptions = () =>
   mutationOptions({
     mutationKey: ['updateMultipleItineraryDays'],
-    mutationFn: (data: NewItineraryDay[]) =>
+    mutationFn: (data: Array<NewItineraryDay>) =>
       updateMultipleItineraryDaysFn({ data }),
     onSuccess: async (data, _variables, _result, ctx) => {
       toast.success('Updated itinerary schedule')

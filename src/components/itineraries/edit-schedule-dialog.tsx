@@ -1,5 +1,5 @@
 import { CalendarCheck2, CalendarCog } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { Button } from '@/components/ui/button'
@@ -20,7 +20,15 @@ interface EditScheduleDialogProps {
   cityItineraryId: string
 }
 
-export function EditScheduleDialog({
+export function EditScheduleDialog(props: EditScheduleDialogProps) {
+  return (
+    <Suspense fallback={null}>
+      <EditScheduleDialogContent {...props} />
+    </Suspense>
+  )
+}
+
+function EditScheduleDialogContent({
   cityItineraryId,
 }: EditScheduleDialogProps) {
   const { itineraryQuery } = useSingleCityItinerary(cityItineraryId)

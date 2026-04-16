@@ -1,7 +1,7 @@
-import { serverEnv } from '@/config/env'
-import { FsqPlaceSearchResponse } from '@/services/foursquare/schema'
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod/v4'
+import type { FsqPlaceSearchResponse } from '@/services/foursquare/schema'
+import { serverEnv } from '@/config/env'
 
 export const getPlacesFn = createServerFn({ method: 'GET' })
   .inputValidator(

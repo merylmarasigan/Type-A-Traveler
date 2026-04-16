@@ -1,30 +1,30 @@
+import { seed } from 'drizzle-seed'
 import { db } from '@/db'
 import {
-  itineraryFolders,
   cityItineraries,
   itineraryDays,
-  timeSlots,
-  savedActivities,
+  itineraryFolders,
   lodging,
+  savedActivities,
+  timeSlots,
 } from '@/db/schema/app'
 import {
-  user,
-  session,
   account,
-  verification,
-  userRelations,
-  sessionRelations,
   accountRelations,
+  session,
+  sessionRelations,
+  user,
+  userRelations,
+  verification,
 } from '@/db/schema/auth'
 import {
-  itinerariesRelations,
   cityItinerariesRelations,
+  itinerariesRelations,
   itineraryDaysRelations,
-  timeSlotRelations,
-  savedActivitiesRelations,
   lodgingRelations,
+  savedActivitiesRelations,
+  timeSlotRelations,
 } from '@/db/schema/relations'
-import { seed } from 'drizzle-seed'
 
 async function main() {
   try {

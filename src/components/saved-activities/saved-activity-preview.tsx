@@ -1,3 +1,6 @@
+import { Suspense } from 'react'
+import { Image } from '@unpic/react'
+import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -10,8 +13,6 @@ import {
 import { TypographySmall } from '@/components/ui/typography'
 import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
 import { authClient } from '@/lib/auth-client'
-import { Image } from '@unpic/react'
-import { Plus } from 'lucide-react'
 
 interface SavedActivityPreviewProps {
   id: string
@@ -20,7 +21,15 @@ interface SavedActivityPreviewProps {
   city?: string
 }
 
-export function SavedActivityPreview({
+export function SavedActivityPreview(props: SavedActivityPreviewProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <SavedActivityPreviewContent {...props} />
+    </Suspense>
+  )
+}
+
+function SavedActivityPreviewContent({
   id,
   timeSlotId,
   cityItineraryId,

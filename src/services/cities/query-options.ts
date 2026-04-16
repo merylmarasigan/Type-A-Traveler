@@ -1,5 +1,5 @@
-import { getCitiesFn } from '@/services/cities/api'
 import { queryOptions } from '@tanstack/react-query'
+import { getCitiesFn } from '@/services/cities/api'
 
 export const citiesQueryOptions = (city: string) =>
   queryOptions({

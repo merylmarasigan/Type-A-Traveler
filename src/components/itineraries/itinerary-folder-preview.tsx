@@ -1,29 +1,38 @@
+import { Suspense } from 'react'
+import { Link } from '@tanstack/react-router'
+import { Eye, Folder, MapPin } from 'lucide-react'
+import type { ItineraryFolder } from '@/db/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
+  CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
-  CardContent,
 } from '@/components/ui/card'
 import {
-  TypographyMuted,
   TypographyBlockquote,
+  TypographyMuted,
 } from '@/components/ui/typography'
-import { ItineraryFolder } from '@/db/types'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { cn } from '@/lib/utils'
-import { Link } from '@tanstack/react-router'
-import { Eye, Folder, MapPin } from 'lucide-react'
 
 interface ItineraryFolderPreviewProps {
   folder: ItineraryFolder
   showAuthor?: boolean
 }
 
-export function ItineraryFolderPreview({
+export function ItineraryFolderPreview(props: ItineraryFolderPreviewProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <ItineraryFolderPreviewContent {...props} />
+    </Suspense>
+  )
+}
+
+function ItineraryFolderPreviewContent({
   folder,
   showAuthor,
 }: ItineraryFolderPreviewProps) {

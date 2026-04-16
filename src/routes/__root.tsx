@@ -6,13 +6,13 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
-import { Header } from '@/components/Header'
 
 import TanStackQueryDevtools from '../components/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { Header } from '@/components/Header'
 import { NotFound } from '@/components/not-found'
 import { Toaster } from '@/components/ui/sonner'
 

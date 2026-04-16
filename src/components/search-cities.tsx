@@ -1,3 +1,10 @@
+import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { GlobeIcon } from 'lucide-react'
+import { useState } from 'react'
+import { useDebounce } from 'use-debounce'
+import type { CityData } from '@/services/cities/schema'
+import type { LocationCategory } from '@/services/tripadvisor/api'
 import { FilterButtons } from '@/components/filter-buttons'
 import {
   Combobox,
@@ -15,13 +22,6 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { citiesQueryOptions } from '@/services/cities/query-options'
-import { CityData } from '@/services/cities/schema'
-import { LocationCategory } from '@/services/tripadvisor/api'
-import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
-import { GlobeIcon } from 'lucide-react'
-import { useState } from 'react'
-import { useDebounce } from 'use-debounce'
 
 interface SearchCitiesProps {
   showFilterButtons?: boolean

@@ -98,7 +98,7 @@ export const updateMultipleItineraryDays = async (
   const daysToRemove = originalDates.filter((d) => !newDateSet.has(d.date))
 
   const result = await db.transaction(async (tx) => {
-    let inserted: (typeof itineraryDays.$inferSelect)[] = []
+    let inserted: Array<typeof itineraryDays.$inferSelect> = []
 
     if (daysToInsert.length > 0) {
       ;``

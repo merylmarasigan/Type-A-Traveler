@@ -2,8 +2,9 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import z from 'zod/v4'
 import { ChevronDown, SearchAlertIcon } from 'lucide-react'
+import { ErrorBoundary } from 'react-error-boundary'
+import { Suspense } from 'react'
 import type { LocationCategory } from '@/services/tripadvisor/api'
-import { LocationPreview } from '@/components/location-preview'
 import { ErrorComponent } from '@/components/error'
 import { TypographyH2 } from '@/components/ui/typography'
 import {
@@ -24,6 +25,7 @@ import { Button } from '@/components/ui/button'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
 import { ItineraryFolderDropdownItem } from '@/components/itinerary-folder-dropdown-item'
 import { FilterButtons } from '@/components/filter-buttons'
+import { LocationPreview } from '@/components/location-preview'
 
 const categorySearchSchema = z.object({
   category: LocationCategoryEnum.catch('hotels'),
@@ -45,6 +47,24 @@ export const Route = createFileRoute('/activities/$city')({
 function RouteComponent() {
   const { city } = Route.useParams()
   const { category, lat, lng } = Route.useSearch()
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <RouteContent city={city} category={category} lat={lat} lng={lng} />
+    </Suspense>
+  )
+}
+
+function RouteContent({
+  city,
+  category,
+  lat,
+  lng,
+}: {
+  city: string
+  category: LocationCategory
+  lat: string
+  lng: string
+}) {
   const navigate = Route.useNavigate()
 
   const cityLocationsQuery = useSuspenseQuery(
@@ -118,18 +138,24 @@ function RouteComponent() {
         ) : (
           <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 max-w-7xl">
             {cityLocationsQuery.data.map((location) => (
-              <LocationPreview
-                key={location.location_id}
-                city={city}
-                lat={lat}
-                lng={lng}
-                cityPhoto={
-                  defaultCityPhoto
-                    ? defaultCityPhoto
-                    : '../No_Image_Available.jpg'
-                }
-                location={location}
-              />
+              <ErrorBoundary
+                fallback={<div>something went wrong with {location.name}</div>}
+                onError={(error) => {
+                  console.error({ location, error, defaultCityPhoto })
+                }}
+              >
+                <LocationPreview
+                  city={city}
+                  lat={lat}
+                  lng={lng}
+                  cityPhoto={
+                    defaultCityPhoto
+                      ? defaultCityPhoto
+                      : '../No_Image_Available.jpg'
+                  }
+                  location={location}
+                />
+              </ErrorBoundary>
             ))}
           </ul>
         )}

@@ -1,14 +1,14 @@
-import { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
-import {
-  createCityItineraryFn,
-  getSingleCityItineraryFn,
-  updateCityItineraryFn,
-  deleteCityItineraryFn,
-  getFolderCityItinerariesFn,
-} from '@/services/backend/city-itineraries.api'
-import { userItineraryFoldersQueryKey } from '@/services/backend/itinerary-folders.options'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import type { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
+import {
+  createCityItineraryFn,
+  deleteCityItineraryFn,
+  getFolderCityItinerariesFn,
+  getSingleCityItineraryFn,
+  updateCityItineraryFn,
+} from '@/services/backend/city-itineraries.api'
+import { userItineraryFoldersQueryKey } from '@/services/backend/itinerary-folders.options'
 
 const multipleCityItinerariesQueryKey = (folderId?: string) =>
   ['itinerary_folders', folderId, 'city_itineraries'] as const

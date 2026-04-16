@@ -1,4 +1,5 @@
 import { AlertCircleIcon } from 'lucide-react'
+import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import {
@@ -22,7 +23,15 @@ interface SavedActivitySuggestionsProps {
   city?: string
 }
 
-export function SavedActivitySuggestions({
+export function SavedActivitySuggestions(props: SavedActivitySuggestionsProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <SavedActivitySuggestionsContent {...props} />
+    </Suspense>
+  )
+}
+
+function SavedActivitySuggestionsContent({
   timeSlotId,
   cityItineraryId,
   city,

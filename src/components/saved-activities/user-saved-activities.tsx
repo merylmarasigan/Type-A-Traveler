@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Search, SearchAlertIcon } from 'lucide-react'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
@@ -13,7 +14,15 @@ interface UserSavedActivitiesProps {
   lng: string
 }
 
-export function UserSavedActivities({
+export function UserSavedActivities(props: UserSavedActivitiesProps) {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <UserSavedActivitiesContent {...props} />
+    </Suspense>
+  )
+}
+
+function UserSavedActivitiesContent({
   city,
   lat,
   lng,

@@ -1,3 +1,5 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod/v4'
 import {
   createSavedActivity,
   deleteSavedActivity,
@@ -11,8 +13,6 @@ import {
   updateSavedActivitySchema,
 } from '@/db/types'
 import { ensureSession } from '@/services/backend/auth.functions'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod/v4'
 
 export const getUserSavedActivitiesFn = createServerFn({
   method: 'GET',

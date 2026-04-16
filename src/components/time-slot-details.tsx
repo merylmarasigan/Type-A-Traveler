@@ -1,5 +1,6 @@
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon, Edit, MapPinOff, MapPinPlus } from 'lucide-react'
+import { useState } from 'react'
 import type { ItineraryDay, SavedActivity, TimeSlot } from '@/db/types'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import { SavedActivitySuggestions } from '@/components/saved-activities/saved-activity-suggestions'
@@ -9,7 +10,6 @@ import { Button } from '@/components/ui/button'
 import { TimeSlotForm } from '@/components/time-slot-form'
 import { TimeSlotActivityOptions } from '@/components/time-slot-activity-options'
 import { TypographySmall } from '@/components/ui/typography'
-import { useState } from 'react'
 import { TimeSlotDeleteDialog } from '@/components/time-slot-delete-dialog'
 
 interface TimeSlotDetailsProps {

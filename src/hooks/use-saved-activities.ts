@@ -1,10 +1,10 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { authClient } from '@/lib/auth-client'
 import {
   cityItinerarySavedActivitiesQueryOptions,
   createSavedActivityMutationOptions,
   userSavedActivitiesQueryOptions,
 } from '@/services/backend/saved-activities.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
 interface UseSavedActivitiesParams {
   city?: string

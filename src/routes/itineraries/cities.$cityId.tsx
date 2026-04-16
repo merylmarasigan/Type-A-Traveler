@@ -1,9 +1,10 @@
+import { Link, createFileRoute } from '@tanstack/react-router'
+import { ArrowLeft } from 'lucide-react'
+import { Suspense } from 'react'
 import { CityItineraryDetails } from '@/components/itineraries/city-itinerary-details'
 import { Button } from '@/components/ui/button'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
 
 export const Route = createFileRoute('/itineraries/cities/$cityId')({
   component: RouteComponent,
@@ -11,6 +12,14 @@ export const Route = createFileRoute('/itineraries/cities/$cityId')({
 
 function RouteComponent() {
   const { cityId } = Route.useParams()
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <RouteContent cityId={cityId} />
+    </Suspense>
+  )
+}
+
+function RouteContent({ cityId }: { cityId: string }) {
   const { itineraryQuery } = useSingleCityItinerary(cityId)
   const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
 
