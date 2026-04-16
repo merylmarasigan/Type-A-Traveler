@@ -7,10 +7,10 @@ import { SavedActivitySuggestions } from '@/components/saved-activities/saved-ac
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Button } from '@/components/ui/button'
-import { TimeSlotForm } from '@/components/time-slot-form'
-import { TimeSlotActivityOptions } from '@/components/time-slot-activity-options'
+import { TimeSlotForm } from '@/components/itineraries/time-slot-form'
+import { TimeSlotActivityOptions } from '@/components/itineraries/time-slot-activity-options'
 import { TypographySmall } from '@/components/ui/typography'
-import { TimeSlotDeleteDialog } from '@/components/time-slot-delete-dialog'
+import { TimeSlotDeleteDialog } from '@/components/itineraries/time-slot-delete-dialog'
 
 interface TimeSlotDetailsProps {
   timeSlot: TimeSlot

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SearchCities } from '@/components/search-cities'
+import { SearchCities } from '@/components/cities-locations/search-cities'
 import { TypographyH1, TypographyH2 } from '@/components/ui/typography'
 
 export const Route = createFileRoute('/')({ component: App })

@@ -11,11 +11,11 @@ import TanStackQueryDevtools from '../components/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { Header } from '@/components/Header'
-import { NotFound } from '@/components/not-found'
+import { NavigationBar } from '@/components/util/navigation-bar'
+import { NotFound } from '@/components/util/not-found'
 import { Toaster } from '@/components/ui/sonner'
 import { getThemeServerFn } from '@/lib/theme'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/components/util/theme-provider'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -57,7 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="h-full flex flex-col">
         <ThemeProvider theme={theme}>
-          <Header />
+          <NavigationBar />
           <main className="flex-1 min-h-0">{children}</main>
           <Toaster />
         </ThemeProvider>

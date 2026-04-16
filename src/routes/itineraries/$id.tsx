@@ -8,7 +8,7 @@ import {
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
 import { ItineraryFolderOverview } from '@/components/itineraries/itinerary-folder-overview'
-import { SearchCitiesDialog } from '@/components/search-cities-dialog'
+import { SearchCitiesDialog } from '@/components/cities-locations/search-cities-dialog'
 import {
   TypographyBlockquote,
   TypographyH1,

@@ -8,10 +8,10 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { AuthHeader } from '@/components/auth/header-user'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { ThemeToggle } from '@/components/util/theme-toggle'
 import { Button } from '@/components/ui/button'
 
-export function Header() {
+export function NavigationBar() {
   return (
     <header className="p-4 w-full">
       <div className="flex justify-between items-center w-full">

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
-import { DateRangePicker } from '@/components/date-range-picker'
+import { DateRangePicker } from '@/components/itineraries/date-range-picker'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
 import {
   Select,

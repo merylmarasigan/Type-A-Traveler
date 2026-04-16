@@ -8,7 +8,7 @@ import {
   singleLocationQueryOptions,
 } from '@/services/tripadvisor/query-options'
 import { SaveActivityButton } from '@/components/saved-activities/save-activity-button'
-import { LocationDetailsDialog } from '@/components/location-details'
+import { LocationDetailsDialog } from '@/components/cities-locations/location-details'
 
 interface LocationPreviewProps {
   city: string

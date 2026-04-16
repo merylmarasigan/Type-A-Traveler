@@ -1,7 +1,7 @@
 import { CalendarCheck2, CalendarCog } from 'lucide-react'
 import { Suspense, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
-import { DateRangePicker } from '@/components/date-range-picker'
+import { DateRangePicker } from '@/components/itineraries/date-range-picker'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

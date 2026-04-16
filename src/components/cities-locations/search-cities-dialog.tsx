@@ -1,6 +1,6 @@
 import { MapPinPlus } from 'lucide-react'
 import type { ComponentProps } from 'react'
-import { SearchCities } from '@/components/search-cities'
+import { SearchCities } from '@/components/cities-locations/search-cities'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

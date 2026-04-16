@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useDebounce } from 'use-debounce'
 import type { CityData } from '@/services/cities/schema'
 import type { LocationCategory } from '@/services/tripadvisor/api'
-import { FilterButtons } from '@/components/filter-buttons'
+import { FilterButtons } from '@/components/cities-locations/filter-buttons'
 import {
   Combobox,
   ComboboxContent,

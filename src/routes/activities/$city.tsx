@@ -5,7 +5,7 @@ import { ChevronDown, SearchAlertIcon } from 'lucide-react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Suspense } from 'react'
 import type { LocationCategory } from '@/services/tripadvisor/api'
-import { ErrorComponent } from '@/components/error'
+import { ErrorComponent } from '@/components/util/error'
 import { TypographyH2 } from '@/components/ui/typography'
 import {
   defaultLocationQueryOptions,
@@ -24,12 +24,12 @@ import {
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
-import { ItineraryFolderDropdownItem } from '@/components/itinerary-folder-dropdown-item'
-import { FilterButtons } from '@/components/filter-buttons'
+import { ItineraryFolderDropdownItem } from '@/components/itineraries/itinerary-folder-dropdown-item'
+import { FilterButtons } from '@/components/cities-locations/filter-buttons'
 import {
   LocationPreview,
   LocationPreviewSkeleton,
-} from '@/components/location-preview'
+} from '@/components/cities-locations/location-preview'
 
 const categorySearchSchema = z.object({
   category: LocationCategoryEnum.catch('hotels'),
@@ -40,7 +40,9 @@ const categorySearchSchema = z.object({
 export const Route = createFileRoute('/activities/$city')({
   component: RouteComponent,
   validateSearch: categorySearchSchema,
-  errorComponent: (error) => <ErrorComponent {...error} />,
+  errorComponent: (error) => (
+    <ErrorComponent {...error} description="No locations found for this city" />
+  ),
 })
 
 function RouteComponent() {
