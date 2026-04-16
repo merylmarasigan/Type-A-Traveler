@@ -5,6 +5,8 @@ import { useTimeSlots } from '@/hooks/use-time-slots'
 import { cn } from '@/lib/utils'
 import { formatDate } from 'date-fns'
 import { ComponentProps } from 'react'
+import { parseLocalDate } from '@/lib/utils'
+
 
 interface ItineraryDayPreviewProps extends ComponentProps<'div'> {
   itineraryDay: ItineraryDay
@@ -37,10 +39,10 @@ export function ItineraryDayPreview({
       )}
       <div className="flex flex-col gap-1 flex-1 row-start-2 md:row-start-1 place-self-end w-full">
         <TypographyLarge className="text-center md:text-end">
-          {formatDate(itineraryDay.date, 'MMM d')}
+          {formatDate(parseLocalDate(itineraryDay.date), 'MMM d')}
         </TypographyLarge>
         <TypographySmall className="text-muted-foreground text-center md:text-end">
-          {formatDate(itineraryDay.date, 'EEEE')}
+          {formatDate(parseLocalDate(itineraryDay.date), 'EEEE')}
         </TypographySmall>
       </div>
     </div>

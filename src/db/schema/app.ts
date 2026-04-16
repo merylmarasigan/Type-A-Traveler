@@ -28,10 +28,8 @@ export const cityItineraries = pgTable('city_itineraries', {
 
 export const itineraryDays = pgTable('itinerary_days', {
   id: text().primaryKey(),
-  cityItineraryId: text()
-    .notNull()
-    .references(() => cityItineraries.id, { onDelete: 'cascade' }),
-  date: date({ mode: 'date' }).notNull(),
+  cityItineraryId: text().notNull(),
+  date: date({ mode: 'string' }).notNull(),
   ...timestamps,
 })
 

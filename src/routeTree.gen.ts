@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as MyItinerariesRouteImport } from './routes/my-itineraries'
+import { Route as MyActivitiesRouteImport } from './routes/my-activities'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as IndexRouteImport } from './routes/index'
@@ -27,6 +28,11 @@ const SignupRoute = SignupRouteImport.update({
 const MyItinerariesRoute = MyItinerariesRouteImport.update({
   id: '/my-itineraries',
   path: '/my-itineraries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyActivitiesRoute = MyActivitiesRouteImport.update({
+  id: '/my-activities',
+  path: '/my-activities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
+  '/my-activities': typeof MyActivitiesRoute
   '/my-itineraries': typeof MyItinerariesRoute
   '/signup': typeof SignupRoute
   '/activities/$city': typeof ActivitiesCityRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
+  '/my-activities': typeof MyActivitiesRoute
   '/my-itineraries': typeof MyItinerariesRoute
   '/signup': typeof SignupRoute
   '/activities/$city': typeof ActivitiesCityRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
+  '/my-activities': typeof MyActivitiesRoute
   '/my-itineraries': typeof MyItinerariesRoute
   '/signup': typeof SignupRoute
   '/activities/$city': typeof ActivitiesCityRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/community'
     | '/login'
+    | '/my-activities'
     | '/my-itineraries'
     | '/signup'
     | '/activities/$city'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/'
     | '/community'
     | '/login'
+    | '/my-activities'
     | '/my-itineraries'
     | '/signup'
     | '/activities/$city'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/'
     | '/community'
     | '/login'
+    | '/my-activities'
     | '/my-itineraries'
     | '/signup'
     | '/activities/$city'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CommunityRoute: typeof CommunityRoute
   LoginRoute: typeof LoginRoute
+  MyActivitiesRoute: typeof MyActivitiesRoute
   MyItinerariesRoute: typeof MyItinerariesRoute
   SignupRoute: typeof SignupRoute
   ActivitiesCityRoute: typeof ActivitiesCityRoute
@@ -161,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/my-itineraries'
       fullPath: '/my-itineraries'
       preLoaderRoute: typeof MyItinerariesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-activities': {
+      id: '/my-activities'
+      path: '/my-activities'
+      fullPath: '/my-activities'
+      preLoaderRoute: typeof MyActivitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -219,6 +239,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CommunityRoute: CommunityRoute,
   LoginRoute: LoginRoute,
+  MyActivitiesRoute: MyActivitiesRoute,
   MyItinerariesRoute: MyItinerariesRoute,
   SignupRoute: SignupRoute,
   ActivitiesCityRoute: ActivitiesCityRoute,

@@ -9,6 +9,7 @@ import { EditScheduleDialog } from '@/components/itineraries/edit-schedule-dialo
 import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
 import { ItineraryDaySchedule } from '@/components/itineraries/itinerary-day-schedule'
 import { Badge } from '@/components/ui/badge'
+import { parseLocalDate } from '@/lib/utils'
 import {
   Card,
   CardAction,
@@ -48,6 +49,7 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
 
   const start = itineraryDaysQuery.data[0]
   const end = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
+  console.log("city-itinerary-details",start, end)
 
   const [selectedDay, setSelectedDay] = useState<ItineraryDay>(
     itineraryDaysQuery.data[0],
@@ -113,8 +115,8 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
       </CardHeader>
       <CardContent>
         <TypographyH3>
-          {formatDate(start.date, 'MMMM do, y')} -{' '}
-          {formatDate(end.date, 'MMMM do, y')}
+          {formatDate(parseLocalDate(start.date), 'MMMM do, y')} -{' '}
+          {formatDate(parseLocalDate(end.date), 'MMMM do, y')}
         </TypographyH3>
 
         <div className="flex items-center gap-2">
