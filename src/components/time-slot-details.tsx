@@ -1,12 +1,5 @@
 import { formatDate } from 'date-fns'
-import {
-  AlertCircleIcon,
-  Edit,
-  MapPinOff,
-  MapPinPlus,
-  Trash,
-  Trash2Icon,
-} from 'lucide-react'
+import { AlertCircleIcon, Edit, MapPinOff, MapPinPlus } from 'lucide-react'
 import type { ItineraryDay, SavedActivity, TimeSlot } from '@/db/types'
 import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
 import { SavedActivitySuggestions } from '@/components/saved-activities/saved-activity-suggestions'
@@ -14,22 +7,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Button } from '@/components/ui/button'
 import { TimeSlotForm } from '@/components/time-slot-form'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogMedia,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { useSingleTimeSlot } from '@/hooks/use-single-time-slot'
 import { TimeSlotActivityOptions } from '@/components/time-slot-activity-options'
 import { TypographySmall } from '@/components/ui/typography'
 import { useState } from 'react'
+import { TimeSlotDeleteDialog } from '@/components/time-slot-delete-dialog'
 
 interface TimeSlotDetailsProps {
   timeSlot: TimeSlot
@@ -48,12 +29,7 @@ export function TimeSlotDetails({
   city,
   showActions,
 }: TimeSlotDetailsProps) {
-  const { deleteTimeSlotMutation } = useSingleTimeSlot(timeSlot.id)
   const [showSuggestions, setShowSuggestions] = useState(false)
-
-  const deleteTimeSlot = async () => {
-    await deleteTimeSlotMutation.mutateAsync(timeSlot.id)
-  }
 
   if (!timeSlot.startTime || !timeSlot.endTime) return null
   return (
@@ -75,37 +51,7 @@ export function TimeSlotDetails({
               </Button>
             </TimeSlotForm>
             <ButtonGroupSeparator />
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="secondary">
-                  <Trash />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent size="sm">
-                <AlertDialogHeader>
-                  <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                    <Trash2Icon />
-                  </AlertDialogMedia>
-                  <AlertDialogTitle>Delete this time slot?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {formatDate(timeSlot.startTime, 'p')} -{' '}
-                    {formatDate(timeSlot.endTime, 'p')}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel variant="outline">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={deleteTimeSlot}
-                    variant="destructive"
-                  >
-                    <Trash />
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <TimeSlotDeleteDialog timeSlot={timeSlot} />
             <ButtonGroupSeparator />
             <Button
               onClick={() => setShowSuggestions((prev) => !prev)}
