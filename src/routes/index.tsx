@@ -1,3 +1,4 @@
+import { CategoryDropdown } from '@/components/category-dropdown'
 import { SearchCities } from '@/components/search-cities'
 import { TypographyH1, TypographyH2 } from '@/components/ui/typography'
 import { createFileRoute } from '@tanstack/react-router'
@@ -11,7 +12,6 @@ function App() {
       <TypographyH2 className="text-center">
         Enter your destination to get started.
       </TypographyH2>
-
       <SearchCities />
     </div>
   )

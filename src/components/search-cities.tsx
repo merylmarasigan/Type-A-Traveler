@@ -22,6 +22,7 @@ import { Link } from '@tanstack/react-router'
 import { GlobeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useDebounce } from 'use-debounce'
+import { CategoryDropdown } from './category-dropdown'
 
 interface SearchCitiesProps {
   showFilterButtons?: boolean
