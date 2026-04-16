@@ -9,10 +9,13 @@ import {
   timeSlots,
 } from '@/db/schema/app'
 
+const { createdAt, updatedAt, ...timeSlotColumns } =
+  getTableColumns(timeSlots)
+
 export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
   const result = await db
     .select({
-      ...getTableColumns(timeSlots),
+      ...timeSlotColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(timeSlots)
@@ -33,7 +36,7 @@ export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
 export const getTimeSlot = async (id: string) => {
   const [result] = await db
     .select({
-      ...getTableColumns(timeSlots),
+      ...timeSlotColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(timeSlots)

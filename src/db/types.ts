@@ -43,8 +43,9 @@ export const insertCityItinerarySchema =
   createInsertSchema(cityItineraries).omit(omittedWithId)
 export type NewCityItinerary = z.infer<typeof insertCityItinerarySchema>
 
-export const selectCityItinerarySchema =
-  createSelectSchema(cityItineraries).omit(omittedTimestamps)
+export const selectCityItinerarySchema = createSelectSchema(cityItineraries)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type CityItinerary = z.infer<typeof selectCityItinerarySchema>
 
 export const updateCityItinerarySchema = createUpdateSchema(cityItineraries, {
@@ -58,8 +59,9 @@ export const insertItineraryDaySchema =
   createInsertSchema(itineraryDays).omit(omittedWithId)
 export type NewItineraryDay = z.infer<typeof insertItineraryDaySchema>
 
-export const selectItineraryDaySchema =
-  createSelectSchema(itineraryDays).omit(omittedTimestamps)
+export const selectItineraryDaySchema = createSelectSchema(itineraryDays)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type ItineraryDay = z.infer<typeof selectItineraryDaySchema>
 
 export const updateItineraryDaySchema = createUpdateSchema(itineraryDays, {
@@ -73,8 +75,9 @@ export const insertTimeSlotSchema =
   createInsertSchema(timeSlots).omit(omittedWithId)
 export type NewTimeSlot = z.infer<typeof insertTimeSlotSchema>
 
-export const selectTimeSlotSchema =
-  createSelectSchema(timeSlots).omit(omittedTimestamps)
+export const selectTimeSlotSchema = createSelectSchema(timeSlots)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type TimeSlot = z.infer<typeof selectTimeSlotSchema>
 
 export const updateTimeSlotSchema = createUpdateSchema(timeSlots, {
@@ -103,8 +106,9 @@ export const insertLodgingSchema =
   createInsertSchema(lodging).omit(omittedWithId)
 export type NewLodging = z.infer<typeof insertLodgingSchema>
 
-export const selectLodgingSchema =
-  createSelectSchema(lodging).omit(omittedTimestamps)
+export const selectLodgingSchema = createSelectSchema(lodging)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type Lodging = z.infer<typeof selectLodgingSchema>
 
 export const updateLodgingSchema = createUpdateSchema(lodging, {

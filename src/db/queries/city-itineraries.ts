@@ -4,10 +4,13 @@ import type { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
 import { db } from '@/db'
 import { cityItineraries, itineraryFolders } from '@/db/schema/app'
 
+const { createdAt, updatedAt, ...cityItineraryColumns } =
+  getTableColumns(cityItineraries)
+
 export const getFolderCityItineraries = async (folderId: string) => {
   const result = await db
     .select({
-      ...getTableColumns(cityItineraries),
+      ...cityItineraryColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(cityItineraries)
@@ -23,7 +26,7 @@ export const getFolderCityItineraries = async (folderId: string) => {
 export const getCityItinerary = async (id: string) => {
   const [result] = await db
     .select({
-      ...getTableColumns(cityItineraries),
+      ...cityItineraryColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(cityItineraries)

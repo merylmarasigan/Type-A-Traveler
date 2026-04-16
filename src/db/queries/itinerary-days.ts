@@ -1,10 +1,6 @@
 import { generateId } from 'better-auth'
 import { eq, getTableColumns, inArray } from 'drizzle-orm'
-import type {
-  ItineraryDay,
-  NewItineraryDay,
-  UpdateItineraryDay,
-} from '@/db/types'
+import type { NewItineraryDay, UpdateItineraryDay } from '@/db/types'
 import { db } from '@/db'
 import {
   cityItineraries,
@@ -12,10 +8,13 @@ import {
   itineraryFolders,
 } from '@/db/schema/app'
 
+const { createdAt, updatedAt, ...itineraryDayColumns } =
+  getTableColumns(itineraryDays)
+
 export const getCityItineraryDays = async (cityItineraryId: string) => {
   const result = await db
     .select({
-      ...getTableColumns(itineraryDays),
+      ...itineraryDayColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(itineraryDays)
@@ -36,7 +35,7 @@ export const getCityItineraryDays = async (cityItineraryId: string) => {
 export const getItineraryDay = async (id: string) => {
   const [result] = await db
     .select({
-      ...getTableColumns(itineraryDays),
+      ...itineraryDayColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(itineraryDays)
@@ -99,7 +98,7 @@ export const updateMultipleItineraryDays = async (
   const daysToRemove = originalDates.filter((d) => !newDateSet.has(d.date))
 
   const result = await db.transaction(async (tx) => {
-    let inserted: Array<ItineraryDay> = []
+    let inserted: (typeof itineraryDays.$inferSelect)[] = []
 
     if (daysToInsert.length > 0) {
       ;``

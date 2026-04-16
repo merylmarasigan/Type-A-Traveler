@@ -4,13 +4,19 @@ import type { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
 import { db } from '@/db'
 import { itineraryDays, savedActivities, timeSlots } from '@/db/schema/app'
 
+const { createdAt, updatedAt, ...savedActivityColumns } =
+  getTableColumns(savedActivities)
+
 export const getUserSavedActivities = async (userId: string, city?: string) => {
   const userIdClause = eq(savedActivities.userId, userId)
   const whereClause = city
     ? and(userIdClause, eq(savedActivities.city, city))
     : userIdClause
 
-  const result = await db.select().from(savedActivities).where(whereClause)
+  const result = await db
+    .select(savedActivityColumns)
+    .from(savedActivities)
+    .where(whereClause)
 
   return result
 }
@@ -19,7 +25,7 @@ export const getCityItinerarySavedActivities = async (
   cityItineraryId: string,
 ) => {
   const result = await db
-    .select({ savedActivities: getTableColumns(savedActivities) })
+    .select({ savedActivities: savedActivityColumns })
     .from(savedActivities)
     .innerJoin(timeSlots, eq(timeSlots.id, savedActivities.timeSlotId))
     .innerJoin(itineraryDays, eq(itineraryDays.id, timeSlots.itineraryDayId))
@@ -30,7 +36,7 @@ export const getCityItinerarySavedActivities = async (
 
 export const getSavedActivity = async (id: string) => {
   const [result] = await db
-    .select()
+    .select(savedActivityColumns)
     .from(savedActivities)
     .where(eq(savedActivities.id, id))
     .limit(1)

@@ -4,10 +4,12 @@ import type { NewLodging, UpdateLodging } from '@/db/types'
 import { db } from '@/db'
 import { itineraryFolders, lodging } from '@/db/schema/app'
 
+const { createdAt, updatedAt, ...lodgingColumns } = getTableColumns(lodging)
+
 export const getItineraryLodging = async (itineraryFolderId: string) => {
   const result = await db
     .select({
-      ...getTableColumns(lodging),
+      ...lodgingColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(lodging)
@@ -20,7 +22,7 @@ export const getItineraryLodging = async (itineraryFolderId: string) => {
 export const getLodging = async (id: string) => {
   const [result] = await db
     .select({
-      ...getTableColumns(lodging),
+      ...lodgingColumns,
       authorId: itineraryFolders.authorId,
     })
     .from(lodging)
