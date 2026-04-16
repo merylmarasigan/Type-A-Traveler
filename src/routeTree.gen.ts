@@ -10,29 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
-import { Route as MyItinerariesRouteImport } from './routes/my-itineraries'
-import { Route as MyActivitiesRouteImport } from './routes/my-activities'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ItinerariesIdRouteImport } from './routes/itineraries/$id'
 import { Route as ActivitiesCityRouteImport } from './routes/activities/$city'
+import { Route as ProtectedMyItinerariesRouteImport } from './routes/_protected/my-itineraries'
+import { Route as ProtectedMyActivitiesRouteImport } from './routes/_protected/my-activities'
 import { Route as ItinerariesCitiesCityIdRouteImport } from './routes/itineraries/cities.$cityId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyItinerariesRoute = MyItinerariesRouteImport.update({
-  id: '/my-itineraries',
-  path: '/my-itineraries',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyActivitiesRoute = MyActivitiesRouteImport.update({
-  id: '/my-activities',
-  path: '/my-activities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -43,6 +34,10 @@ const LoginRoute = LoginRouteImport.update({
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -60,6 +55,16 @@ const ActivitiesCityRoute = ActivitiesCityRouteImport.update({
   path: '/activities/$city',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedMyItinerariesRoute = ProtectedMyItinerariesRouteImport.update({
+  id: '/my-itineraries',
+  path: '/my-itineraries',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedMyActivitiesRoute = ProtectedMyActivitiesRouteImport.update({
+  id: '/my-activities',
+  path: '/my-activities',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ItinerariesCitiesCityIdRoute = ItinerariesCitiesCityIdRouteImport.update({
   id: '/itineraries/cities/$cityId',
   path: '/itineraries/cities/$cityId',
@@ -75,9 +80,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
-  '/my-activities': typeof MyActivitiesRoute
-  '/my-itineraries': typeof MyItinerariesRoute
   '/signup': typeof SignupRoute
+  '/my-activities': typeof ProtectedMyActivitiesRoute
+  '/my-itineraries': typeof ProtectedMyItinerariesRoute
   '/activities/$city': typeof ActivitiesCityRoute
   '/itineraries/$id': typeof ItinerariesIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -87,9 +92,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
-  '/my-activities': typeof MyActivitiesRoute
-  '/my-itineraries': typeof MyItinerariesRoute
   '/signup': typeof SignupRoute
+  '/my-activities': typeof ProtectedMyActivitiesRoute
+  '/my-itineraries': typeof ProtectedMyItinerariesRoute
   '/activities/$city': typeof ActivitiesCityRoute
   '/itineraries/$id': typeof ItinerariesIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -98,11 +103,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_protected': typeof ProtectedRouteWithChildren
   '/community': typeof CommunityRoute
   '/login': typeof LoginRoute
-  '/my-activities': typeof MyActivitiesRoute
-  '/my-itineraries': typeof MyItinerariesRoute
   '/signup': typeof SignupRoute
+  '/_protected/my-activities': typeof ProtectedMyActivitiesRoute
+  '/_protected/my-itineraries': typeof ProtectedMyItinerariesRoute
   '/activities/$city': typeof ActivitiesCityRoute
   '/itineraries/$id': typeof ItinerariesIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -114,9 +120,9 @@ export interface FileRouteTypes {
     | '/'
     | '/community'
     | '/login'
+    | '/signup'
     | '/my-activities'
     | '/my-itineraries'
-    | '/signup'
     | '/activities/$city'
     | '/itineraries/$id'
     | '/api/auth/$'
@@ -126,9 +132,9 @@ export interface FileRouteTypes {
     | '/'
     | '/community'
     | '/login'
+    | '/signup'
     | '/my-activities'
     | '/my-itineraries'
-    | '/signup'
     | '/activities/$city'
     | '/itineraries/$id'
     | '/api/auth/$'
@@ -136,11 +142,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_protected'
     | '/community'
     | '/login'
-    | '/my-activities'
-    | '/my-itineraries'
     | '/signup'
+    | '/_protected/my-activities'
+    | '/_protected/my-itineraries'
     | '/activities/$city'
     | '/itineraries/$id'
     | '/api/auth/$'
@@ -149,10 +156,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
   CommunityRoute: typeof CommunityRoute
   LoginRoute: typeof LoginRoute
-  MyActivitiesRoute: typeof MyActivitiesRoute
-  MyItinerariesRoute: typeof MyItinerariesRoute
   SignupRoute: typeof SignupRoute
   ActivitiesCityRoute: typeof ActivitiesCityRoute
   ItinerariesIdRoute: typeof ItinerariesIdRoute
@@ -169,20 +175,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/my-itineraries': {
-      id: '/my-itineraries'
-      path: '/my-itineraries'
-      fullPath: '/my-itineraries'
-      preLoaderRoute: typeof MyItinerariesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-activities': {
-      id: '/my-activities'
-      path: '/my-activities'
-      fullPath: '/my-activities'
-      preLoaderRoute: typeof MyActivitiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -195,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -218,6 +217,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ActivitiesCityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/my-itineraries': {
+      id: '/_protected/my-itineraries'
+      path: '/my-itineraries'
+      fullPath: '/my-itineraries'
+      preLoaderRoute: typeof ProtectedMyItinerariesRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/my-activities': {
+      id: '/_protected/my-activities'
+      path: '/my-activities'
+      fullPath: '/my-activities'
+      preLoaderRoute: typeof ProtectedMyActivitiesRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/itineraries/cities/$cityId': {
       id: '/itineraries/cities/$cityId'
       path: '/itineraries/cities/$cityId'
@@ -235,12 +248,25 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ProtectedRouteChildren {
+  ProtectedMyActivitiesRoute: typeof ProtectedMyActivitiesRoute
+  ProtectedMyItinerariesRoute: typeof ProtectedMyItinerariesRoute
+}
+
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedMyActivitiesRoute: ProtectedMyActivitiesRoute,
+  ProtectedMyItinerariesRoute: ProtectedMyItinerariesRoute,
+}
+
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProtectedRoute: ProtectedRouteWithChildren,
   CommunityRoute: CommunityRoute,
   LoginRoute: LoginRoute,
-  MyActivitiesRoute: MyActivitiesRoute,
-  MyItinerariesRoute: MyItinerariesRoute,
   SignupRoute: SignupRoute,
   ActivitiesCityRoute: ActivitiesCityRoute,
   ItinerariesIdRoute: ItinerariesIdRoute,

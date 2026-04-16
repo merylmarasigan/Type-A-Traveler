@@ -5,7 +5,7 @@ import { SavedActivityPreviewSkeleton } from '@/components/saved-activities/save
 import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyH1, TypographySmall } from '@/components/ui/typography'
 
-export const Route = createFileRoute('/my-activities')({
+export const Route = createFileRoute('/_protected/my-activities')({
   component: MyActivitiesPage,
 })
 

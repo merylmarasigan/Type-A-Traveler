@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/empty'
 import { Button } from '@/components/ui/button'
 
-export const Route = createFileRoute('/my-itineraries')({
+export const Route = createFileRoute('/_protected/my-itineraries')({
   component: myItinerariesPage,
 })
 
