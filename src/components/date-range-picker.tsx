@@ -26,10 +26,7 @@ export function DateRangePicker({
             mode="range"
             defaultMonth={dateRange.from}
             selected={dateRange}
-            onSelect={(selected) => {
-              console.log({ selected })
-              setDateRange(selected)
-            }}
+            onSelect={setDateRange}
             numberOfMonths={2}
             showOutsideDays={false}
           />

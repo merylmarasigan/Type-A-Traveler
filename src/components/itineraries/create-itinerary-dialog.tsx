@@ -57,7 +57,6 @@ export function CreateItineraryDialog({
     useState<ItineraryFolder | null>(null)
 
   const handleConfirmDates = async () => {
-    console.log(dateRange)
     const { itineraryFolderId } = await createInitialDays(
       dateRange,
       city,
@@ -82,7 +81,7 @@ export function CreateItineraryDialog({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button disabled={noSavedActivities}>
           Create new itinerary
           <CalendarPlus />

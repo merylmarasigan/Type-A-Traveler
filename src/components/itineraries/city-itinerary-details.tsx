@@ -49,7 +49,6 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
 
   const start = itineraryDaysQuery.data[0]
   const end = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
-  console.log("city-itinerary-details",start, end)
 
   const [selectedDay, setSelectedDay] = useState<ItineraryDay>(
     itineraryDaysQuery.data[0],
