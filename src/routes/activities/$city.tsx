@@ -164,6 +164,7 @@ function RouteContent({
           <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 max-w-7xl">
             {cityLocationsQuery.data.map((location) => (
               <ErrorBoundary
+                key={location.location_id}
                 fallback={<div>something went wrong with {location.name}</div>}
                 onError={(error) => {
                   console.error({ location, error, defaultCityPhoto })

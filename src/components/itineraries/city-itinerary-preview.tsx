@@ -60,6 +60,9 @@ function CityItineraryPreviewContent({
 
   const first = itineraryDaysQuery.data[0]
   const last = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
+
+  if (!first || !last) return <CityItineraryPreviewSkeleton />
+
   const scheduleDescription = `${formatDate(parseLocalDate(first.date), 'MMMM do, y')} - ${formatDate(parseLocalDate(last.date), 'MMMM do, y')}`
   return (
     <Card className="w-full md:w-96 md:max-w-md">

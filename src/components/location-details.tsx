@@ -30,12 +30,14 @@ export function LocationDetailsDialog({
 }: LocationDetailsProps) {
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button variant="secondary" className="flex-1">
-          <Eye />
-          View
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button variant="secondary" className="flex-1">
+            <Eye />
+            View
+          </Button>
+        }
+      />
       <DialogContent>
         <img
           src={imageUrl}

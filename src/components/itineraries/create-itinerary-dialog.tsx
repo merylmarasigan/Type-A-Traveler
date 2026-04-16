@@ -96,12 +96,14 @@ function CreateItineraryDialogContent({
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button disabled={noSavedActivities}>
-          Create new itinerary
-          <CalendarPlus />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button disabled={noSavedActivities}>
+            Create new itinerary
+            <CalendarPlus />
+          </Button>
+        }
+      />
       <DialogContent className="w-auto sm:max-w-xl p-0">
         <DialogHeader className="px-4 pt-4">
           <DialogTitle>Create your itinerary for {city}</DialogTitle>

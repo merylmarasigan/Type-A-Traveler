@@ -50,16 +50,18 @@ export function EditItineraryDialog(props: EditItineraryDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button
-          onClick={() => setOpen(true)}
-          variant="outline"
-          className={cn(props.className)}
-        >
-          {props.type === 'Folder' ? <FolderPen /> : <MapPinPen />}
-          Edit details
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button
+            onClick={() => setOpen(true)}
+            variant="outline"
+            className={cn(props.className)}
+          >
+            {props.type === 'Folder' ? <FolderPen /> : <MapPinPen />}
+            Edit details
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Rename {props.title}</DialogTitle>

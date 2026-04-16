@@ -14,12 +14,14 @@ import {
 export function SearchCitiesDialog(props: ComponentProps<'button'>) {
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button variant="outline" {...props}>
-          <MapPinPlus />
-          Add another city
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button variant="outline" {...props}>
+            <MapPinPlus />
+            Add another city
+          </Button>
+        }
+      />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add another city</DialogTitle>

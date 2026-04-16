@@ -59,16 +59,18 @@ function EditScheduleDialogContent({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button
-          className="w-full"
-          onClick={() => setOpen(true)}
-          variant="secondary"
-        >
-          <CalendarCog />
-          Adjust dates
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button
+            className="w-full"
+            onClick={() => setOpen(true)}
+            variant="secondary"
+          >
+            <CalendarCog />
+            Adjust dates
+          </Button>
+        }
+      />
       <DialogContent className="w-auto sm:max-w-xl p-0">
         <DialogHeader className="px-4 pt-4">
           <DialogTitle>Adjust dates for {itineraryQuery.data.city}</DialogTitle>

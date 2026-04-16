@@ -65,13 +65,15 @@ function ItineraryFolderPreviewContent({
   const multipleCities = itinerariesQuery.data.length > 1
   const firstCity = itinerariesQuery.data[0]
 
+  if (!firstCity && !multipleCities) return null
+
   return (
     <Card className="w-full md:w-96 md:max-w-md">
       <CardHeader>
         <CardTitle className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             {multipleCities ? <Folder /> : <MapPin />}
-            {multipleCities ? folder.title : firstCity.title}
+            {multipleCities ? folder.title : firstCity!.title}
           </div>
           {showAuthor && (
             <TypographyMuted>by {userQuery.data.name}</TypographyMuted>
@@ -80,7 +82,7 @@ function ItineraryFolderPreviewContent({
       </CardHeader>
       <CardContent>
         <TypographyBlockquote>
-          {multipleCities ? folder.description : firstCity.description}
+          {multipleCities ? folder.description : firstCity!.description}
         </TypographyBlockquote>
       </CardContent>
       <CardFooter

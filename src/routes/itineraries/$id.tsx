@@ -63,9 +63,9 @@ function RouteContent({ id }: { id: string }) {
     await router.navigate({ to: '/my-itineraries' })
   }
 
-  const title = folderQuery.data?.title ?? cityItineraries.data[0].title
+  const title = folderQuery.data?.title ?? cityItineraries.data[0]?.title
   const description =
-    folderQuery.data.description ?? cityItineraries.data[0].description
+    folderQuery.data?.description ?? cityItineraries.data[0]?.description
   const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
 
   const folderOnlyHasOneCity = cityItineraries.data.length === 1
