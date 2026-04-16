@@ -14,7 +14,7 @@ import { ComponentProps } from 'react'
 export function SearchCitiesDialog(props: ComponentProps<'button'>) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button variant="outline" {...props}>
           <MapPinPlus />
           Add another city

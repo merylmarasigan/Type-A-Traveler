@@ -44,7 +44,7 @@ export function EditScheduleDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button
           className="w-full"
           onClick={() => setOpen(true)}

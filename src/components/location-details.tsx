@@ -30,7 +30,7 @@ export function LocationDetailsDialog({
 }: LocationDetailsProps) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button variant="secondary" className="flex-1">
           <Eye />
           View

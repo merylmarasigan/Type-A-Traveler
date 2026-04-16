@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
-import { authClient } from '@/lib/auth-client'
 import { ItineraryFolderPreview } from '@/components/itineraries/itinerary-folder-preview'
 import { TypographyH1, TypographySmall } from '@/components/ui/typography'
 import {
@@ -19,8 +18,7 @@ export const Route = createFileRoute('/my-itineraries')({
 })
 
 function myItinerariesPage() {
-  const { data } = authClient.useSession()
-  const { userFoldersQuery } = useItineraryFolders(data?.user?.id)
+  const { userFoldersQuery } = useItineraryFolders()
   const { data: folders } = userFoldersQuery
 
   return (

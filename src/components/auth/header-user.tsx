@@ -50,12 +50,11 @@ export function AuthHeader() {
                 My Itineraries
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              {/* TODO: implement the saved-activities page */}
-              {/* <Link to="/my-saved-activities" className="justify-start"> */}
-              <Bookmark />
-              My Saved Activities
-              {/* </Link> */}
+            <DropdownMenuItem asChild>
+              <Link to="/my-activities" className="justify-start">
+                <Bookmark />
+                My Saved Activities
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

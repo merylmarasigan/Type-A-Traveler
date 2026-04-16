@@ -50,7 +50,7 @@ export function EditItineraryDialog(props: EditItineraryDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button
           onClick={() => setOpen(true)}
           variant="outline"

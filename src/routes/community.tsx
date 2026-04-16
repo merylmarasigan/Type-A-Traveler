@@ -17,7 +17,7 @@ function CommunityPage() {
       <TypographySmall>See trips others have planned!</TypographySmall>
       <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4">
         {folders.map((folder) => (
-          <ItineraryFolderPreview folder={folder} showAuthor />
+          <ItineraryFolderPreview key={folder.id} folder={folder} showAuthor />
         ))}
       </div>
     </div>
