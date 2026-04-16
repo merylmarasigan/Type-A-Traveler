@@ -73,7 +73,7 @@ function ItineraryFolderPreviewContent({
         <CardTitle className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             {multipleCities ? <Folder /> : <MapPin />}
-            {multipleCities ? folder.title : firstCity!.title}
+            {multipleCities ? folder.title : firstCity.title}
           </div>
           {showAuthor && (
             <TypographyMuted>by {userQuery.data.name}</TypographyMuted>
@@ -81,8 +81,8 @@ function ItineraryFolderPreviewContent({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <TypographyBlockquote>
-          {multipleCities ? folder.description : firstCity!.description}
+        <TypographyBlockquote className="line-clamp-1 text-ellipsis overflow-hidden">
+          {multipleCities ? folder.description : firstCity.description}
         </TypographyBlockquote>
       </CardContent>
       <CardFooter

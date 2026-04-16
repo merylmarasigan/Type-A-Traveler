@@ -34,7 +34,7 @@ export function SavedActivitySuggestions(props: SavedActivitySuggestionsProps) {
 function SavedActivitySuggestionsSkeleton() {
   return (
     <div className="flex flex-col gap-2 w-full">
-      <div className="w-32 md:w-3xl 2xl:w-6xl rounded-md border">
+      <div className="w-full min-w-0 max-w-full rounded-md border md:max-w-3xl 2xl:max-w-6xl">
         <TypographySmall className="text-primary p-2">
           Suggestions
         </TypographySmall>
@@ -67,7 +67,7 @@ function SavedActivitySuggestionsContent({
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <ScrollArea className="w-32 md:w-3xl 2xl:w-6xl rounded-md border whitespace-nowrap">
+      <ScrollArea className="w-full min-w-0 max-w-full rounded-md border whitespace-nowrap md:max-w-3xl 2xl:max-w-6xl">
         <TypographySmall className="text-primary p-2">
           Suggestions
         </TypographySmall>
