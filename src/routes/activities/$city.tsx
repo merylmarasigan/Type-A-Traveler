@@ -115,7 +115,7 @@ function RouteContent({
   return (
     <div className="flex flex-col items-center">
       <div className="max-w-7xl flex flex-col gap-2 p-2">
-        <div className="self-start w-full flex justify-between items-center p-2 gap-2">
+        <div className="self-start w-full flex flex-col md:flex-row justify-between items-center p-2 gap-2">
           <TypographyH2 className="text-start">
             Suggested {category} for {city}
           </TypographyH2>
@@ -146,10 +146,12 @@ function RouteContent({
           </div>
         </div>
 
-        <FilterButtons
-          currentCategory={category}
-          setCurrentCategory={updateCategory}
-        />
+        <div className="px-4 md:px-0">
+          <FilterButtons
+            currentCategory={category}
+            setCurrentCategory={updateCategory}
+          />
+        </div>
 
         {cityLocationsQuery.data.length === 0 ? (
           <Alert>
