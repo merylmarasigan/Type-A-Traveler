@@ -25,7 +25,7 @@ export function FilterButtons({ currentCategory, setCurrentCategory }: Props) {
   return (
     <RadioGroup
       value={currentCategory}
-      className="grid-flow-row md:grid-flow-col w-full md:w-min"
+      className="grid-flow-col w-full md:w-min"
       onValueChange={validateCategory}
     >
       {locationCategories.map((category) => (

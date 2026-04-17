@@ -21,6 +21,7 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item'
+import { recordRecentCitySearch } from '@/hooks/use-recent-city-searches'
 import { citiesQueryOptions } from '@/services/cities/query-options'
 
 interface SearchCitiesProps {
@@ -38,7 +39,7 @@ export function SearchCities({ showFilterButtons = true }: SearchCitiesProps) {
   )
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 w-full">
       {showFilterButtons && (
         <FilterButtons
           currentCategory={searchCategory}
@@ -52,7 +53,7 @@ export function SearchCities({ showFilterButtons = true }: SearchCitiesProps) {
       >
         <ComboboxInput
           placeholder="Los Angeles, New York, etc."
-          className="w-ful md:w-96"
+          className="w-full md:w-96 mb-8"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           showClear
@@ -76,6 +77,13 @@ export function SearchCities({ showFilterButtons = true }: SearchCitiesProps) {
                   lat: city.lat,
                   lng: city.lng,
                 }}
+                onClick={() =>
+                  recordRecentCitySearch({
+                    name: city.name,
+                    lat: city.lat,
+                    lng: city.lng,
+                  })
+                }
               >
                 <ComboboxItem value={city}>
                   <Item size="sm" className="p-0">
