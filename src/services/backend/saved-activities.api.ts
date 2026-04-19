@@ -6,11 +6,13 @@ import {
   getActivitiesForTimeSlot,
   getCityItinerarySavedActivities,
   getSavedActivity,
+  getTimeSlotActivity,
   getUnlinkedActivitiesForTimeSlot,
   getUserSavedActivities,
   linkActivityToTimeSlot,
   unlinkActivityFromTimeSlot,
   updateSavedActivity,
+  updateTimeSlotActivityNote,
 } from '@/db/queries/saved-activities'
 import {
   insertSavedActivitySchema,
@@ -147,6 +149,29 @@ export const unlinkActivityFromTimeSlotFn = createServerFn({ method: 'POST' })
       data.savedActivityId,
       data.timeSlotId,
     )
+
+    return result
+  })
+
+export const getTimeSlotActivityFn = createServerFn({ method: 'GET' })
+  .inputValidator(
+    z.object({ savedActivityId: z.string(), timeSlotId: z.string() }),
+  )
+  .handler(async ({ data }) => {
+    const result = await getTimeSlotActivity(
+      data.savedActivityId,
+      data.timeSlotId,
+    )
+
+    return result
+  })
+
+export const updateTimeSlotActivityNoteFn = createServerFn({ method: 'POST' })
+  .inputValidator(z.object({ id: z.string(), note: z.string().nullable() }))
+  .handler(async ({ data }) => {
+    await ensureSession()
+
+    const result = await updateTimeSlotActivityNote(data.id, data.note)
 
     return result
   })

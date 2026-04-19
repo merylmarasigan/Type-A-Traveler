@@ -111,6 +111,16 @@ export const selectTimeSlotActivitySchema =
   createSelectSchema(timeSlotActivities).omit(omittedTimestamps)
 export type TimeSlotActivity = z.infer<typeof selectTimeSlotActivitySchema>
 
+export const updateTimeSlotActivitySchema = createUpdateSchema(
+  timeSlotActivities,
+  {
+    id: z.string(), // Makes id required for updates
+  },
+).omit(omittedTimestamps)
+export type UpdateTimeSlotActivity = z.infer<
+  typeof updateTimeSlotActivitySchema
+>
+
 // ---------- LODGING ----------
 
 export const insertLodgingSchema =

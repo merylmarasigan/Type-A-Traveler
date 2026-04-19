@@ -155,3 +155,34 @@ export const unlinkActivityFromTimeSlot = async (
 
   return result
 }
+
+export const getTimeSlotActivity = async (
+  savedActivityId: string,
+  timeSlotId: string,
+) => {
+  const [result] = await db
+    .select()
+    .from(timeSlotActivities)
+    .where(
+      and(
+        eq(timeSlotActivities.savedActivityId, savedActivityId),
+        eq(timeSlotActivities.timeSlotId, timeSlotId),
+      ),
+    )
+    .limit(1)
+
+  return result
+}
+
+export const updateTimeSlotActivityNote = async (
+  id: string,
+  note: string | null,
+) => {
+  const [result] = await db
+    .update(timeSlotActivities)
+    .set({ note })
+    .where(eq(timeSlotActivities.id, id))
+    .returning()
+
+  return result
+}

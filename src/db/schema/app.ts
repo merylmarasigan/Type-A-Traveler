@@ -65,6 +65,7 @@ export const timeSlotActivities = pgTable('time_slot_activities', {
   savedActivityId: text()
     .notNull()
     .references(() => savedActivities.id, { onDelete: 'cascade' }),
+  note: text(),
   ...timestamps,
 })
 
