@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
-import { Moon, Sun, Building2, MoreVertical } from 'lucide-react'
+import { Moon, Sun, Building2, CalendarPlus, MoreVertical } from 'lucide-react'
+import { Suspense } from 'react'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -18,6 +19,25 @@ import { AuthHeader } from '@/components/auth/header-user'
 import { ThemeToggle } from '@/components/util/theme-toggle'
 import { useTheme } from '@/components/util/theme-provider'
 import { Button } from '@/components/ui/button'
+import { QuickCreateItineraryDialog } from '@/components/itineraries/quick-create-itinerary-dialog'
+import { authClient } from '@/lib/auth-client'
+
+function QuickCreateNavButton() {
+  const { data: session } = authClient.useSession()
+
+  if (!session?.user) return null
+
+  return (
+    <QuickCreateItineraryDialog
+      trigger={
+        <Button size="sm">
+          <CalendarPlus />
+          <span className="hidden sm:inline">New itinerary</span>
+        </Button>
+      }
+    />
+  )
+}
 
 function MobileNavMenu() {
   const { theme, setTheme } = useTheme()
@@ -81,6 +101,9 @@ export function NavigationBar() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
+          <Suspense fallback={null}>
+            <QuickCreateNavButton />
+          </Suspense>
           <NavigationMenu className="order-1 md:order-2 max-w-none flex-none">
             <NavigationMenuList>
               <NavigationMenuItem>
