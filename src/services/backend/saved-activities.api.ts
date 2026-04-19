@@ -3,9 +3,13 @@ import z from 'zod/v4'
 import {
   createSavedActivity,
   deleteSavedActivity,
+  getActivitiesForTimeSlot,
   getCityItinerarySavedActivities,
   getSavedActivity,
+  getUnlinkedActivitiesForTimeSlot,
   getUserSavedActivities,
+  linkActivityToTimeSlot,
+  unlinkActivityFromTimeSlot,
   updateSavedActivity,
 } from '@/db/queries/saved-activities'
 import {
@@ -49,6 +53,34 @@ export const getCityItinerarySavedActivitiesFn = createServerFn({
     return activities
   })
 
+export const getTimeSlotActivitiesFn = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ timeSlotId: z.string() }))
+  .handler(async ({ data }) => {
+    const activities = await getActivitiesForTimeSlot(data.timeSlotId)
+
+    return activities
+  })
+
+export const getUnlinkedActivitiesForTimeSlotFn = createServerFn({
+  method: 'GET',
+})
+  .inputValidator(
+    z.object({
+      timeSlotId: z.string(),
+      userId: z.string(),
+      city: z.string(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const activities = await getUnlinkedActivitiesForTimeSlot(
+      data.timeSlotId,
+      data.userId,
+      data.city,
+    )
+
+    return activities
+  })
+
 export const getSingleSavedActivityFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ savedActivityId: z.string() }))
   .handler(async ({ data }) => {
@@ -87,4 +119,34 @@ export const deleteSavedActivityFn = createServerFn({
     const deletedActivity = await deleteSavedActivity(data.savedActivityId)
 
     return deletedActivity
+  })
+
+export const linkActivityToTimeSlotFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({ savedActivityId: z.string(), timeSlotId: z.string() }),
+  )
+  .handler(async ({ data }) => {
+    await ensureSession()
+
+    const link = await linkActivityToTimeSlot(
+      data.savedActivityId,
+      data.timeSlotId,
+    )
+
+    return link
+  })
+
+export const unlinkActivityFromTimeSlotFn = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({ savedActivityId: z.string(), timeSlotId: z.string() }),
+  )
+  .handler(async ({ data }) => {
+    await ensureSession()
+
+    const result = await unlinkActivityFromTimeSlot(
+      data.savedActivityId,
+      data.timeSlotId,
+    )
+
+    return result
   })

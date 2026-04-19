@@ -2,9 +2,9 @@ import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Search, SearchAlertIcon } from 'lucide-react'
 import {
-  SavedActivityPreview,
-  SavedActivityPreviewSkeleton,
-} from '@/components/saved-activities/saved-activity-preview'
+  SavedActivityCard,
+  SavedActivityCardSkeleton,
+} from '@/components/saved-activities/saved-activity-card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -35,7 +35,7 @@ function UserSavedActivitiesSkeleton() {
       </div>
       <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <SavedActivityPreviewSkeleton key={i} />
+          <SavedActivityCardSkeleton key={i} />
         ))}
       </ul>
     </div>
@@ -78,7 +78,7 @@ function UserSavedActivitiesContent({
       ) : (
         <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
           {savedActivities.map((activity) => (
-            <SavedActivityPreview key={activity.id} id={activity.id} />
+            <SavedActivityCard key={activity.id} id={activity.id} />
           ))}
         </ul>
       )}

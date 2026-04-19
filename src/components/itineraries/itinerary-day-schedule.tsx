@@ -18,7 +18,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyLarge } from '@/components/ui/typography'
-import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useTimeSlots } from '@/hooks/use-time-slots'
@@ -61,9 +60,6 @@ function ItineraryDayScheduleContent({
   itineraryDay,
 }: ItineraryDayScheduleProps) {
   const { timeSlotsQuery } = useTimeSlots({ itineraryDayId: itineraryDay.id })
-  const { cityActivitiesQuery } = useSavedActivities({
-    cityItineraryId: itineraryDay.cityItineraryId,
-  })
   const { itineraryQuery } = useSingleCityItinerary({
     cityItineraryId: itineraryDay.cityItineraryId,
   })
@@ -71,15 +67,6 @@ function ItineraryDayScheduleContent({
     itineraryFolderId: itineraryQuery.data.folderId,
   })
   const { data } = authClient.useSession()
-
-  const todayTimeSlotIds = timeSlotsQuery.data
-    .filter((timeSlot) => timeSlot.itineraryDayId === itineraryDay.id)
-    .map((timeSlot) => timeSlot.id)
-
-  const todaysActivities = cityActivitiesQuery.data.filter(
-    (activity) =>
-      activity.timeSlotId && todayTimeSlotIds.includes(activity.timeSlotId),
-  )
 
   const dayOfWeek = formatDate(itineraryDay.date, 'EEEE')
 
@@ -92,8 +79,8 @@ function ItineraryDayScheduleContent({
           <CardTitle>{dayOfWeek}</CardTitle>
           <CardDescription>
             <Badge variant="secondary">
-              {todaysActivities.length}{' '}
-              {todaysActivities.length === 1 ? 'activity' : 'activities'}
+              {timeSlotsQuery.data.length}{' '}
+              {timeSlotsQuery.data.length === 1 ? 'time slot' : 'time slots'}
             </Badge>
           </CardDescription>
         </CardHeader>
@@ -127,9 +114,6 @@ function ItineraryDayScheduleContent({
                   <TimeSlotDetails
                     timeSlot={slot}
                     itineraryDay={itineraryDay}
-                    activities={cityActivitiesQuery.data.filter(
-                      (activity) => activity.timeSlotId === slot.id,
-                    )}
                     cityItineraryId={itineraryDay.cityItineraryId}
                     city={itineraryQuery.data.city}
                     showActions={authorIsSessionUser}

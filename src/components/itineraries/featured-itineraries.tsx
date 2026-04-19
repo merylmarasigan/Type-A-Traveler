@@ -13,14 +13,18 @@ export function FeaturedItineraries() {
       <TypographyH3>Featured Itineraries</TypographyH3>
       <Suspense
         fallback={
-          <ScrollArea className="self-center w-full min-w-0 max-w-full px-2 rounded-md border whitespace-nowrap md:max-w-5xl">
-            <div className="flex w-max space-x-4 p-4">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <ItineraryFolderPreviewSkeleton key={i} />
-              ))}
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+          <div className="relative self-center w-full min-w-0 max-w-full md:max-w-5xl">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 rounded-l-md bg-linear-to-r from-background to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 rounded-r-md bg-linear-to-l from-background to-transparent" />
+            <ScrollArea className="w-full rounded-md border whitespace-nowrap">
+              <div className="flex w-max space-x-4 p-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <ItineraryFolderPreviewSkeleton key={i} />
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
         }
       >
         <FeaturedItinerariesContent />
@@ -34,13 +38,17 @@ function FeaturedItinerariesContent() {
   const { data: folders } = foldersQuery
 
   return (
-    <ScrollArea className="self-center w-full min-w-0 max-w-full px-2 rounded-md border whitespace-nowrap md:max-w-5xl">
-      <div className="flex w-max space-x-4 p-4">
-        {folders.map((folder) => (
-          <ItineraryFolderPreview key={folder.id} folder={folder} />
-        ))}
-      </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    <div className="relative self-center w-full min-w-0 max-w-full md:max-w-5xl">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 rounded-l-md bg-linear-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 rounded-r-md bg-linear-to-l from-background to-transparent" />
+      <ScrollArea className="w-full rounded-md border whitespace-nowrap">
+        <div className="flex w-max space-x-4 p-4">
+          {folders.map((folder) => (
+            <ItineraryFolderPreview key={folder.id} folder={folder} />
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+    </div>
   )
 }

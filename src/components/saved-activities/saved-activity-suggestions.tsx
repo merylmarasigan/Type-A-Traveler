@@ -1,7 +1,8 @@
 import { AlertCircleIcon } from 'lucide-react'
 import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
-import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { SavedActivitySuggestionCard } from '@/components/saved-activities/saved-activity-suggestion-card'
 import {
   Alert,
   AlertAction,
@@ -11,9 +12,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useSavedActivities } from '@/hooks/use-saved-activities'
-import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { TypographySmall } from '@/components/ui/typography'
+import { unlinkedActivitiesQueryOptions } from '@/services/backend/saved-activities.options'
+import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
+import { authClient } from '@/lib/auth-client'
 
 interface SavedActivitySuggestionsProps {
   cityItineraryId: string
@@ -53,17 +55,17 @@ function SavedActivitySuggestionsContent({
   cityItineraryId,
   city,
 }: SavedActivitySuggestionsProps) {
+  const { data: session } = authClient.useSession()
   const { itineraryQuery } = useSingleCityItinerary({ cityItineraryId })
 
-  const { userActivitiesQuery } = useSavedActivities({
-    city: itineraryQuery.data.city,
-  })
+  const itineraryCity = itineraryQuery.data.city
+  const userId = session?.user.id ?? ''
 
-  const notYetAddedActivities = userActivitiesQuery.data.filter(
-    (activity) =>
-      activity.timeSlotId === null &&
-      activity.city === itineraryQuery.data.city,
+  const unlinkedActivitiesQuery = useSuspenseQuery(
+    unlinkedActivitiesQueryOptions(timeSlotId, userId, itineraryCity),
   )
+
+  const suggestions = unlinkedActivitiesQuery.data
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -73,19 +75,18 @@ function SavedActivitySuggestionsContent({
         </TypographySmall>
 
         <div className="flex w-max space-x-4 p-4">
-          {notYetAddedActivities.length === 0 ? (
+          {suggestions.length === 0 ? (
             <Alert>
               <AlertCircleIcon />
               <AlertTitle>No Activities</AlertTitle>
               <AlertDescription>
-                You have no more activities saved for {itineraryQuery.data.city}
-                .
+                You have no more activities saved for {itineraryCity}.
               </AlertDescription>
               <AlertAction>
                 <Button size="xs" variant="default" asChild>
                   <Link
                     to="/activities/$city"
-                    params={{ city: itineraryQuery.data.city }}
+                    params={{ city: itineraryCity }}
                     search={{
                       category: 'hotels',
                       lat: itineraryQuery.data.lat,
@@ -98,13 +99,13 @@ function SavedActivitySuggestionsContent({
               </AlertAction>
             </Alert>
           ) : (
-            notYetAddedActivities.map((activity) => (
-              <SavedActivityPreview
+            suggestions.map((activity) => (
+              <SavedActivitySuggestionCard
                 key={activity.id}
                 id={activity.id}
                 timeSlotId={timeSlotId}
                 cityItineraryId={cityItineraryId}
-                city={city}
+                city={city ?? itineraryCity}
               />
             ))
           )}

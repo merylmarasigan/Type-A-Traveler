@@ -10,6 +10,7 @@ import {
   itineraryFolders,
   lodging,
   savedActivities,
+  timeSlotActivities,
   timeSlots,
 } from '@/db/schema/app'
 import { user } from '@/db/schema/auth'
@@ -99,6 +100,16 @@ export const updateSavedActivitySchema = createUpdateSchema(savedActivities, {
   id: z.string(), // Makes id required for updates
 }).omit(omittedTimestamps)
 export type UpdateSavedActivity = z.infer<typeof updateSavedActivitySchema>
+
+// ---------- TIME SLOT ACTIVITIES (junction) ----------
+
+export const insertTimeSlotActivitySchema =
+  createInsertSchema(timeSlotActivities).omit(omittedWithId)
+export type NewTimeSlotActivity = z.infer<typeof insertTimeSlotActivitySchema>
+
+export const selectTimeSlotActivitySchema =
+  createSelectSchema(timeSlotActivities).omit(omittedTimestamps)
+export type TimeSlotActivity = z.infer<typeof selectTimeSlotActivitySchema>
 
 // ---------- LODGING ----------
 

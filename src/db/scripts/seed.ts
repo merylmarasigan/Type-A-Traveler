@@ -6,6 +6,7 @@ import {
   itineraryFolders,
   lodging,
   savedActivities,
+  timeSlotActivities,
   timeSlots,
 } from '@/db/schema/app'
 import {
@@ -23,6 +24,7 @@ import {
   itineraryDaysRelations,
   lodgingRelations,
   savedActivitiesRelations,
+  timeSlotActivitiesRelations,
   timeSlotRelations,
 } from '@/db/schema/relations'
 
@@ -38,6 +40,7 @@ async function main() {
       itineraryDays,
       timeSlots,
       savedActivities,
+      timeSlotActivities,
       lodging,
       userRelations,
       sessionRelations,
@@ -47,6 +50,7 @@ async function main() {
       itineraryDaysRelations,
       timeSlotRelations,
       savedActivitiesRelations,
+      timeSlotActivitiesRelations,
       lodgingRelations,
     }).refine((f) => ({
       user: {
@@ -195,12 +199,10 @@ async function main() {
           startTime: f.timestamp(),
           endTime: f.timestamp(),
         },
-        with: {
-          savedActivities: 2,
-        },
       },
 
       savedActivities: {
+        count: 20,
         columns: {
           id: f.uuid(),
           name: f.valuesFromArray({

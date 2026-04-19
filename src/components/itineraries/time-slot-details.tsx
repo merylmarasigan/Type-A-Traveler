@@ -1,35 +1,59 @@
 import { formatDate } from 'date-fns'
 import { AlertCircleIcon, Edit, MapPinOff, MapPinPlus } from 'lucide-react'
-import { useState } from 'react'
-import type { ItineraryDay, SavedActivity, TimeSlot } from '@/db/types'
-import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
+import { Suspense, useState } from 'react'
+import type { ItineraryDay, TimeSlot } from '@/db/types'
+import { TimeSlotActivityCard } from '@/components/saved-activities/time-slot-activity-card'
 import { SavedActivitySuggestions } from '@/components/saved-activities/saved-activity-suggestions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TimeSlotForm } from '@/components/itineraries/time-slot-form'
-import { TimeSlotActivityOptions } from '@/components/itineraries/time-slot-activity-options'
 import { TypographySmall } from '@/components/ui/typography'
 import { TimeSlotDeleteDialog } from '@/components/itineraries/time-slot-delete-dialog'
+import { useTimeSlotActivities } from '@/hooks/use-time-slot-activities'
 
 interface TimeSlotDetailsProps {
   timeSlot: TimeSlot
   itineraryDay: ItineraryDay
-  activities: Array<SavedActivity>
   cityItineraryId: string
   city: string
   showActions: boolean
 }
 
-export function TimeSlotDetails({
+export function TimeSlotDetails(props: TimeSlotDetailsProps) {
+  return (
+    <Suspense fallback={<TimeSlotDetailsSkeleton />}>
+      <TimeSlotDetailsContent {...props} />
+    </Suspense>
+  )
+}
+
+function TimeSlotDetailsSkeleton() {
+  return (
+    <div className="flex flex-col gap-2 w-full p-2 border rounded-md">
+      <Skeleton className="h-9 w-48" />
+      <div className="flex flex-wrap gap-2">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <Skeleton key={i} className="h-40 w-48 rounded-md" />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function TimeSlotDetailsContent({
   timeSlot,
   itineraryDay,
-  activities,
   cityItineraryId,
   city,
   showActions,
 }: TimeSlotDetailsProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const { timeSlotActivitiesQuery } = useTimeSlotActivities({
+    timeSlotId: timeSlot.id,
+  })
+  const activities = timeSlotActivitiesQuery.data
 
   if (!timeSlot.startTime || !timeSlot.endTime) return null
   return (
@@ -90,10 +114,13 @@ export function TimeSlotDetails({
             <TypographySmall>Activities</TypographySmall>
             <div className="flex flex-wrap gap-2">
               {activities.map((activity) => (
-                <div key={activity.id} className="flex flex-col gap-1">
-                  <SavedActivityPreview id={activity.id} city={activity.city} />
-                  <TimeSlotActivityOptions activity={activity} />
-                </div>
+                <TimeSlotActivityCard
+                  key={activity.id}
+                  id={activity.id}
+                  timeSlotId={timeSlot.id}
+                  cityItineraryId={cityItineraryId}
+                  city={city}
+                />
               ))}
             </div>
           </div>

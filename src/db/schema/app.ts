@@ -46,7 +46,6 @@ export const timeSlots = pgTable('time_slots', {
 export const savedActivities = pgTable('saved_activities', {
   id: text().primaryKey(),
   userId: text().notNull(),
-  timeSlotId: text().references(() => timeSlots.id, { onDelete: 'cascade' }),
   name: text().notNull(),
   city: text().notNull(),
   lat: text().notNull(),
@@ -55,6 +54,17 @@ export const savedActivities = pgTable('saved_activities', {
   imageUrl: text(),
   fsq_place_id: text(),
   trp_location_id: text(),
+  ...timestamps,
+})
+
+export const timeSlotActivities = pgTable('time_slot_activities', {
+  id: text().primaryKey(),
+  timeSlotId: text()
+    .notNull()
+    .references(() => timeSlots.id, { onDelete: 'cascade' }),
+  savedActivityId: text()
+    .notNull()
+    .references(() => savedActivities.id, { onDelete: 'cascade' }),
   ...timestamps,
 })
 

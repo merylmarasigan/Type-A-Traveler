@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { ActivitiesByCity } from '@/components/saved-activities/activities-by-city'
-import { SavedActivityPreviewSkeleton } from '@/components/saved-activities/saved-activity-preview'
+import { SavedActivityCardSkeleton } from '@/components/saved-activities/saved-activity-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyH1, TypographySmall } from '@/components/ui/typography'
 
@@ -26,7 +26,7 @@ function MyActivitiesPage() {
                 <Skeleton className="h-7 w-32 mb-4" />
                 <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {Array.from({ length: 4 }).map((_, j) => (
-                    <SavedActivityPreviewSkeleton key={j} />
+                    <SavedActivityCardSkeleton key={j} />
                   ))}
                 </ul>
               </section>

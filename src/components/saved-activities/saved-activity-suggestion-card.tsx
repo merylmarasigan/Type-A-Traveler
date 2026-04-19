@@ -6,31 +6,33 @@ import {
   Card,
   CardAction,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { TypographySmall } from '@/components/ui/typography'
 import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
+import { useMutation } from '@tanstack/react-query'
+import { linkActivityToTimeSlotMutationOptions } from '@/services/backend/saved-activities.options'
 import { authClient } from '@/lib/auth-client'
 
-interface SavedActivityPreviewProps {
+interface SavedActivitySuggestionCardProps {
   id: string
-  timeSlotId?: string
-  cityItineraryId?: string
-  city?: string
+  timeSlotId: string
+  cityItineraryId: string
+  city: string
 }
 
-export function SavedActivityPreview(props: SavedActivityPreviewProps) {
+export function SavedActivitySuggestionCard(
+  props: SavedActivitySuggestionCardProps,
+) {
   return (
-    <Suspense fallback={<SavedActivityPreviewSkeleton />}>
-      <SavedActivityPreviewContent {...props} />
+    <Suspense fallback={<SavedActivitySuggestionCardSkeleton />}>
+      <SavedActivitySuggestionCardContent {...props} />
     </Suspense>
   )
 }
 
-export function SavedActivityPreviewSkeleton() {
+export function SavedActivitySuggestionCardSkeleton() {
   return (
     <Card className="pt-0 max-w-sm">
       <Skeleton className="aspect-video w-full rounded-t-md rounded-b-none" />
@@ -45,29 +47,24 @@ export function SavedActivityPreviewSkeleton() {
   )
 }
 
-function SavedActivityPreviewContent({
+function SavedActivitySuggestionCardContent({
   id,
   timeSlotId,
   cityItineraryId,
   city,
-}: SavedActivityPreviewProps) {
-  const { data } = authClient.useSession()
+}: SavedActivitySuggestionCardProps) {
+  const { data: session } = authClient.useSession()
 
-  const { activityQuery, updateActivityMutation } = useSingleSavedActivity({
-    savedActivityId: id,
-    cityItineraryId,
-    userId: data?.user.id,
-    city,
-  })
+  const { activityQuery } = useSingleSavedActivity({ savedActivityId: id })
 
-  const addToTimeSlot = async () => {
-    if (!timeSlotId) return
-
-    await updateActivityMutation.mutateAsync({
-      id,
+  const linkMutation = useMutation(
+    linkActivityToTimeSlotMutationOptions(
       timeSlotId,
-    })
-  }
+      cityItineraryId,
+      session?.user.id ?? '',
+      city,
+    ),
+  )
 
   const activity = activityQuery.data
 
@@ -88,20 +85,16 @@ function SavedActivityPreviewContent({
         <CardDescription className="line-clamp-2">
           {activity.description}
         </CardDescription>
-        {timeSlotId && (
-          <CardAction>
-            <Button onClick={addToTimeSlot}>
-              <Plus />
-              Add
-            </Button>
-          </CardAction>
-        )}
+        <CardAction>
+          <Button
+            onClick={() => linkMutation.mutate(id)}
+            disabled={linkMutation.isPending}
+          >
+            <Plus />
+            Add
+          </Button>
+        </CardAction>
       </CardHeader>
-      {!timeSlotId && (
-        <CardFooter>
-          <TypographySmall>{activity.city}</TypographySmall>
-        </CardFooter>
-      )}
     </Card>
   )
 }

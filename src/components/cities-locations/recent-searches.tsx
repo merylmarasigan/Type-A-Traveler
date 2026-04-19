@@ -3,6 +3,7 @@ import { TypographyH3 } from '@/components/ui/typography'
 import { Link } from '@tanstack/react-router'
 import { Search, SearchX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 export function RecentSearches() {
   const { recentSearches, clearSearchHistory } = useRecentCitySearches()
@@ -18,23 +19,34 @@ export function RecentSearches() {
           Clear
         </Button>
       </div>
-      <div className="flex gap-2 overflow-scroll">
-        {recentSearches.map((entry) => (
-          <Button
-            variant="secondary"
-            asChild
-            key={`${entry.name}-${entry.lat}-${entry.lng}`}
-          >
-            <Link
-              to="/activities/$city"
-              params={{ city: entry.name }}
-              search={{ category: 'hotels', lat: entry.lat, lng: entry.lng }}
-            >
-              <Search />
-              {entry.name}
-            </Link>
-          </Button>
-        ))}
+      <div className="relative w-full min-w-0">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-linear-to-r from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-linear-to-l from-background to-transparent" />
+        <ScrollArea className="w-full whitespace-nowrap">
+          <div className="flex w-max space-x-4 p-4">
+            {recentSearches.map((entry) => (
+              <Button
+                variant="secondary"
+                asChild
+                key={`${entry.name}-${entry.lat}-${entry.lng}`}
+              >
+                <Link
+                  to="/activities/$city"
+                  params={{ city: entry.name }}
+                  search={{
+                    category: 'hotels',
+                    lat: entry.lat,
+                    lng: entry.lng,
+                  }}
+                >
+                  <Search />
+                  {entry.name}
+                </Link>
+              </Button>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </div>
   )
