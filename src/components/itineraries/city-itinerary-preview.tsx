@@ -1,12 +1,13 @@
 import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
-import { Eye } from 'lucide-react'
+import { MapPin } from 'lucide-react'
+import { Image } from '@unpic/react'
 import type { CityItinerary } from '@/db/types'
-import { Button } from '@/components/ui/button'
-import { parseLocalDate } from '@/lib/utils'
+import { cn, parseLocalDate } from '@/lib/utils'
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -20,6 +21,8 @@ import { useSavedActivities } from '@/hooks/use-saved-activities'
 
 interface CityItineraryPreviewProps {
   cityItinerary: CityItinerary
+  showAuthor?: boolean
+  author?: string
 }
 
 export function CityItineraryPreview(props: CityItineraryPreviewProps) {
@@ -32,7 +35,8 @@ export function CityItineraryPreview(props: CityItineraryPreviewProps) {
 
 function CityItineraryPreviewSkeleton() {
   return (
-    <Card className="w-full md:w-96 md:max-w-md">
+    <Card className="w-full overflow-hidden pt-0 md:w-96 md:max-w-md">
+      <Skeleton className="h-44 w-full rounded-none sm:h-48" />
       <CardHeader>
         <Skeleton className="h-5 w-1/2" />
         <CardDescription>
@@ -52,6 +56,8 @@ function CityItineraryPreviewSkeleton() {
 
 function CityItineraryPreviewContent({
   cityItinerary,
+  showAuthor,
+  author,
 }: CityItineraryPreviewProps) {
   const { itineraryDaysQuery } = useItineraryDays({
     cityItineraryId: cityItinerary.id,
@@ -65,32 +71,81 @@ function CityItineraryPreviewContent({
 
   if (!first || !last) return <CityItineraryPreviewSkeleton />
 
+  const thumbUrls = cityActivitiesQuery.data
+    .flatMap((a) => (a.imageUrl ? [a.imageUrl] : []))
+    .slice(0, 4)
+  const uniqueThumbUrls = [...new Set(thumbUrls)]
+
   const scheduleDescription = `${formatDate(parseLocalDate(first.date), 'MMMM do, y')} - ${formatDate(parseLocalDate(last.date), 'MMMM do, y')}`
   return (
-    <Card className="w-full md:w-96 md:max-w-md">
-      <CardHeader>
-        <CardTitle>{cityItinerary.title}</CardTitle>
-        <CardDescription>{cityItinerary.city}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <TypographySmall>
-          {cityActivitiesQuery.data.length}{' '}
-          {cityActivitiesQuery.data.length === 1 ? 'activity' : 'activities'}
-        </TypographySmall>
-      </CardContent>
-      <CardFooter className="justify-between">
-        <TypographyMuted>{scheduleDescription}</TypographyMuted>
-
-        <Button asChild>
-          <Link
-            to="/itineraries/cities/$cityId"
-            params={{ cityId: cityItinerary.id }}
+    <Link
+      to="/itineraries/cities/$cityId"
+      params={{ cityId: cityItinerary.id }}
+    >
+      <Card className="w-full overflow-hidden pt-0 md:w-96 md:max-w-md">
+        {uniqueThumbUrls.length > 0 ? (
+          <div
+            className={cn(
+              'grid h-44 w-full gap-0.5 bg-muted sm:h-48',
+              uniqueThumbUrls.length === 1 && 'grid-cols-1 grid-rows-1',
+              uniqueThumbUrls.length === 2 && 'grid-cols-2 grid-rows-1',
+              (uniqueThumbUrls.length === 3 || uniqueThumbUrls.length === 4) &&
+                'grid-cols-2 grid-rows-[minmax(0,1fr)_minmax(0,1fr)]',
+            )}
           >
-            <Eye />
-            View
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
+            {uniqueThumbUrls.map((url, index) => (
+              <div
+                key={`${url}-${index}`}
+                className={cn(
+                  'relative min-h-0 overflow-hidden',
+                  uniqueThumbUrls.length === 3 && index === 2 && 'col-span-2',
+                )}
+              >
+                <Image
+                  src={url}
+                  alt={`${cityItinerary.city} activity preview ${index + 1}`}
+                  layout="constrained"
+                  width={320}
+                  height={240}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div
+            className="h-44 w-full shrink-0 bg-muted sm:h-48"
+            aria-hidden
+          />
+        )}
+        <CardHeader>
+          <CardTitle className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">{cityItinerary.title}</div>
+            {showAuthor && <TypographyMuted>by {author}</TypographyMuted>}
+          </CardTitle>
+          {uniqueThumbUrls.length > 0 && (
+            <CardDescription>{cityItinerary.city}</CardDescription>
+          )}
+          <CardAction>
+            <MapPin />
+          </CardAction>
+        </CardHeader>
+        {uniqueThumbUrls.length === 0 && (
+          <CardContent>
+            <TypographySmall>
+              {cityActivitiesQuery.data.length}{' '}
+              {cityActivitiesQuery.data.length === 1
+                ? 'activity'
+                : 'activities'}
+            </TypographySmall>
+          </CardContent>
+        )}
+        {uniqueThumbUrls.length === 0 && (
+          <CardFooter className="justify-between">
+            <TypographyMuted>{scheduleDescription}</TypographyMuted>
+          </CardFooter>
+        )}
+      </Card>
+    </Link>
   )
 }

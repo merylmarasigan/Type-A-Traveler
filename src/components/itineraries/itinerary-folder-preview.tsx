@@ -1,24 +1,26 @@
 import { Suspense } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Eye, Folder, MapPin } from 'lucide-react'
+import { useQueries } from '@tanstack/react-query'
+import { Folder } from 'lucide-react'
+import { Image } from '@unpic/react'
 import type { ItineraryFolder } from '@/db/types'
+import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Card,
+  CardAction,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  TypographyBlockquote,
-  TypographyMuted,
-} from '@/components/ui/typography'
+import { TypographyMuted } from '@/components/ui/typography'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { cn } from '@/lib/utils'
+import { cityItinerarySavedActivitiesQueryOptions } from '@/services/backend/saved-activities.options'
 
 interface ItineraryFolderPreviewProps {
   folder: ItineraryFolder
@@ -35,7 +37,8 @@ export function ItineraryFolderPreview(props: ItineraryFolderPreviewProps) {
 
 export function ItineraryFolderPreviewSkeleton() {
   return (
-    <Card className="w-full md:w-96 md:max-w-md">
+    <Card className="w-full overflow-hidden pt-0 md:w-96 md:max-w-md">
+      <Skeleton className="h-44 w-full rounded-none sm:h-48" />
       <CardHeader>
         <CardTitle className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
@@ -61,43 +64,94 @@ function ItineraryFolderPreviewContent({
   const { itinerariesQuery } = useCityItineraries({ folderId: folder.id })
   const { userQuery } = useSingleUser({ userId: folder.authorId })
 
-  const cityCount = itinerariesQuery.data.length
-  const multipleCities = itinerariesQuery.data.length > 1
-  const firstCity = itinerariesQuery.data[0]
+  const cities = itinerariesQuery.data
+  const cityCount = cities.length
 
-  if (!firstCity && !multipleCities) return null
+  const activitiesQueries = useQueries({
+    queries: cities.map((cityItinerary) => ({
+      ...cityItinerarySavedActivitiesQueryOptions(cityItinerary.id),
+      enabled: cityCount > 1,
+    })),
+  })
+
+  if (cityCount === 0) return null
+
+  if (cityCount === 1) {
+    return (
+      <CityItineraryPreview
+        cityItinerary={cities[0]}
+        showAuthor={showAuthor}
+        author={userQuery.data.name}
+      />
+    )
+  }
+
+  const thumbUrls = activitiesQueries.reduce<string[]>((urls, q) => {
+    for (const activity of q.data ?? []) {
+      if (activity.imageUrl && urls.length < 4) urls.push(activity.imageUrl)
+    }
+    return urls
+  }, [])
+  const uniqueThumbUrls = [...new Set(thumbUrls)]
+
+  const thumbsLoading = activitiesQueries.some((q) => q.isPending)
 
   return (
-    <Card className="w-full md:w-96 md:max-w-md">
-      <CardHeader>
-        <CardTitle className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            {multipleCities ? <Folder /> : <MapPin />}
-            {multipleCities ? folder.title : firstCity.title}
+    <Link to="/itineraries/$id" params={{ id: folder.id }}>
+      <Card className="w-full overflow-hidden pt-0 md:w-96 md:max-w-md">
+        {thumbsLoading && uniqueThumbUrls.length === 0 ? (
+          <Skeleton className="h-44 w-full rounded-none sm:h-48" />
+        ) : uniqueThumbUrls.length > 0 ? (
+          <div
+            className={cn(
+              'grid h-44 w-full gap-0.5 bg-muted sm:h-48',
+              uniqueThumbUrls.length === 1 && 'grid-cols-1 grid-rows-1',
+              uniqueThumbUrls.length === 2 && 'grid-cols-2 grid-rows-1',
+              (uniqueThumbUrls.length === 3 || uniqueThumbUrls.length === 4) &&
+                'grid-cols-2 grid-rows-[minmax(0,1fr)_minmax(0,1fr)]',
+            )}
+          >
+            {uniqueThumbUrls.map((url, index) => (
+              <div
+                key={`${url}-${index}`}
+                className={cn(
+                  'relative min-h-0 overflow-hidden',
+                  uniqueThumbUrls.length === 3 && index === 2 && 'col-span-2',
+                )}
+              >
+                <Image
+                  src={url}
+                  alt={`${folder.title ?? 'Itinerary'} activity preview ${index + 1}`}
+                  layout="constrained"
+                  width={320}
+                  height={240}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ))}
           </div>
-          {showAuthor && (
-            <TypographyMuted>by {userQuery.data.name}</TypographyMuted>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <TypographyBlockquote className="line-clamp-2 text-wrap text-ellipsis overflow-hidden">
-          {multipleCities ? folder.description : firstCity.description}
-        </TypographyBlockquote>
-      </CardContent>
-      <CardFooter
-        className={cn(multipleCities ? 'justify-between' : 'justify-end')}
-      >
-        {multipleCities && (
-          <Badge variant="secondary">{cityCount} cities</Badge>
+        ) : (
+          <div
+            className="h-44 w-full shrink-0 bg-muted sm:h-48"
+            aria-hidden
+          />
         )}
-        <Button asChild size="sm">
-          <Link to="/itineraries/$id" params={{ id: folder.id }}>
-            <Eye />
-            View
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
+        <CardHeader>
+          <CardTitle className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">{folder.title}</div>
+            {showAuthor && (
+              <TypographyMuted>by {userQuery.data.name}</TypographyMuted>
+            )}
+          </CardTitle>
+          <CardDescription className="line-clamp-2">
+            {folder.description}
+          </CardDescription>
+          <CardAction className="flex items-center gap-2">
+            <Badge variant="secondary">{cityCount} cities</Badge>
+            <Folder />
+          </CardAction>
+        </CardHeader>
+      </Card>
+    </Link>
   )
 }
