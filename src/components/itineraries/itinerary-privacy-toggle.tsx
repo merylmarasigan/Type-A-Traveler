@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Toggle } from '@/components/ui/toggle'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { Eye, EyeOff } from 'lucide-react'
 
@@ -23,12 +23,13 @@ export function ItineraryPrivacyToggle({
   }
 
   return (
-    <Button
+    <Toggle
       variant="outline"
       onClick={togglePrivacy}
-      aria-label={isPublic ? 'Make itinerary private' : 'Make itinerary public'}
+      aria-label="Toggle itinerary privacy"
     >
       {isPublic ? <Eye /> : <EyeOff />}
-    </Button>
+      {isPublic ? 'Public' : 'Private'}
+    </Toggle>
   )
 }

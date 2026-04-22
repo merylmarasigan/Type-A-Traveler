@@ -16,8 +16,18 @@ import {
   updateTimeSlotActivityNoteFn,
 } from '@/services/backend/saved-activities.api'
 
-const userSavedActivitiesQueryKey = (userId?: string, city?: string) =>
-  ['users', userId, 'saved_activities', city] as const
+const userSavedActivitiesQueryKey = (
+  userId?: string,
+  city?: string,
+  userShowsSavedActivitiesOnProfile?: boolean,
+) =>
+  [
+    'users',
+    userId,
+    'saved_activities',
+    city,
+    userShowsSavedActivitiesOnProfile ? 'show_on_profile' : 'hide_on_profile',
+  ] as const
 
 const cityItinerarySavedActivitiesQueryKey = (cityItineraryId?: string) =>
   ['city_itineraries', cityItineraryId, 'saved_activities'] as const
@@ -42,13 +52,22 @@ const timeSlotActivityQueryKey = (
 export const userSavedActivitiesQueryOptions = ({
   userId,
   city,
+  userShowsSavedActivitiesOnProfile,
 }: {
   userId?: string
   city?: string
+  userShowsSavedActivitiesOnProfile?: boolean
 }) =>
   queryOptions({
-    queryKey: userSavedActivitiesQueryKey(userId, city),
-    queryFn: () => getUserSavedActivitiesFn({ data: { userId, city } }),
+    queryKey: userSavedActivitiesQueryKey(
+      userId,
+      city,
+      userShowsSavedActivitiesOnProfile,
+    ),
+    queryFn: () =>
+      getUserSavedActivitiesFn({
+        data: { userId, city, userShowsSavedActivitiesOnProfile },
+      }),
     enabled: userId !== '',
   })
 

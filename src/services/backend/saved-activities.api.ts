@@ -27,10 +27,11 @@ export const getUserSavedActivitiesFn = createServerFn({
     z.object({
       userId: z.string().optional(),
       city: z.string().optional(),
+      userShowsSavedActivitiesOnProfile: z.boolean().optional(),
     }),
   )
   .handler(async ({ data }) => {
-    if (!data.userId) return []
+    if (!data.userId || !data.userShowsSavedActivitiesOnProfile) return []
 
     const activities = await getUserSavedActivities(data.userId, data.city)
 

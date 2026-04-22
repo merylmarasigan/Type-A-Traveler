@@ -25,6 +25,8 @@ import {
 } from '@/components/ui/empty'
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 export const Route = createFileRoute('/profile/$username')({
   component: RouteComponent,
@@ -65,10 +67,18 @@ function ProfilePageSkeleton() {
 }
 
 function RouteContent({ userId }: { userId: string }) {
-  const { userQuery } = useSingleUser({ userId })
+  const { userQuery, updateUserMutation } = useSingleUser({ userId })
   const { data: session } = authClient.useSession()
 
   const isOwner = session?.user.id === userId
+
+  const toggleShowSavedActivitiesOnProfile = async () => {
+    await updateUserMutation.mutateAsync({
+      id: userId,
+      showSavedActivitiesOnProfile:
+        !userQuery.data.showSavedActivitiesOnProfile,
+    })
+  }
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6 p-4 md:p-6">
@@ -98,6 +108,18 @@ function RouteContent({ userId }: { userId: string }) {
           </Suspense>
         </TabsContent>
         <TabsContent value="saved-activities" className="flex flex-col gap-4">
+          {isOwner && (
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="show-saved-activities-on-profile"
+                checked={userQuery.data.showSavedActivitiesOnProfile}
+                onCheckedChange={toggleShowSavedActivitiesOnProfile}
+              />
+              <Label htmlFor="show-saved-activities-on-profile">
+                Show on profile
+              </Label>
+            </div>
+          )}
           <Suspense
             fallback={
               <div className="flex flex-col gap-10">
@@ -119,6 +141,9 @@ function RouteContent({ userId }: { userId: string }) {
               showCreateItinerary={false}
               emptyTitle="No saved activities"
               emptyDescription={`${isOwner ? 'You have' : 'This user has'} not saved any activities yet.`}
+              userShowsSavedActivitiesOnProfile={
+                userQuery.data.showSavedActivitiesOnProfile
+              }
             />
           </Suspense>
         </TabsContent>

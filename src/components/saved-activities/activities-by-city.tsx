@@ -22,6 +22,7 @@ interface ActivitiesByCityProps {
   showCreateItinerary?: boolean
   emptyTitle?: string
   emptyDescription?: string
+  userShowsSavedActivitiesOnProfile?: boolean
 }
 
 export function ActivitiesByCity({
@@ -29,9 +30,12 @@ export function ActivitiesByCity({
   showCreateItinerary = true,
   emptyTitle = 'No saved activities!',
   emptyDescription = 'Save some activities to see them here.',
+  userShowsSavedActivitiesOnProfile,
 }: ActivitiesByCityProps = {}) {
   const { userActivitiesQuery } = useSavedActivities(
-    forUserId !== undefined ? { forUserId } : {},
+    forUserId !== undefined
+      ? { forUserId, userShowsSavedActivitiesOnProfile }
+      : {},
   )
   const activities = userActivitiesQuery.data
   const { data: session } = authClient.useSession()

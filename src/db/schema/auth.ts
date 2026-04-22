@@ -9,6 +9,9 @@ export const user = pgTable('user', {
   username: text('username').unique(),
   displayUsername: text('display_username'),
   image: text('image'),
+  showSavedActivitiesOnProfile: boolean('show_saved_activities_on_profile')
+    .default(false)
+    .notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()

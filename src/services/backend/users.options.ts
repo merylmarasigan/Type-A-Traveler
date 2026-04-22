@@ -18,11 +18,7 @@ export const multipleUsersQueryOptions = () =>
     queryFn: () => getUsersFn(),
   })
 
-export const singleUserQueryOptions = ({
-  userId,
-}: {
-  userId: string
-}) =>
+export const singleUserQueryOptions = ({ userId }: { userId: string }) =>
   queryOptions({
     queryKey: singleUserQueryKey(userId),
     queryFn: () => getSingleUserFn({ data: { userId } }),
@@ -33,8 +29,14 @@ export const updateUserMutationOptions = () =>
   mutationOptions({
     mutationKey: ['updateUser'],
     mutationFn: (data: UpdateUser) => updateUserFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) => {
-      toast.success(`Updated ${data.name}`)
+    onSuccess: async (data, variables, _result, ctx) => {
+      if (variables.showSavedActivitiesOnProfile !== undefined) {
+        toast.success(
+          `${variables.showSavedActivitiesOnProfile ? 'Showing' : 'Hiding'} saved activities on profile`,
+        )
+      } else {
+        toast.success(`Updated ${data.name}`)
+      }
 
       await ctx.client.invalidateQueries({
         queryKey: singleUserQueryKey(data.id),
