@@ -15,30 +15,39 @@ const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
 const singleItineraryFolderQueryKey = (itineraryFolderId?: string) =>
   ['itinerary_folders', itineraryFolderId] as const
 
-export const userItineraryFoldersQueryKey = (userId?: string) => [
+export const userItineraryFoldersQueryKey = (
+  userId?: string,
+  publicOnly?: boolean,
+) => [
   'users',
   userId,
   ...multipleItineraryFoldersQueryKey(),
+  publicOnly ? 'public' : 'private',
 ]
 
 export const multipleItineraryFoldersQueryOptions = ({
   limit,
+  publicOnly,
 }: {
   limit?: number
+  publicOnly?: boolean
 }) =>
   queryOptions({
     queryKey: multipleItineraryFoldersQueryKey(),
-    queryFn: () => getMultipleItineraryFoldersFn({ data: { limit } }),
+    queryFn: () =>
+      getMultipleItineraryFoldersFn({ data: { limit, publicOnly } }),
   })
 
 export const userItineraryFoldersQueryOptions = ({
   userId,
+  publicOnly,
 }: {
   userId?: string
+  publicOnly?: boolean
 }) =>
   queryOptions({
-    queryKey: userItineraryFoldersQueryKey(userId),
-    queryFn: () => getUserItineraryFoldersFn({ data: { userId } }),
+    queryKey: userItineraryFoldersQueryKey(userId, publicOnly),
+    queryFn: () => getUserItineraryFoldersFn({ data: { userId, publicOnly } }),
     enabled: userId !== undefined && userId !== '',
   })
 
@@ -69,8 +78,14 @@ export const updateItineraryFolderMutationOptions = () =>
     mutationKey: ['updateItineraryFolder'],
     mutationFn: (data: UpdateItineraryFolder) =>
       updateItineraryFolderFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) => {
-      toast.success(`Updated ${data.title}`)
+    onSuccess: async (data, variables, _result, ctx) => {
+      if (variables.isPublic !== undefined) {
+        toast.success(
+          `Itinerary is now ${data.isPublic ? 'public' : 'private'}`,
+        )
+      } else {
+        toast.success(`Updated ${data.title}`)
+      }
 
       await ctx.client.invalidateQueries({
         queryKey: singleItineraryFolderQueryKey(data.id),

@@ -8,15 +8,17 @@ import {
 
 type UseItineraryFoldersParams = {
   limit?: number
+  publicOnly?: boolean
 }
 
 export const useItineraryFolders = ({
   limit,
+  publicOnly,
 }: UseItineraryFoldersParams = {}) => {
   const { data } = authClient.useSession()
 
   const foldersQuery = useSuspenseQuery(
-    multipleItineraryFoldersQueryOptions({ limit }),
+    multipleItineraryFoldersQueryOptions({ limit, publicOnly }),
   )
 
   const userFoldersQuery = useSuspenseQuery(

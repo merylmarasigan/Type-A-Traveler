@@ -98,6 +98,7 @@ function CityItineraryPreviewContent({
               key={`${url}-${index}`}
               className={cn(
                 'relative min-h-0 overflow-hidden',
+                uniqueThumbUrls.length === 1 && 'w-full',
                 uniqueThumbUrls.length === 3 && index === 2 && 'col-span-2',
               )}
             >
@@ -105,8 +106,8 @@ function CityItineraryPreviewContent({
                 src={url}
                 alt={`${cityItinerary.city} activity preview ${index + 1}`}
                 layout="constrained"
-                width={320}
-                height={240}
+                width={400}
+                height={300}
                 className="h-full w-full object-cover"
               />
             </div>

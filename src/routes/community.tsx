@@ -32,7 +32,7 @@ function CommunityPage() {
 }
 
 function CommunityPageContent() {
-  const { foldersQuery } = useItineraryFolders({ limit: 50 })
+  const { foldersQuery } = useItineraryFolders({ limit: 50, publicOnly: true })
   const { data: folders } = foldersQuery
 
   return (

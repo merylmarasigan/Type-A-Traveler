@@ -34,7 +34,7 @@ export function FeaturedItineraries() {
 }
 
 function FeaturedItinerariesContent() {
-  const { foldersQuery } = useItineraryFolders({ limit: 20 })
+  const { foldersQuery } = useItineraryFolders({ limit: 20, publicOnly: true })
   const { data: folders } = foldersQuery
 
   return (

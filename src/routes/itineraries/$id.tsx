@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, notFound, useRouter } from '@tanstack/react-router'
 import { Folder } from 'lucide-react'
 import { Suspense } from 'react'
 import {
@@ -20,9 +20,21 @@ import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { authClient } from '@/lib/auth-client'
+import { ItineraryPrivacyToggle } from '@/components/itineraries/itinerary-privacy-toggle'
+import { getSingleItineraryFolderFn } from '@/services/backend/itinerary-folders.api'
+import { getSession } from '@/services/backend/auth.functions'
+import { NotFound } from '@/components/util/not-found'
 
 export const Route = createFileRoute('/itineraries/$id')({
   component: RouteComponent,
+  loader: async ({ params }) => {
+    const session = await getSession()
+    const { authorId, isPublic } = await getSingleItineraryFolderFn({
+      data: { itineraryFolderId: params.id },
+    })
+    if (session?.user.id !== authorId && !isPublic) throw notFound()
+  },
+  notFoundComponent: () => <NotFound type="private-itinerary" />,
 })
 
 function RouteComponent() {
@@ -48,7 +60,7 @@ function RouteContent({ id }: { id: string }) {
   })
   const { data } = authClient.useSession()
   const { userQuery } = useSingleUser({
-    userId: folderQuery.data.authorId,
+    userId: folderQuery.data?.authorId,
   })
   const router = useRouter()
 
@@ -71,7 +83,7 @@ function RouteContent({ id }: { id: string }) {
   const title = folderQuery.data?.title ?? cityItineraries.data[0]?.title
   const description =
     folderQuery.data?.description ?? cityItineraries.data[0]?.description
-  const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
+  const authorIsSessionUser = data?.user.id === folderQuery.data?.authorId
 
   const folderOnlyHasOneCity = cityItineraries.data.length === 1
 
@@ -91,7 +103,7 @@ function RouteContent({ id }: { id: string }) {
           by {userQuery.data.name}
         </TypographySmall>
         <ItineraryAuthorProfileLink
-          authorId={folderQuery.data.authorId}
+          authorId={folderQuery.data?.authorId}
           sessionUserId={data?.user.id}
           username={userQuery.data.username}
         />
@@ -104,6 +116,10 @@ function RouteContent({ id }: { id: string }) {
 
       {authorIsSessionUser && (
         <div className="self-center flex justify-between items-center gap-2 w-min">
+          <ItineraryPrivacyToggle
+            isPublic={folderQuery.data?.isPublic}
+            itineraryFolderId={id}
+          />
           <EditItineraryDialog
             title={title}
             description={description}

@@ -8,7 +8,7 @@ export const itineraryFolders = pgTable('itinerary_folders', {
   description: text(),
   flightNumbers: text().array(),
   notes: text(),
-  public: boolean().notNull().default(false),
+  isPublic: boolean().notNull().default(false),
   ...timestamps,
 })
 

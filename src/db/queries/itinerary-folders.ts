@@ -1,5 +1,5 @@
 import { generateId } from 'better-auth'
-import { eq, getTableColumns } from 'drizzle-orm'
+import { and, eq, getTableColumns } from 'drizzle-orm'
 import type { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
 import { db } from '@/db'
 import { cityItineraries, itineraryFolders } from '@/db/schema/app'
@@ -11,20 +11,34 @@ const { createdAt, updatedAt, ...itineraryFolderColumns } =
  * Get a specific amount of itinerary folders.
  * @param limit Adds a limit clause to the query. Defaults to 10.
  */
-export const getItineraryFolders = async (limit: number = 10) => {
+export const getItineraryFolders = async (
+  limit: number = 10,
+  publicOnly: boolean,
+) => {
+  const publicOnlyClause = publicOnly
+    ? eq(itineraryFolders.isPublic, true)
+    : undefined
+
   const result = await db
     .select(itineraryFolderColumns)
     .from(itineraryFolders)
+    .where(publicOnlyClause)
     .limit(limit)
 
   return result
 }
 
-export const getUserItineraryFolders = async (userId: string) => {
+export const getUserItineraryFolders = async (
+  userId: string,
+  publicOnly: boolean,
+) => {
+  const publicOnlyClause = publicOnly
+    ? eq(itineraryFolders.isPublic, true)
+    : undefined
   const result = await db
     .select(itineraryFolderColumns)
     .from(itineraryFolders)
-    .where(eq(itineraryFolders.authorId, userId))
+    .where(and(eq(itineraryFolders.authorId, userId), publicOnlyClause))
 
   return result
 }

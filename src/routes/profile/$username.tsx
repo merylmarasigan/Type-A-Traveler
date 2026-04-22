@@ -135,7 +135,7 @@ function ProfileItinerariesTab({
   isOwner: boolean
 }) {
   const { data: folders } = useSuspenseQuery(
-    userItineraryFoldersQueryOptions({ userId }),
+    userItineraryFoldersQueryOptions({ userId, publicOnly: true }),
   )
 
   if (folders.length === 0) {
@@ -147,8 +147,9 @@ function ProfileItinerariesTab({
           </EmptyMedia>
           <EmptyTitle>No itineraries yet</EmptyTitle>
           <EmptyDescription>
-            {isOwner ? 'You have' : 'This user has'} not created any itineraries
-            yet.
+            {isOwner
+              ? 'You have no public itineraries.'
+              : 'This user has not created any itineraries yet.'}
           </EmptyDescription>
         </EmptyHeader>
         {isOwner && (
