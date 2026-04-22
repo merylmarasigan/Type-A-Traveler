@@ -5,10 +5,13 @@ import {
   CityItineraryDetails,
   CityItineraryDetailsSkeleton,
 } from '@/components/itineraries/city-itinerary-details'
+import { ItineraryAuthorProfileLink } from '@/components/itineraries/itinerary-author-profile-link'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
+import { useSingleUser } from '@/hooks/use-single-user'
+import { authClient } from '@/lib/auth-client'
 
 export const Route = createFileRoute('/itineraries/cities/$cityId')({
   component: RouteComponent,
@@ -35,6 +38,10 @@ function RouteContent({ cityId }: { cityId: string }) {
   const { folderQuery } = useSingleItineraryFolder({
     itineraryFolderId: itineraryQuery.data.folderId,
   })
+  const { data: session } = authClient.useSession()
+  const { userQuery } = useSingleUser({
+    userId: folderQuery.data.authorId,
+  })
 
   return (
     <div className="flex flex-col h-full gap-2 p-2">
@@ -47,6 +54,14 @@ function RouteContent({ cityId }: { cityId: string }) {
           {folderQuery.data.title}
         </Link>
       </Button>
+
+      <div className="flex justify-center">
+        <ItineraryAuthorProfileLink
+          authorId={folderQuery.data.authorId}
+          sessionUserId={session?.user.id}
+          username={userQuery.data.username}
+        />
+      </div>
 
       <CityItineraryDetails id={cityId} />
     </div>

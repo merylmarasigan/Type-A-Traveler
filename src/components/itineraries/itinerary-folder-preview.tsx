@@ -82,6 +82,7 @@ function ItineraryFolderPreviewContent({
         cityItinerary={cities[0]}
         showAuthor={showAuthor}
         author={userQuery.data.name}
+        authorUsername={userQuery.data.username ?? undefined}
       />
     )
   }
@@ -97,7 +98,11 @@ function ItineraryFolderPreviewContent({
   const thumbsLoading = activitiesQueries.some((q) => q.isPending)
 
   return (
-    <Link to="/itineraries/$id" params={{ id: folder.id }}>
+    <Link
+      to="/itineraries/$id"
+      params={{ id: folder.id }}
+      className="block rounded-none outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
       <Card className="w-full overflow-hidden pt-0 md:w-96 md:max-w-md">
         {thumbsLoading && uniqueThumbUrls.length === 0 ? (
           <Skeleton className="h-44 w-full rounded-none sm:h-48" />
@@ -131,17 +136,11 @@ function ItineraryFolderPreviewContent({
             ))}
           </div>
         ) : (
-          <div
-            className="h-44 w-full shrink-0 bg-muted sm:h-48"
-            aria-hidden
-          />
+          <div className="h-44 w-full shrink-0 bg-muted sm:h-48" aria-hidden />
         )}
         <CardHeader>
           <CardTitle className="flex flex-col gap-1">
             <div className="flex items-center gap-2">{folder.title}</div>
-            {showAuthor && (
-              <TypographyMuted>by {userQuery.data.name}</TypographyMuted>
-            )}
           </CardTitle>
           <CardDescription className="line-clamp-2">
             {folder.description}
@@ -151,6 +150,24 @@ function ItineraryFolderPreviewContent({
             <Folder />
           </CardAction>
         </CardHeader>
+        {showAuthor && (
+          <CardFooter>
+            <TypographyMuted>
+              by{' '}
+              {userQuery.data.username ? (
+                <Link
+                  to="/profile/$username"
+                  params={{ username: userQuery.data.username }}
+                  className="font-medium text-foreground underline-offset-4 hover:underline"
+                >
+                  {userQuery.data.name}
+                </Link>
+              ) : (
+                userQuery.data.name
+              )}
+            </TypographyMuted>
+          </CardFooter>
+        )}
       </Card>
     </Link>
   )

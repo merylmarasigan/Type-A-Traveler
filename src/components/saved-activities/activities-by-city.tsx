@@ -6,8 +6,24 @@ import { QuickCreateItineraryDialog } from '@/components/itineraries/quick-creat
 import { Button } from '@/components/ui/button'
 import { CalendarPlus } from 'lucide-react'
 
-export function ActivitiesByCity() {
-  const { userActivitiesQuery } = useSavedActivities({}) // fetches all activities for the logged in user, regardless of city. We will filter by city in the UI. We could also create a new hook that accepts a city parameter and only fetches activities for that city, but this is simpler for now.
+interface ActivitiesByCityProps {
+  /** Load activities for this user instead of the signed-in user. */
+  forUserId?: string
+  /** When false, hides the per-city create-itinerary control (e.g. on another user's profile). */
+  showCreateItinerary?: boolean
+  emptyTitle?: string
+  emptyDescription?: string
+}
+
+export function ActivitiesByCity({
+  forUserId,
+  showCreateItinerary = true,
+  emptyTitle = 'No saved activities!',
+  emptyDescription = 'Save some activities to see them here.',
+}: ActivitiesByCityProps = {}) {
+  const { userActivitiesQuery } = useSavedActivities(
+    forUserId !== undefined ? { forUserId } : {},
+  )
   const activities = userActivitiesQuery.data
 
   const grouped = activities.reduce<Record<string, typeof activities>>(
@@ -25,10 +41,8 @@ export function ActivitiesByCity() {
   if (cities.length === 0) {
     return (
       <Alert>
-        <AlertTitle>No saved activities!</AlertTitle>
-        <AlertDescription>
-          Save some activities to see them here.
-        </AlertDescription>
+        <AlertTitle>{emptyTitle}</AlertTitle>
+        <AlertDescription>{emptyDescription}</AlertDescription>
       </Alert>
     )
   }
@@ -39,15 +53,17 @@ export function ActivitiesByCity() {
         <section key={city}>
           <div className="flex items-center justify-between gap-2 mb-4 border-b pb-2">
             <TypographyH3>{city}</TypographyH3>
-            <QuickCreateItineraryDialog
-              defaultCity={city}
-              trigger={
-                <Button variant="outline" size="sm">
-                  <CalendarPlus />
-                  Create itinerary
-                </Button>
-              }
-            />
+            {showCreateItinerary && (
+              <QuickCreateItineraryDialog
+                defaultCity={city}
+                trigger={
+                  <Button variant="outline" size="sm">
+                    <CalendarPlus />
+                    Create itinerary
+                  </Button>
+                }
+              />
+            )}
           </div>
           <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {grouped[city].map((activity) => (

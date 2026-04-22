@@ -7,6 +7,7 @@ import {
 } from '@/components/itineraries/city-itinerary-details'
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
+import { ItineraryAuthorProfileLink } from '@/components/itineraries/itinerary-author-profile-link'
 import { ItineraryFolderOverview } from '@/components/itineraries/itinerary-folder-overview'
 import { SearchCitiesDialog } from '@/components/cities-locations/search-cities-dialog'
 import {
@@ -85,9 +86,16 @@ function RouteContent({ id }: { id: string }) {
           {description}
         </TypographyBlockquote>
       )}
-      <TypographySmall className="text-center">
-        by {userQuery.data.name}
-      </TypographySmall>
+      <div className="flex flex-col items-center gap-2">
+        <TypographySmall className="text-center">
+          by {userQuery.data.name}
+        </TypographySmall>
+        <ItineraryAuthorProfileLink
+          authorId={folderQuery.data.authorId}
+          sessionUserId={data?.user.id}
+          username={userQuery.data.username}
+        />
+      </div>
       {cityItineraries.data.length > 1 && (
         <TypographySmall className="self-center text-center text-muted-foreground">
           {cityItineraries.data.length} cities
