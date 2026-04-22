@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   deleteItineraryDayMutationOptions,
   singleItineraryDayQueryOptions,
-  updateItineraryDayMutationOptions,
+  updateSingleItineraryDayMutationOptions,
 } from '@/services/backend/itinerary-days.options'
 
 type UseSingleItineraryDayParams = {
@@ -13,10 +13,12 @@ export const useSingleItineraryDay = ({
   itineraryDayId,
 }: UseSingleItineraryDayParams) => {
   const dayQuery = useSuspenseQuery(
-    singleItineraryDayQueryOptions(itineraryDayId),
+    singleItineraryDayQueryOptions({ itineraryDayId }),
   )
 
-  const updateDayMutation = useMutation(updateItineraryDayMutationOptions())
+  const updateDayMutation = useMutation(
+    updateSingleItineraryDayMutationOptions(),
+  )
 
   const deleteDayMutation = useMutation(deleteItineraryDayMutationOptions())
 

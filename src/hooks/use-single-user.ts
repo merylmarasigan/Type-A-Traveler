@@ -10,7 +10,7 @@ type UseSingleUserParams = {
 }
 
 export const useSingleUser = ({ userId }: UseSingleUserParams) => {
-  const userQuery = useSuspenseQuery(singleUserQueryOptions(userId))
+  const userQuery = useSuspenseQuery(singleUserQueryOptions({ userId }))
 
   const updateUserMutation = useMutation(updateUserMutationOptions())
 

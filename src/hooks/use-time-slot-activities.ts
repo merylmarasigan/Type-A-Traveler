@@ -9,7 +9,7 @@ export const useTimeSlotActivities = ({
   timeSlotId,
 }: UseTimeSlotActivitiesParams) => {
   const timeSlotActivitiesQuery = useSuspenseQuery(
-    timeSlotActivitiesQueryOptions(timeSlotId),
+    timeSlotActivitiesQueryOptions({ timeSlotId }),
   )
 
   return { timeSlotActivitiesQuery }

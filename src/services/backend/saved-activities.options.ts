@@ -39,19 +39,24 @@ const timeSlotActivityQueryKey = (
   timeSlotId: string,
 ) => ['time_slot_activities', savedActivityId, timeSlotId] as const
 
-export const userSavedActivitiesQueryOptions = (
-  userId?: string,
-  city?: string,
-) =>
+export const userSavedActivitiesQueryOptions = ({
+  userId,
+  city,
+}: {
+  userId?: string
+  city?: string
+}) =>
   queryOptions({
     queryKey: userSavedActivitiesQueryKey(userId, city),
     queryFn: () => getUserSavedActivitiesFn({ data: { userId, city } }),
     enabled: userId !== '',
   })
 
-export const cityItinerarySavedActivitiesQueryOptions = (
-  cityItineraryId?: string,
-) =>
+export const cityItinerarySavedActivitiesQueryOptions = ({
+  cityItineraryId,
+}: {
+  cityItineraryId?: string
+}) =>
   queryOptions({
     queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
     queryFn: () =>
@@ -59,25 +64,37 @@ export const cityItinerarySavedActivitiesQueryOptions = (
     enabled: cityItineraryId !== undefined && cityItineraryId !== '',
   })
 
-export const singleSavedActivityQueryOptions = (savedActivityId: string) =>
+export const singleSavedActivityQueryOptions = ({
+  savedActivityId,
+}: {
+  savedActivityId: string
+}) =>
   queryOptions({
     queryKey: singleSavedActivityQueryKey(savedActivityId),
     queryFn: () => getSingleSavedActivityFn({ data: { savedActivityId } }),
     enabled: savedActivityId !== '',
   })
 
-export const timeSlotActivitiesQueryOptions = (timeSlotId: string) =>
+export const timeSlotActivitiesQueryOptions = ({
+  timeSlotId,
+}: {
+  timeSlotId: string
+}) =>
   queryOptions({
     queryKey: timeSlotActivitiesQueryKey(timeSlotId),
     queryFn: () => getTimeSlotActivitiesFn({ data: { timeSlotId } }),
     enabled: timeSlotId !== '',
   })
 
-export const unlinkedActivitiesQueryOptions = (
-  timeSlotId: string,
-  userId: string,
-  city: string,
-) =>
+export const unlinkedActivitiesQueryOptions = ({
+  timeSlotId,
+  userId,
+  city,
+}: {
+  timeSlotId: string
+  userId: string
+  city: string
+}) =>
   queryOptions({
     queryKey: unlinkedActivitiesQueryKey(timeSlotId, userId, city),
     queryFn: () =>
@@ -87,7 +104,11 @@ export const unlinkedActivitiesQueryOptions = (
     enabled: timeSlotId !== '' && userId !== '' && city !== '',
   })
 
-export const createSavedActivityMutationOptions = (cityItineraryId?: string) =>
+export const createSavedActivityMutationOptions = ({
+  cityItineraryId,
+}: {
+  cityItineraryId?: string
+}) =>
   mutationOptions({
     mutationKey: ['createSavedActivity'],
     mutationFn: (data: NewSavedActivity) => createSavedActivityFn({ data }),
@@ -108,11 +129,15 @@ export const createSavedActivityMutationOptions = (cityItineraryId?: string) =>
     },
   })
 
-export const updateSavedActivityMutationOptions = (
-  cityItineraryId?: string,
-  userId?: string,
-  city?: string,
-) =>
+export const updateSavedActivityMutationOptions = ({
+  cityItineraryId,
+  userId,
+  city,
+}: {
+  cityItineraryId?: string
+  userId?: string
+  city?: string
+}) =>
   mutationOptions({
     mutationKey: ['updateSavedActivity'],
     mutationFn: (data: UpdateSavedActivity) => updateSavedActivityFn({ data }),
@@ -145,12 +170,17 @@ export const deleteSavedActivityMutationOptions = () =>
     },
   })
 
-export const linkActivityToTimeSlotMutationOptions = (
-  timeSlotId: string,
-  cityItineraryId: string,
-  userId: string,
-  city: string,
-) =>
+export const linkActivityToTimeSlotMutationOptions = ({
+  timeSlotId,
+  cityItineraryId,
+  userId,
+  city,
+}: {
+  timeSlotId: string
+  cityItineraryId: string
+  userId: string
+  city: string
+}) =>
   mutationOptions({
     mutationKey: ['linkActivityToTimeSlot'],
     mutationFn: (savedActivityId: string) =>
@@ -168,12 +198,17 @@ export const linkActivityToTimeSlotMutationOptions = (
     },
   })
 
-export const unlinkActivityFromTimeSlotMutationOptions = (
-  timeSlotId: string,
-  cityItineraryId: string,
-  userId: string,
-  city: string,
-) =>
+export const unlinkActivityFromTimeSlotMutationOptions = ({
+  timeSlotId,
+  cityItineraryId,
+  userId,
+  city,
+}: {
+  timeSlotId: string
+  cityItineraryId: string
+  userId: string
+  city: string
+}) =>
   mutationOptions({
     mutationKey: ['unlinkActivityFromTimeSlot'],
     mutationFn: (savedActivityId: string) =>
@@ -193,10 +228,13 @@ export const unlinkActivityFromTimeSlotMutationOptions = (
     },
   })
 
-export const timeSlotActivityQueryOptions = (
-  savedActivityId: string,
-  timeSlotId: string,
-) =>
+export const timeSlotActivityQueryOptions = ({
+  savedActivityId,
+  timeSlotId,
+}: {
+  savedActivityId: string
+  timeSlotId: string
+}) =>
   queryOptions({
     queryKey: timeSlotActivityQueryKey(savedActivityId, timeSlotId),
     queryFn: () =>
@@ -204,10 +242,13 @@ export const timeSlotActivityQueryOptions = (
     enabled: savedActivityId !== '' && timeSlotId !== '',
   })
 
-export const updateTimeSlotActivityNoteMutationOptions = (
-  savedActivityId: string,
-  timeSlotId: string,
-) =>
+export const updateTimeSlotActivityNoteMutationOptions = ({
+  savedActivityId,
+  timeSlotId,
+}: {
+  savedActivityId: string
+  timeSlotId: string
+}) =>
   mutationOptions({
     mutationKey: ['updateTimeSlotActivityNote', savedActivityId, timeSlotId],
     mutationFn: ({ id, note }: { id: string; note: string | null }) =>

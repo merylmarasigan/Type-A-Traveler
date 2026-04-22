@@ -16,14 +16,22 @@ const multipleItineraryDaysQueryKey = (cityItineraryId?: string) =>
 const singleItineraryDayQueryKey = (itineraryDayId: string) =>
   ['itinerary_days', itineraryDayId] as const
 
-export const cityItineraryDaysQueryOptions = (cityItineraryId?: string) =>
+export const cityItineraryDaysQueryOptions = ({
+  cityItineraryId,
+}: {
+  cityItineraryId?: string
+}) =>
   queryOptions({
     queryKey: multipleItineraryDaysQueryKey(cityItineraryId),
     queryFn: () => getCityItineraryDaysFn({ data: { cityItineraryId } }),
     enabled: cityItineraryId !== undefined && cityItineraryId !== '',
   })
 
-export const singleItineraryDayQueryOptions = (itineraryDayId: string) =>
+export const singleItineraryDayQueryOptions = ({
+  itineraryDayId,
+}: {
+  itineraryDayId: string
+}) =>
   queryOptions({
     queryKey: singleItineraryDayQueryKey(itineraryDayId),
     queryFn: () => getSingleItineraryDayFn({ data: { itineraryDayId } }),

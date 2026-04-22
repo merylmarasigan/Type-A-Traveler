@@ -135,7 +135,7 @@ function ProfileItinerariesTab({
   isOwner: boolean
 }) {
   const { data: folders } = useSuspenseQuery(
-    userItineraryFoldersQueryOptions(userId),
+    userItineraryFoldersQueryOptions({ userId }),
   )
 
   if (folders.length === 0) {

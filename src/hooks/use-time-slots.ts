@@ -11,7 +11,7 @@ type UseTimeSlotsParams = {
 
 export const useTimeSlots = ({ itineraryDayId }: UseTimeSlotsParams) => {
   const timeSlotsQuery = useSuspenseQuery(
-    itineraryDayTimeSlotsQueryOptions(itineraryDayId),
+    itineraryDayTimeSlotsQueryOptions({ itineraryDayId }),
   )
 
   const createTimeSlotMutation = useMutation(createTimeSlotMutationOptions())

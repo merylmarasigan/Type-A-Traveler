@@ -35,7 +35,7 @@ export function SearchCities({ showFilterButtons = true }: SearchCitiesProps) {
   const [debouncedValue] = useDebounce(inputValue, 1000)
 
   const { data: cities, isLoading } = useQuery(
-    citiesQueryOptions(debouncedValue),
+    citiesQueryOptions({ city: debouncedValue }),
   )
 
   return (

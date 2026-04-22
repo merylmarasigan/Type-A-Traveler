@@ -18,7 +18,11 @@ export const multipleUsersQueryOptions = () =>
     queryFn: () => getUsersFn(),
   })
 
-export const singleUserQueryOptions = (userId: string) =>
+export const singleUserQueryOptions = ({
+  userId,
+}: {
+  userId: string
+}) =>
   queryOptions({
     queryKey: singleUserQueryKey(userId),
     queryFn: () => getSingleUserFn({ data: { userId } }),

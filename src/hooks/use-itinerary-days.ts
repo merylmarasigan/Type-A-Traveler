@@ -24,7 +24,7 @@ export const useItineraryDays = ({
   const { createCityItineraryMutation } = useCityItineraries({})
 
   const itineraryDaysQuery = useSuspenseQuery(
-    cityItineraryDaysQueryOptions(cityItineraryId),
+    cityItineraryDaysQueryOptions({ cityItineraryId }),
   )
 
   const createItineraryDaysMutation = useMutation(

@@ -16,7 +16,7 @@ export const useSingleCityItinerary = ({
   const { data } = authClient.useSession()
 
   const itineraryQuery = useSuspenseQuery(
-    singleCityItineraryQueryOptions(cityItineraryId),
+    singleCityItineraryQueryOptions({ cityItineraryId }),
   )
 
   const updateItineraryMutation = useMutation(
@@ -24,7 +24,7 @@ export const useSingleCityItinerary = ({
   )
 
   const deleteItineraryMutation = useMutation(
-    deleteCityItineraryMutationOptions(data?.user.id),
+    deleteCityItineraryMutationOptions({ userId: data?.user.id }),
   )
 
   return {

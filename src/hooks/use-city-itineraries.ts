@@ -12,7 +12,7 @@ export const useCityItineraries = ({
   folderId,
 }: UseCityItinerariesParams = {}) => {
   const itinerariesQuery = useSuspenseQuery(
-    folderCityItinerariesQueryOptions(folderId),
+    folderCityItinerariesQueryOptions({ folderId }),
   )
 
   const createCityItineraryMutation = useMutation(

@@ -21,20 +21,32 @@ export const userItineraryFoldersQueryKey = (userId?: string) => [
   ...multipleItineraryFoldersQueryKey(),
 ]
 
-export const multipleItineraryFoldersQueryOptions = (limit?: number) =>
+export const multipleItineraryFoldersQueryOptions = ({
+  limit,
+}: {
+  limit?: number
+}) =>
   queryOptions({
     queryKey: multipleItineraryFoldersQueryKey(),
     queryFn: () => getMultipleItineraryFoldersFn({ data: { limit } }),
   })
 
-export const userItineraryFoldersQueryOptions = (userId?: string) =>
+export const userItineraryFoldersQueryOptions = ({
+  userId,
+}: {
+  userId?: string
+}) =>
   queryOptions({
     queryKey: userItineraryFoldersQueryKey(userId),
     queryFn: () => getUserItineraryFoldersFn({ data: { userId } }),
     enabled: userId !== undefined && userId !== '',
   })
 
-export const singleItineraryFolderQueryOptions = (itineraryFolderId: string) =>
+export const singleItineraryFolderQueryOptions = ({
+  itineraryFolderId,
+}: {
+  itineraryFolderId: string
+}) =>
   queryOptions({
     queryKey: singleItineraryFolderQueryKey(itineraryFolderId),
     queryFn: () => getSingleItineraryFolderFn({ data: { itineraryFolderId } }),

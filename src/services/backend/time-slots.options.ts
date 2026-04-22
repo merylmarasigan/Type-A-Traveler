@@ -16,14 +16,22 @@ const multipleTimeSlotsQueryKey = (itineraryDayId: string) =>
 const singleTimeSlotQueryKey = (timeSlotId: string) =>
   ['time_slots', timeSlotId] as const
 
-export const itineraryDayTimeSlotsQueryOptions = (itineraryDayId: string) =>
+export const itineraryDayTimeSlotsQueryOptions = ({
+  itineraryDayId,
+}: {
+  itineraryDayId: string
+}) =>
   queryOptions({
     queryKey: multipleTimeSlotsQueryKey(itineraryDayId),
     queryFn: () => getItineraryDayTimeSlotsFn({ data: { itineraryDayId } }),
     enabled: itineraryDayId !== '',
   })
 
-export const singleTimeSlotQueryOptions = (timeSlotId: string) =>
+export const singleTimeSlotQueryOptions = ({
+  timeSlotId,
+}: {
+  timeSlotId: string
+}) =>
   queryOptions({
     queryKey: singleTimeSlotQueryKey(timeSlotId),
     queryFn: () => getSingleTimeSlotFn({ data: { timeSlotId } }),

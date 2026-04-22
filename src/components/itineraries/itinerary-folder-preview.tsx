@@ -69,7 +69,9 @@ function ItineraryFolderPreviewContent({
 
   const activitiesQueries = useQueries({
     queries: cities.map((cityItinerary) => ({
-      ...cityItinerarySavedActivitiesQueryOptions(cityItinerary.id),
+      ...cityItinerarySavedActivitiesQueryOptions({
+        cityItineraryId: cityItinerary.id,
+      }),
       enabled: cityCount > 1,
     })),
   })

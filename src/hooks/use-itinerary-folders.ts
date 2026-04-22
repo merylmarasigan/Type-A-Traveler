@@ -16,11 +16,11 @@ export const useItineraryFolders = ({
   const { data } = authClient.useSession()
 
   const foldersQuery = useSuspenseQuery(
-    multipleItineraryFoldersQueryOptions(limit),
+    multipleItineraryFoldersQueryOptions({ limit }),
   )
 
   const userFoldersQuery = useSuspenseQuery(
-    userItineraryFoldersQueryOptions(data?.session.userId),
+    userItineraryFoldersQueryOptions({ userId: data?.session.userId }),
   )
 
   const createFolderMutation = useMutation(

@@ -49,11 +49,11 @@ function LocationPreviewContent({
   cityPhoto,
 }: LocationPreviewProps) {
   const { data: details } = useSuspenseQuery(
-    singleLocationQueryOptions(city, location.location_id),
+    singleLocationQueryOptions({ city, locationId: location.location_id }),
   )
 
   const { data: photo } = useSuspenseQuery(
-    singleLocationPhotoQueryOptions(city, location.location_id),
+    singleLocationPhotoQueryOptions({ city, locationId: location.location_id }),
   )
 
   return (

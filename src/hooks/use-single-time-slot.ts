@@ -10,7 +10,9 @@ type UseSingleTimeSlotParams = {
 }
 
 export const useSingleTimeSlot = ({ timeSlotId }: UseSingleTimeSlotParams) => {
-  const timeSlotQuery = useSuspenseQuery(singleTimeSlotQueryOptions(timeSlotId))
+  const timeSlotQuery = useSuspenseQuery(
+    singleTimeSlotQueryOptions({ timeSlotId }),
+  )
 
   const updateTimeSlotMutation = useMutation(updateTimeSlotMutationOptions())
 

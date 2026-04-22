@@ -19,11 +19,11 @@ export const useSingleSavedActivity = ({
   city,
 }: UseSingleSavedActivityParams) => {
   const activityQuery = useSuspenseQuery(
-    singleSavedActivityQueryOptions(savedActivityId),
+    singleSavedActivityQueryOptions({ savedActivityId }),
   )
 
   const updateActivityMutation = useMutation(
-    updateSavedActivityMutationOptions(cityItineraryId, userId, city),
+    updateSavedActivityMutationOptions({ cityItineraryId, userId, city }),
   )
 
   const deleteActivityMutation = useMutation(

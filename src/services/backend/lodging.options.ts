@@ -15,14 +15,22 @@ const multipleLodgingQueryKey = (itineraryFolderId: string) =>
 const singleLodgingQueryKey = (lodgingId: string) =>
   ['lodging', lodgingId] as const
 
-export const folderLodgingQueryOptions = (itineraryFolderId: string) =>
+export const folderLodgingQueryOptions = ({
+  itineraryFolderId,
+}: {
+  itineraryFolderId: string
+}) =>
   queryOptions({
     queryKey: multipleLodgingQueryKey(itineraryFolderId),
     queryFn: () => getItineraryLodgingFn({ data: { itineraryFolderId } }),
     enabled: itineraryFolderId !== '',
   })
 
-export const singleLodgingQueryOptions = (lodgingId: string) =>
+export const singleLodgingQueryOptions = ({
+  lodgingId,
+}: {
+  lodgingId: string
+}) =>
   queryOptions({
     queryKey: singleLodgingQueryKey(lodgingId),
     queryFn: () => getSingleLodgingFn({ data: { lodgingId } }),

@@ -64,20 +64,23 @@ function TimeSlotActivityCardContent({
   const { activityQuery } = useSingleSavedActivity({ savedActivityId: id })
 
   const { data: timeSlotActivity } = useSuspenseQuery(
-    timeSlotActivityQueryOptions(id, timeSlotId),
+    timeSlotActivityQueryOptions({ savedActivityId: id, timeSlotId }),
   )
 
   const unlinkMutation = useMutation(
-    unlinkActivityFromTimeSlotMutationOptions(
+    unlinkActivityFromTimeSlotMutationOptions({
       timeSlotId,
       cityItineraryId,
-      session?.user.id ?? '',
+      userId: session?.user.id ?? '',
       city,
-    ),
+    }),
   )
 
   const noteMutation = useMutation(
-    updateTimeSlotActivityNoteMutationOptions(id, timeSlotId),
+    updateTimeSlotActivityNoteMutationOptions({
+      savedActivityId: id,
+      timeSlotId,
+    }),
   )
 
   const activity = activityQuery.data

@@ -10,7 +10,9 @@ type UseSingleLodgingParams = {
 }
 
 export const useSingleLodging = ({ lodgingId }: UseSingleLodgingParams) => {
-  const lodgingQuery = useSuspenseQuery(singleLodgingQueryOptions(lodgingId))
+  const lodgingQuery = useSuspenseQuery(
+    singleLodgingQueryOptions({ lodgingId }),
+  )
 
   const updateLodgingMutation = useMutation(updateLodgingMutationOptions())
 

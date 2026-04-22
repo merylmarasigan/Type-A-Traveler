@@ -62,7 +62,7 @@ function SavedActivitySuggestionsContent({
   const userId = session?.user.id ?? ''
 
   const unlinkedActivitiesQuery = useSuspenseQuery(
-    unlinkedActivitiesQueryOptions(timeSlotId, userId, itineraryCity),
+    unlinkedActivitiesQueryOptions({ timeSlotId, userId, city: itineraryCity }),
   )
 
   const suggestions = unlinkedActivitiesQuery.data

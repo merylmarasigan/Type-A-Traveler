@@ -1,4 +1,4 @@
-import { date, integer, pgTable, text } from 'drizzle-orm/pg-core'
+import { boolean, date, integer, pgTable, text } from 'drizzle-orm/pg-core'
 import { startEndTimestamps, timestamps } from '@/db/schema/columns.helpers'
 
 export const itineraryFolders = pgTable('itinerary_folders', {
@@ -8,6 +8,7 @@ export const itineraryFolders = pgTable('itinerary_folders', {
   description: text(),
   flightNumbers: text().array(),
   notes: text(),
+  public: boolean().notNull().default(false),
   ...timestamps,
 })
 

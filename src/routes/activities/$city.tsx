@@ -90,19 +90,18 @@ function RouteContent({
   const navigate = Route.useNavigate()
 
   const cityLocationsQuery = useSuspenseQuery(
-    locationsQueryOptions(city, category, lat, lng),
+    locationsQueryOptions({ city, category, lat, lng }),
   )
 
   const { userFoldersQuery } = useItineraryFolders({})
 
   const defaultLocationQuery = useSuspenseQuery(
-    defaultLocationQueryOptions(city, lat, lng),
+    defaultLocationQueryOptions({ city, lat, lng }),
   )
 
   const { data: defaultCityPhoto } = useSuspenseQuery(
     singleLocationPhotoQueryOptions(
-      city,
-      defaultLocationQuery.data.location_id,
+      { city, locationId: defaultLocationQuery.data.location_id },
     ),
   )
 

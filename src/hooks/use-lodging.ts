@@ -9,7 +9,9 @@ type UseLodgingParams = {
 }
 
 export const useLodging = ({ folderId }: UseLodgingParams) => {
-  const lodgingQuery = useSuspenseQuery(folderLodgingQueryOptions(folderId))
+  const lodgingQuery = useSuspenseQuery(
+    folderLodgingQueryOptions({ itineraryFolderId: folderId }),
+  )
 
   const createLodgingMutation = useMutation(createLodgingMutationOptions())
 

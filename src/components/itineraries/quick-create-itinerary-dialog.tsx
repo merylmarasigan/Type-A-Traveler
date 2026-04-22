@@ -97,7 +97,7 @@ function QuickCreateItineraryDialogContent({
     useState<ItineraryFolder | null>(null)
 
   const { data: folderCityItineraries } = useQuery(
-    folderCityItinerariesQueryOptions(selectedItinerary?.id),
+    folderCityItinerariesQueryOptions({ folderId: selectedItinerary?.id }),
   )
 
   const conflictingCityItinerary =

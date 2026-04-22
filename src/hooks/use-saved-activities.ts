@@ -23,15 +23,15 @@ export const useSavedActivities = ({
   const userId = forUserId ?? data?.user.id ?? ''
 
   const userActivitiesQuery = useSuspenseQuery(
-    userSavedActivitiesQueryOptions(userId, city),
+    userSavedActivitiesQueryOptions({ userId, city }),
   )
 
   const cityActivitiesQuery = useSuspenseQuery(
-    cityItinerarySavedActivitiesQueryOptions(cityItineraryId),
+    cityItinerarySavedActivitiesQueryOptions({ cityItineraryId }),
   )
 
   const createSavedActivityMutation = useMutation(
-    createSavedActivityMutationOptions(cityItineraryId),
+    createSavedActivityMutationOptions({ cityItineraryId }),
   )
 
   return {

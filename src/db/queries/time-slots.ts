@@ -28,6 +28,7 @@ export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
       eq(cityItineraries.folderId, itineraryFolders.id),
     )
     .where(eq(timeSlots.itineraryDayId, itineraryDayId))
+    .orderBy(timeSlots.startTime)
 
   return result
 }

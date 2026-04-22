@@ -58,12 +58,12 @@ function SavedActivitySuggestionCardContent({
   const { activityQuery } = useSingleSavedActivity({ savedActivityId: id })
 
   const linkMutation = useMutation(
-    linkActivityToTimeSlotMutationOptions(
+    linkActivityToTimeSlotMutationOptions({
       timeSlotId,
       cityItineraryId,
-      session?.user.id ?? '',
+      userId: session?.user.id ?? '',
       city,
-    ),
+    }),
   )
 
   const activity = activityQuery.data

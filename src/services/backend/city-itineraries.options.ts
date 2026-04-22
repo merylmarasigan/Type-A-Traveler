@@ -16,14 +16,22 @@ const multipleCityItinerariesQueryKey = (folderId?: string) =>
 const singleCityItineraryQueryKey = (cityItineraryId?: string) =>
   ['city_itineraries', cityItineraryId] as const
 
-export const folderCityItinerariesQueryOptions = (folderId?: string) =>
+export const folderCityItinerariesQueryOptions = ({
+  folderId,
+}: {
+  folderId?: string
+}) =>
   queryOptions({
     queryKey: multipleCityItinerariesQueryKey(folderId),
     queryFn: () => getFolderCityItinerariesFn({ data: { folderId } }),
     enabled: folderId !== undefined && folderId !== '',
   })
 
-export const singleCityItineraryQueryOptions = (cityItineraryId: string) =>
+export const singleCityItineraryQueryOptions = ({
+  cityItineraryId,
+}: {
+  cityItineraryId: string
+}) =>
   queryOptions({
     queryKey: singleCityItineraryQueryKey(cityItineraryId),
     queryFn: () => getSingleCityItineraryFn({ data: { cityItineraryId } }),
@@ -56,7 +64,11 @@ export const updateCityItineraryMutationOptions = () =>
     },
   })
 
-export const deleteCityItineraryMutationOptions = (userId?: string) =>
+export const deleteCityItineraryMutationOptions = ({
+  userId,
+}: {
+  userId?: string
+}) =>
   mutationOptions({
     mutationKey: ['deleteCityItinerary'],
     mutationFn: (cityItineraryId: string) =>
