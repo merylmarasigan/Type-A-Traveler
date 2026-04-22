@@ -3,6 +3,7 @@ import z from 'zod/v4'
 import {
   deleteUser,
   getSingleUser,
+  getUserIdByUsername,
   getUsers,
   updateUser,
 } from '@/db/queries/users'
@@ -22,6 +23,14 @@ export const getSingleUserFn = createServerFn({ method: 'GET' })
     const user = await getSingleUser(data.userId)
 
     return user
+  })
+
+export const getUserIdByUsernameFn = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ username: z.string() }))
+  .handler(async ({ data }) => {
+    const { userId } = await getUserIdByUsername(data.username)
+
+    return userId
   })
 
 export const updateUserFn = createServerFn({ method: 'POST' })

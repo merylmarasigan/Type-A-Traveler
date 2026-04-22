@@ -4,16 +4,27 @@ import {
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
+  EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
+import { CircleUserRound } from 'lucide-react'
 
-export function NotFound() {
+interface NotFoundProps {
+  type?: 'user' | 'page'
+}
+
+export function NotFound({ type = 'page' }: NotFoundProps) {
   return (
     <Empty>
       <EmptyHeader>
+        {type === 'user' && (
+          <EmptyMedia variant="default">
+            <CircleUserRound />
+          </EmptyMedia>
+        )}
         <EmptyTitle>404 - Not Found</EmptyTitle>
         <EmptyDescription>
-          The page you&apos;re looking for doesn&apos;t exist.
+          The {type} you&apos;re looking for doesn&apos;t exist.
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>

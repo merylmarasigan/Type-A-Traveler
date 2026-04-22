@@ -24,6 +24,16 @@ export const getSingleUser = async (id: string) => {
   return result
 }
 
+export const getUserIdByUsername = async (username: string) => {
+  const result = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(eq(user.username, username))
+    .limit(1)
+
+  return { userId: result.length > 0 ? result[0].id : null }
+}
+
 export const updateUser = async (values: UpdateUser) => {
   const [result] = await db
     .update(user)

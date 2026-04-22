@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProfileUsernameRouteImport } from './routes/profile/$username'
 import { Route as ItinerariesIdRouteImport } from './routes/itineraries/$id'
 import { Route as ActivitiesCityRouteImport } from './routes/activities/$city'
 import { Route as ProtectedMyItinerariesRouteImport } from './routes/_protected/my-itineraries'
@@ -43,6 +44,11 @@ const ProtectedRoute = ProtectedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileUsernameRoute = ProfileUsernameRouteImport.update({
+  id: '/profile/$username',
+  path: '/profile/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ItinerariesIdRoute = ItinerariesIdRouteImport.update({
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/my-itineraries': typeof ProtectedMyItinerariesRoute
   '/activities/$city': typeof ActivitiesCityRoute
   '/itineraries/$id': typeof ItinerariesIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/cities/$cityId': typeof ItinerariesCitiesCityIdRoute
 }
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/my-itineraries': typeof ProtectedMyItinerariesRoute
   '/activities/$city': typeof ActivitiesCityRoute
   '/itineraries/$id': typeof ItinerariesIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/cities/$cityId': typeof ItinerariesCitiesCityIdRoute
 }
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/_protected/my-itineraries': typeof ProtectedMyItinerariesRoute
   '/activities/$city': typeof ActivitiesCityRoute
   '/itineraries/$id': typeof ItinerariesIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/itineraries/cities/$cityId': typeof ItinerariesCitiesCityIdRoute
 }
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/my-itineraries'
     | '/activities/$city'
     | '/itineraries/$id'
+    | '/profile/$username'
     | '/api/auth/$'
     | '/itineraries/cities/$cityId'
   fileRoutesByTo: FileRoutesByTo
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/my-itineraries'
     | '/activities/$city'
     | '/itineraries/$id'
+    | '/profile/$username'
     | '/api/auth/$'
     | '/itineraries/cities/$cityId'
   id:
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/_protected/my-itineraries'
     | '/activities/$city'
     | '/itineraries/$id'
+    | '/profile/$username'
     | '/api/auth/$'
     | '/itineraries/cities/$cityId'
   fileRoutesById: FileRoutesById
@@ -162,6 +174,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   ActivitiesCityRoute: typeof ActivitiesCityRoute
   ItinerariesIdRoute: typeof ItinerariesIdRoute
+  ProfileUsernameRoute: typeof ProfileUsernameRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ItinerariesCitiesCityIdRoute: typeof ItinerariesCitiesCityIdRoute
 }
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/$username': {
+      id: '/profile/$username'
+      path: '/profile/$username'
+      fullPath: '/profile/$username'
+      preLoaderRoute: typeof ProfileUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/itineraries/$id': {
@@ -270,6 +290,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   ActivitiesCityRoute: ActivitiesCityRoute,
   ItinerariesIdRoute: ItinerariesIdRoute,
+  ProfileUsernameRoute: ProfileUsernameRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ItinerariesCitiesCityIdRoute: ItinerariesCitiesCityIdRoute,
 }
