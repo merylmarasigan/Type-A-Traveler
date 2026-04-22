@@ -26,6 +26,13 @@ export const auth = betterAuth({
       clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
       accessType: 'offline',
       prompt: 'select_account consent',
+      mapProfileToUser: (profile) => {
+        // Map the email from OAuth provider to username
+        return {
+          username: profile.email.split('@')[0], // Normalized username
+          displayUsername: profile.name, // Display version
+        }
+      },
     },
   },
 })

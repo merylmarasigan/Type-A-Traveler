@@ -10,7 +10,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -43,7 +42,18 @@ export function AuthHeader() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
-            <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
+            <DropdownMenuItem asChild>
+              <Link
+                to={`/profile/$username`}
+                params={{ username: session.user.username ?? '' }}
+                className="justify-start"
+              >
+                <span>{session.user.name}</span>
+                <span className="text-muted-foreground">
+                  @{session.user.username}
+                </span>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to="/my-itineraries" className="justify-start">
                 <Folders />

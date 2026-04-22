@@ -5,6 +5,7 @@ const tables = [
   // Drop dependents first to respect foreign key constraints
   'saved_activities',
   'time_slots',
+  'time_slot_activities',
   'itinerary_days',
   'city_itineraries',
   'lodging',

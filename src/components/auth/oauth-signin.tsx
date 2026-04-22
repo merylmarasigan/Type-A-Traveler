@@ -7,10 +7,9 @@ export function OAuthSignIn() {
   const router = useRouter()
 
   const signInWithGoogle = async () => {
-    const { data, error } = await authClient.signIn.social({
+    const { error } = await authClient.signIn.social({
       provider: 'google',
     })
-    // TODO: do something with data?
 
     if (!error) router.navigate({ to: '/' })
   }
