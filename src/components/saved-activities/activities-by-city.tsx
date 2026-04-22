@@ -1,10 +1,19 @@
 import { useSavedActivities } from '@/hooks/use-saved-activities' // hook that fetches the activities from the database
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { SavedActivityCard } from '@/components/saved-activities/saved-activity-card'
 import { TypographyH3 } from '@/components/ui/typography'
 import { QuickCreateItineraryDialog } from '@/components/itineraries/quick-create-itinerary-dialog'
 import { Button } from '@/components/ui/button'
-import { CalendarPlus } from 'lucide-react'
+import { CalendarPlus, FolderPlus, MapPin } from 'lucide-react'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { Link } from '@tanstack/react-router'
+import { authClient } from '@/lib/auth-client'
 
 interface ActivitiesByCityProps {
   /** Load activities for this user instead of the signed-in user. */
@@ -25,6 +34,8 @@ export function ActivitiesByCity({
     forUserId !== undefined ? { forUserId } : {},
   )
   const activities = userActivitiesQuery.data
+  const { data: session } = authClient.useSession()
+  const isOwner = session?.user.id === forUserId
 
   const grouped = activities.reduce<Record<string, typeof activities>>(
     (acc, activity) => {
@@ -40,10 +51,25 @@ export function ActivitiesByCity({
 
   if (cities.length === 0) {
     return (
-      <Alert>
-        <AlertTitle>{emptyTitle}</AlertTitle>
-        <AlertDescription>{emptyDescription}</AlertDescription>
-      </Alert>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <MapPin />
+          </EmptyMedia>
+          <EmptyTitle>{emptyTitle}</EmptyTitle>
+          <EmptyDescription>{emptyDescription}</EmptyDescription>
+        </EmptyHeader>
+        {isOwner && (
+          <EmptyContent className="flex-row justify-center gap-2">
+            <Button asChild>
+              <Link to="/">
+                <FolderPlus />
+                Find activities
+              </Link>
+            </Button>
+          </EmptyContent>
+        )}
+      </Empty>
     )
   }
 

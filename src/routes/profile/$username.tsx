@@ -24,6 +24,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { Button } from '@/components/ui/button'
+import { authClient } from '@/lib/auth-client'
 
 export const Route = createFileRoute('/profile/$username')({
   component: RouteComponent,
@@ -65,6 +66,10 @@ function ProfilePageSkeleton() {
 
 function RouteContent({ userId }: { userId: string }) {
   const { userQuery } = useSingleUser({ userId })
+  const { data: session } = authClient.useSession()
+
+  const isOwner = session?.user.id === userId
+
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6 p-4 md:p-6">
       <div className="flex flex-col gap-1">
@@ -89,7 +94,7 @@ function RouteContent({ userId }: { userId: string }) {
               </div>
             }
           >
-            <ProfileItinerariesTab userId={userId} />
+            <ProfileItinerariesTab userId={userId} isOwner={isOwner} />
           </Suspense>
         </TabsContent>
         <TabsContent value="saved-activities" className="flex flex-col gap-4">
@@ -113,7 +118,7 @@ function RouteContent({ userId }: { userId: string }) {
               forUserId={userId}
               showCreateItinerary={false}
               emptyTitle="No saved activities"
-              emptyDescription="This user has not saved any activities yet."
+              emptyDescription={`${isOwner ? 'You have' : 'This user has'} not saved any activities yet.`}
             />
           </Suspense>
         </TabsContent>
@@ -122,7 +127,13 @@ function RouteContent({ userId }: { userId: string }) {
   )
 }
 
-function ProfileItinerariesTab({ userId }: { userId: string }) {
+function ProfileItinerariesTab({
+  userId,
+  isOwner,
+}: {
+  userId: string
+  isOwner: boolean
+}) {
   const { data: folders } = useSuspenseQuery(
     userItineraryFoldersQueryOptions(userId),
   )
@@ -136,17 +147,20 @@ function ProfileItinerariesTab({ userId }: { userId: string }) {
           </EmptyMedia>
           <EmptyTitle>No itineraries yet</EmptyTitle>
           <EmptyDescription>
-            This user has not created any itineraries yet.
+            {isOwner ? 'You have' : 'This user has'} not created any itineraries
+            yet.
           </EmptyDescription>
         </EmptyHeader>
-        <EmptyContent className="flex-row justify-center gap-2">
-          <Button asChild variant="outline">
-            <Link to="/">
-              <FolderPlus />
-              Plan a trip
-            </Link>
-          </Button>
-        </EmptyContent>
+        {isOwner && (
+          <EmptyContent className="flex-row justify-center gap-2">
+            <Button asChild>
+              <Link to="/">
+                <FolderPlus />
+                Plan a trip
+              </Link>
+            </Button>
+          </EmptyContent>
+        )}
       </Empty>
     )
   }
