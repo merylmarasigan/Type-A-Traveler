@@ -198,7 +198,7 @@ function QuickCreateItineraryDialogContent({
 
           <Collapsible className="flex flex-col gap-2">
             <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full">
+              <Button disabled={noCities} variant="ghost" className="w-full">
                 Add to an existing itinerary?
                 <ChevronDown />
               </Button>
