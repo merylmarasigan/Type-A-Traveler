@@ -31,7 +31,12 @@ export const getUserSavedActivitiesFn = createServerFn({
     }),
   )
   .handler(async ({ data }) => {
-    if (!data.userId || !data.userShowsSavedActivitiesOnProfile) return []
+    if (!data.userId) return []
+    if (
+      data.userShowsSavedActivitiesOnProfile !== undefined &&
+      !data.userShowsSavedActivitiesOnProfile
+    )
+      return []
 
     const activities = await getUserSavedActivities(data.userId, data.city)
 
