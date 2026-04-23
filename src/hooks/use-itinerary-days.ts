@@ -1,3 +1,6 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
+import { eachDayOfInterval } from 'date-fns'
+import type { DateRange } from 'react-day-picker'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
 import { authClient } from '@/lib/auth-client'
@@ -7,18 +10,21 @@ import {
   createItineraryDaysMutationOptions,
   updateMultipleItineraryDaysMutationOptions,
 } from '@/services/backend/itinerary-days.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
-import { eachDayOfInterval } from 'date-fns'
-import { DateRange } from 'react-day-picker'
 
-export const useItineraryDays = (cityItineraryId?: string) => {
+type UseItineraryDaysParams = {
+  cityItineraryId?: string
+}
+
+export const useItineraryDays = ({
+  cityItineraryId,
+}: UseItineraryDaysParams = {}) => {
   const { data } = authClient.useSession()
 
-  const { createFolderMutation } = useItineraryFolders()
-  const { createCityItineraryMutation } = useCityItineraries()
+  const { createFolderMutation } = useItineraryFolders({})
+  const { createCityItineraryMutation } = useCityItineraries({})
 
   const itineraryDaysQuery = useSuspenseQuery(
-    cityItineraryDaysQueryOptions(cityItineraryId),
+    cityItineraryDaysQueryOptions({ cityItineraryId }),
   )
 
   const createItineraryDaysMutation = useMutation(
@@ -35,6 +41,8 @@ export const useItineraryDays = (cityItineraryId?: string) => {
   const createInitialDays = async (
     dateRange: DateRange,
     city: string,
+    lat: string,
+    lng: string,
     existingFolderId?: string,
   ) => {
     // TODO: show toast or throw a redirect
@@ -52,6 +60,8 @@ export const useItineraryDays = (cityItineraryId?: string) => {
 
     const cityItinerary = await createCityItineraryMutation.mutateAsync({
       city,
+      lat,
+      lng,
       folderId: itineraryFolderId,
       title: `Itinerary for ${city}`,
     })

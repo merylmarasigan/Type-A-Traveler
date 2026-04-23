@@ -1,13 +1,13 @@
-import { NewLodging, UpdateLodging } from '@/db/types'
-import {
-  createLodgingFn,
-  getSingleLodgingFn,
-  updateLodgingFn,
-  deleteLodgingFn,
-  getItineraryLodgingFn,
-} from '@/services/backend/lodging.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import type { NewLodging, UpdateLodging } from '@/db/types'
+import {
+  createLodgingFn,
+  deleteLodgingFn,
+  getItineraryLodgingFn,
+  getSingleLodgingFn,
+  updateLodgingFn,
+} from '@/services/backend/lodging.api'
 
 const multipleLodgingQueryKey = (itineraryFolderId: string) =>
   ['itinerary_folders', itineraryFolderId, 'lodging'] as const
@@ -15,14 +15,22 @@ const multipleLodgingQueryKey = (itineraryFolderId: string) =>
 const singleLodgingQueryKey = (lodgingId: string) =>
   ['lodging', lodgingId] as const
 
-export const folderLodgingQueryOptions = (itineraryFolderId: string) =>
+export const folderLodgingQueryOptions = ({
+  itineraryFolderId,
+}: {
+  itineraryFolderId: string
+}) =>
   queryOptions({
     queryKey: multipleLodgingQueryKey(itineraryFolderId),
     queryFn: () => getItineraryLodgingFn({ data: { itineraryFolderId } }),
     enabled: itineraryFolderId !== '',
   })
 
-export const singleLodgingQueryOptions = (lodgingId: string) =>
+export const singleLodgingQueryOptions = ({
+  lodgingId,
+}: {
+  lodgingId: string
+}) =>
   queryOptions({
     queryKey: singleLodgingQueryKey(lodgingId),
     queryFn: () => getSingleLodgingFn({ data: { lodgingId } }),

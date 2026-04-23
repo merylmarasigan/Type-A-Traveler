@@ -1,3 +1,5 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod/v4'
 import {
   createItineraryFolder,
   deleteItineraryFolder,
@@ -11,15 +13,18 @@ import {
   updateItineraryFolderSchema,
 } from '@/db/types'
 import { ensureSession } from '@/services/backend/auth.functions'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod/v4'
 
 export const getMultipleItineraryFoldersFn = createServerFn({
   method: 'GET',
 })
-  .inputValidator(z.object({ limit: z.number().optional() }))
+  .inputValidator(
+    z.object({
+      limit: z.number().optional(),
+      publicOnly: z.boolean().optional().default(false),
+    }),
+  )
   .handler(async ({ data }) => {
-    const folders = await getItineraryFolders(data.limit)
+    const folders = await getItineraryFolders(data.limit, data.publicOnly)
 
     return folders
   })
@@ -27,11 +32,16 @@ export const getMultipleItineraryFoldersFn = createServerFn({
 export const getUserItineraryFoldersFn = createServerFn({
   method: 'GET',
 })
-  .inputValidator(z.object({ userId: z.string().optional() }))
+  .inputValidator(
+    z.object({
+      userId: z.string().optional(),
+      publicOnly: z.boolean().optional().default(false),
+    }),
+  )
   .handler(async ({ data }) => {
     if (!data.userId) return []
 
-    const folders = await getUserItineraryFolders(data.userId)
+    const folders = await getUserItineraryFolders(data.userId, data.publicOnly)
 
     return folders
   })

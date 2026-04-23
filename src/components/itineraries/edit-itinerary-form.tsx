@@ -1,13 +1,14 @@
+import { useForm } from '@tanstack/react-form'
+import { Save } from 'lucide-react'
+import z from 'zod/v4'
 import { Button } from '@/components/ui/button'
 import {
+  Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-  Field,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useForm } from '@tanstack/react-form'
-import z from 'zod/v4'
 
 interface EditItineraryFormProps {
   title: string | null
@@ -39,7 +40,6 @@ export function EditItineraryForm({
     },
     onSubmit: async ({ value }) => {
       onSubmit({ title: value.title, description: value.description })
-      // toast.success('Title updated!')
     },
   })
 
@@ -101,7 +101,10 @@ export function EditItineraryForm({
         />
       </FieldGroup>
 
-      <Button type="submit">Save</Button>
+      <Button type="submit">
+        <Save />
+        Save
+      </Button>
     </form>
   )
 }

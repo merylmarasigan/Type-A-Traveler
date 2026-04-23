@@ -1,3 +1,5 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod/v4'
 import {
   createCityItinerary,
   deleteCityItinerary,
@@ -10,8 +12,6 @@ import {
   updateCityItinerarySchema,
 } from '@/db/types'
 import { ensureSession } from '@/services/backend/auth.functions'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod/v4'
 
 export const getFolderCityItinerariesFn = createServerFn({
   method: 'GET',
@@ -60,7 +60,9 @@ export const deleteCityItineraryFn = createServerFn({
   .handler(async ({ data }) => {
     await ensureSession()
 
-    const deletedCityItinerary = await deleteCityItinerary(data.cityItineraryId)
+    const { deletedCityItinerary, remainingCities } = await deleteCityItinerary(
+      data.cityItineraryId,
+    )
 
-    return deletedCityItinerary
+    return { deletedCityItinerary, remainingCities }
   })

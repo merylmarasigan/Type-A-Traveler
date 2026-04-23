@@ -1,3 +1,7 @@
+import { Link, useRouter } from '@tanstack/react-router'
+import z from 'zod'
+import { useForm } from '@tanstack/react-form'
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,11 +12,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Link, useRouter } from '@tanstack/react-router'
-import z from 'zod'
-import { useForm } from '@tanstack/react-form'
 import { authClient } from '@/lib/auth-client'
-import { useState } from 'react'
 import { OAuthSignIn } from '@/components/auth/oauth-signin'
 
 const formSchema = z.object({
@@ -32,7 +32,7 @@ const defaultFormValues: FormValues = {
   username: '',
 }
 
-export function LoginForm() {
+export function LoginForm({ redirect }: { redirect?: string }) {
   const router = useRouter()
   const [error, setError] = useState('')
 
@@ -46,9 +46,11 @@ export function LoginForm() {
       const { error } = await authClient.signIn.username(value)
       if (error) return setError(error.message ?? 'Something went wrong.')
 
-      router.navigate({ to: '/' })
+      router.navigate({ to: redirect ?? '/' })
     },
   })
+
+  const redirectedFromPage = redirect?.substring(redirect.indexOf('-') + 1)
 
   return (
     <div className={cn('flex flex-col gap-6')}>
@@ -60,6 +62,9 @@ export function LoginForm() {
       >
         <div className="flex flex-col items-center gap-2 text-center pb-2">
           <h1 className="text-xl font-bold">Welcome back!</h1>
+          {redirectedFromPage && (
+            <FieldError>Log in to view your {redirectedFromPage}</FieldError>
+          )}
           <FieldDescription>
             Don't have an account yet? <Link to="/signup">Create one</Link>
           </FieldDescription>

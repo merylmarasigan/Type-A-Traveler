@@ -1,13 +1,14 @@
+import { createServerFn } from '@tanstack/react-start'
+import z from 'zod/v4'
 import {
   deleteUser,
-  updateUser,
   getSingleUser,
+  getUserIdByUsername,
   getUsers,
+  updateUser,
 } from '@/db/queries/users'
 import { updateUserSchema } from '@/db/types'
 import { ensureSession } from '@/services/backend/auth.functions'
-import { createServerFn } from '@tanstack/react-start'
-import z from 'zod/v4'
 
 export const getUsersFn = createServerFn({ method: 'GET' }).handler(
   async () => {
@@ -22,6 +23,14 @@ export const getSingleUserFn = createServerFn({ method: 'GET' })
     const user = await getSingleUser(data.userId)
 
     return user
+  })
+
+export const getUserIdByUsernameFn = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ username: z.string() }))
+  .handler(async ({ data }) => {
+    const { userId } = await getUserIdByUsername(data.username)
+
+    return userId
   })
 
 export const updateUserFn = createServerFn({ method: 'POST' })

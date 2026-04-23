@@ -1,13 +1,19 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   deleteItineraryFolderMutationOptions,
   singleItineraryFolderQueryOptions,
   updateItineraryFolderMutationOptions,
 } from '@/services/backend/itinerary-folders.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useSingleItineraryFolder = (itineraryFolderId: string) => {
+type UseSingleItineraryFolderParams = {
+  itineraryFolderId: string
+}
+
+export const useSingleItineraryFolder = ({
+  itineraryFolderId,
+}: UseSingleItineraryFolderParams) => {
   const folderQuery = useSuspenseQuery(
-    singleItineraryFolderQueryOptions(itineraryFolderId),
+    singleItineraryFolderQueryOptions({ itineraryFolderId }),
   )
 
   const updateFolderMutation = useMutation(

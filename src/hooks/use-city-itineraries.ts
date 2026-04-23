@@ -1,12 +1,18 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   createCityItineraryMutationOptions,
   folderCityItinerariesQueryOptions,
 } from '@/services/backend/city-itineraries.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useCityItineraries = (folderId?: string) => {
+type UseCityItinerariesParams = {
+  folderId?: string
+}
+
+export const useCityItineraries = ({
+  folderId,
+}: UseCityItinerariesParams = {}) => {
   const itinerariesQuery = useSuspenseQuery(
-    folderCityItinerariesQueryOptions(folderId),
+    folderCityItinerariesQueryOptions({ folderId }),
   )
 
   const createCityItineraryMutation = useMutation(

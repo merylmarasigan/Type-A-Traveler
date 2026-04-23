@@ -1,30 +1,32 @@
+import { seed } from 'drizzle-seed'
 import { db } from '@/db'
 import {
-  itineraryFolders,
   cityItineraries,
   itineraryDays,
-  timeSlots,
-  savedActivities,
+  itineraryFolders,
   lodging,
+  savedActivities,
+  timeSlotActivities,
+  timeSlots,
 } from '@/db/schema/app'
 import {
-  user,
-  session,
   account,
-  verification,
-  userRelations,
-  sessionRelations,
   accountRelations,
+  session,
+  sessionRelations,
+  user,
+  userRelations,
+  verification,
 } from '@/db/schema/auth'
 import {
-  itinerariesRelations,
   cityItinerariesRelations,
+  itinerariesRelations,
   itineraryDaysRelations,
-  timeSlotRelations,
-  savedActivitiesRelations,
   lodgingRelations,
+  savedActivitiesRelations,
+  timeSlotActivitiesRelations,
+  timeSlotRelations,
 } from '@/db/schema/relations'
-import { seed } from 'drizzle-seed'
 
 async function main() {
   try {
@@ -38,6 +40,7 @@ async function main() {
       itineraryDays,
       timeSlots,
       savedActivities,
+      timeSlotActivities,
       lodging,
       userRelations,
       sessionRelations,
@@ -47,6 +50,7 @@ async function main() {
       itineraryDaysRelations,
       timeSlotRelations,
       savedActivitiesRelations,
+      timeSlotActivitiesRelations,
       lodgingRelations,
     }).refine((f) => ({
       user: {
@@ -195,12 +199,10 @@ async function main() {
           startTime: f.timestamp(),
           endTime: f.timestamp(),
         },
-        with: {
-          savedActivities: 2,
-        },
       },
 
       savedActivities: {
+        count: 20,
         columns: {
           id: f.uuid(),
           name: f.valuesFromArray({

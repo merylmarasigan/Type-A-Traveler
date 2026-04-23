@@ -1,16 +1,18 @@
+import { useRouter } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Field, FieldSeparator } from '@/components/ui/field'
 import { authClient } from '@/lib/auth-client'
-import { useRouter } from '@tanstack/react-router'
+import { MouseEvent } from 'react'
 
 export function OAuthSignIn() {
   const router = useRouter()
 
-  const signInWithGoogle = async () => {
-    const { data, error } = await authClient.signIn.social({
+  const signInWithGoogle = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    const { error } = await authClient.signIn.social({
       provider: 'google',
     })
-    // TODO: do something with data?
 
     if (!error) router.navigate({ to: '/' })
   }

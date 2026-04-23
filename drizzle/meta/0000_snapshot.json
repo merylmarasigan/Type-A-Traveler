@@ -452,12 +452,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -544,12 +540,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -559,9 +551,7 @@
         "session_token_unique": {
           "name": "session_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -625,9 +615,7 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -724,12 +712,8 @@
           "name": "users_to_city_itineraries_user_id_user_id_fk",
           "tableFrom": "users_to_city_itineraries",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -737,12 +721,8 @@
           "name": "users_to_city_itineraries_city_itinerary_id_city_itineraries_id_fk",
           "tableFrom": "users_to_city_itineraries",
           "tableTo": "city_itineraries",
-          "columnsFrom": [
-            "city_itinerary_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["city_itinerary_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -750,10 +730,7 @@
       "compositePrimaryKeys": {
         "users_to_city_itineraries_user_id_city_itinerary_id_pk": {
           "name": "users_to_city_itineraries_user_id_city_itinerary_id_pk",
-          "columns": [
-            "user_id",
-            "city_itinerary_id"
-          ]
+          "columns": ["user_id", "city_itinerary_id"]
         }
       },
       "uniqueConstraints": {},

@@ -1,14 +1,14 @@
-import { NewTimeSlot, UpdateTimeSlot } from '@/db/types'
-import {
-  getItineraryDayTimeSlotsFn,
-  getSingleTimeSlotFn,
-  createTimeSlotFn,
-  updateTimeSlotFn,
-  deleteTimeSlotFn,
-} from '@/services/backend/time-slots.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { formatDate } from 'date-fns'
 import { toast } from 'sonner'
+import type { NewTimeSlot, UpdateTimeSlot } from '@/db/types'
+import {
+  createTimeSlotFn,
+  deleteTimeSlotFn,
+  getItineraryDayTimeSlotsFn,
+  getSingleTimeSlotFn,
+  updateTimeSlotFn,
+} from '@/services/backend/time-slots.api'
 
 const multipleTimeSlotsQueryKey = (itineraryDayId: string) =>
   ['itinerary_days', itineraryDayId, 'time_slots'] as const
@@ -16,14 +16,22 @@ const multipleTimeSlotsQueryKey = (itineraryDayId: string) =>
 const singleTimeSlotQueryKey = (timeSlotId: string) =>
   ['time_slots', timeSlotId] as const
 
-export const itineraryDayTimeSlotsQueryOptions = (itineraryDayId: string) =>
+export const itineraryDayTimeSlotsQueryOptions = ({
+  itineraryDayId,
+}: {
+  itineraryDayId: string
+}) =>
   queryOptions({
     queryKey: multipleTimeSlotsQueryKey(itineraryDayId),
     queryFn: () => getItineraryDayTimeSlotsFn({ data: { itineraryDayId } }),
     enabled: itineraryDayId !== '',
   })
 
-export const singleTimeSlotQueryOptions = (timeSlotId: string) =>
+export const singleTimeSlotQueryOptions = ({
+  timeSlotId,
+}: {
+  timeSlotId: string
+}) =>
   queryOptions({
     queryKey: singleTimeSlotQueryKey(timeSlotId),
     queryFn: () => getSingleTimeSlotFn({ data: { timeSlotId } }),
@@ -50,6 +58,9 @@ export const updateTimeSlotMutationOptions = () =>
     onSuccess: async (data, _variables, _result, ctx) => {
       toast.success(`Updated time slot${getWeekDay(data.startTime)}`)
 
+      await ctx.client.invalidateQueries({
+        queryKey: multipleTimeSlotsQueryKey(data.itineraryDayId),
+      })
       await ctx.client.invalidateQueries({
         queryKey: singleTimeSlotQueryKey(data.id),
       })

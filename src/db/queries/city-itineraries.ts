@@ -1,13 +1,23 @@
-import { db } from '@/db'
-import { cityItineraries } from '@/db/schema/app'
-import { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
 import { generateId } from 'better-auth'
-import { eq } from 'drizzle-orm'
+import { eq, getTableColumns } from 'drizzle-orm'
+import type { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
+import { db } from '@/db'
+import { cityItineraries, itineraryFolders } from '@/db/schema/app'
+
+const { createdAt, updatedAt, ...cityItineraryColumns } =
+  getTableColumns(cityItineraries)
 
 export const getFolderCityItineraries = async (folderId: string) => {
   const result = await db
-    .select()
+    .select({
+      ...cityItineraryColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(cityItineraries)
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(cityItineraries.folderId, folderId))
 
   return result
@@ -15,8 +25,15 @@ export const getFolderCityItineraries = async (folderId: string) => {
 
 export const getCityItinerary = async (id: string) => {
   const [result] = await db
-    .select()
+    .select({
+      ...cityItineraryColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(cityItineraries)
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(cityItineraries.id, id))
     .limit(1)
 
@@ -50,5 +67,16 @@ export const deleteCityItinerary = async (id: string) => {
     .where(eq(cityItineraries.id, id))
     .returning()
 
-  return deletedCityItinerary
+  const remainingCities = await db
+    .select()
+    .from(cityItineraries)
+    .where(eq(cityItineraries.folderId, deletedCityItinerary.folderId))
+
+  if (remainingCities.length === 0) {
+    await db
+      .delete(itineraryFolders)
+      .where(eq(itineraryFolders.id, deletedCityItinerary.folderId))
+  }
+
+  return { deletedCityItinerary, remainingCities }
 }

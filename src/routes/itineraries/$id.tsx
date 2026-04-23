@@ -1,8 +1,15 @@
-import { CityItineraryDetails } from '@/components/itineraries/city-itinerary-details'
+import { createFileRoute, notFound, useRouter } from '@tanstack/react-router'
+import { Folder } from 'lucide-react'
+import { Suspense } from 'react'
+import {
+  CityItineraryDetails,
+  CityItineraryDetailsSkeleton,
+} from '@/components/itineraries/city-itinerary-details'
 import { CityItineraryPreview } from '@/components/itineraries/city-itinerary-preview'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
+import { ItineraryAuthorProfileLink } from '@/components/itineraries/itinerary-author-profile-link'
 import { ItineraryFolderOverview } from '@/components/itineraries/itinerary-folder-overview'
-import { SearchCitiesDialog } from '@/components/search-cities-dialog'
+import { SearchCitiesDialog } from '@/components/cities-locations/search-cities-dialog'
 import {
   TypographyBlockquote,
   TypographyH1,
@@ -13,19 +20,49 @@ import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { authClient } from '@/lib/auth-client'
-import { createFileRoute } from '@tanstack/react-router'
-import { Folder } from 'lucide-react'
+import { ItineraryPrivacyToggle } from '@/components/itineraries/itinerary-privacy-toggle'
+import { getSingleItineraryFolderFn } from '@/services/backend/itinerary-folders.api'
+import { getSession } from '@/services/backend/auth.functions'
+import { NotFound } from '@/components/util/not-found'
 
 export const Route = createFileRoute('/itineraries/$id')({
   component: RouteComponent,
+  loader: async ({ params }) => {
+    const session = await getSession()
+    const { authorId, isPublic } = await getSingleItineraryFolderFn({
+      data: { itineraryFolderId: params.id },
+    })
+    if (session?.user.id !== authorId && !isPublic) throw notFound()
+  },
+  notFoundComponent: () => <NotFound type="private-itinerary" />,
 })
 
 function RouteComponent() {
   const { id } = Route.useParams()
-  const { folderQuery, updateFolderMutation } = useSingleItineraryFolder(id)
-  const { itinerariesQuery: cityItineraries } = useCityItineraries(id)
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col gap-2 p-2">
+          <CityItineraryDetailsSkeleton />
+        </div>
+      }
+    >
+      <RouteContent id={id} />
+    </Suspense>
+  )
+}
+
+function RouteContent({ id }: { id: string }) {
+  const { folderQuery, updateFolderMutation, deleteFolderMutation } =
+    useSingleItineraryFolder({ itineraryFolderId: id })
+  const { itinerariesQuery: cityItineraries } = useCityItineraries({
+    folderId: id,
+  })
   const { data } = authClient.useSession()
-  const { userQuery } = useSingleUser(folderQuery.data.authorId)
+  const { userQuery } = useSingleUser({
+    userId: folderQuery.data?.authorId,
+  })
+  const router = useRouter()
 
   const updateTitle = async (value: {
     title: string | null
@@ -38,10 +75,15 @@ function RouteComponent() {
     })
   }
 
-  const title = folderQuery.data?.title ?? cityItineraries.data[0].title
+  const deleteFolder = async () => {
+    await deleteFolderMutation.mutateAsync(id)
+    await router.navigate({ to: '/my-itineraries' })
+  }
+
+  const title = folderQuery.data?.title ?? cityItineraries.data[0]?.title
   const description =
-    folderQuery.data.description ?? cityItineraries.data[0].description
-  const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
+    folderQuery.data?.description ?? cityItineraries.data[0]?.description
+  const authorIsSessionUser = data?.user.id === folderQuery.data?.authorId
 
   const folderOnlyHasOneCity = cityItineraries.data.length === 1
 
@@ -56,9 +98,16 @@ function RouteComponent() {
           {description}
         </TypographyBlockquote>
       )}
-      <TypographySmall className="text-center">
-        by {userQuery.data.name}
-      </TypographySmall>
+      <div className="flex flex-col items-center gap-2">
+        <TypographySmall className="text-center">
+          by {userQuery.data.name}
+        </TypographySmall>
+        <ItineraryAuthorProfileLink
+          authorId={folderQuery.data?.authorId}
+          sessionUserId={data?.user.id}
+          username={userQuery.data.username}
+        />
+      </div>
       {cityItineraries.data.length > 1 && (
         <TypographySmall className="self-center text-center text-muted-foreground">
           {cityItineraries.data.length} cities
@@ -67,12 +116,17 @@ function RouteComponent() {
 
       {authorIsSessionUser && (
         <div className="self-center flex justify-between items-center gap-2 w-min">
+          <ItineraryPrivacyToggle
+            isPublic={folderQuery.data?.isPublic}
+            itineraryFolderId={id}
+          />
           <EditItineraryDialog
             title={title}
             description={description}
             id={id}
             type="Folder"
             onSubmit={updateTitle}
+            onDelete={deleteFolder}
           />
           <SearchCitiesDialog className="self-start" />
         </div>

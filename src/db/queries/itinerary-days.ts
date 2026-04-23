@@ -1,13 +1,31 @@
-import { db } from '@/db'
-import { itineraryDays } from '@/db/schema/app'
-import { ItineraryDay, NewItineraryDay, UpdateItineraryDay } from '@/db/types'
 import { generateId } from 'better-auth'
-import { eq, inArray } from 'drizzle-orm'
+import { eq, getTableColumns, inArray } from 'drizzle-orm'
+import type { NewItineraryDay, UpdateItineraryDay } from '@/db/types'
+import { db } from '@/db'
+import {
+  cityItineraries,
+  itineraryDays,
+  itineraryFolders,
+} from '@/db/schema/app'
+
+const { createdAt, updatedAt, ...itineraryDayColumns } =
+  getTableColumns(itineraryDays)
 
 export const getCityItineraryDays = async (cityItineraryId: string) => {
   const result = await db
-    .select()
+    .select({
+      ...itineraryDayColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(itineraryDays)
+    .innerJoin(
+      cityItineraries,
+      eq(itineraryDays.cityItineraryId, cityItineraries.id),
+    )
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(itineraryDays.cityItineraryId, cityItineraryId))
     .orderBy(itineraryDays.date)
 
@@ -16,8 +34,19 @@ export const getCityItineraryDays = async (cityItineraryId: string) => {
 
 export const getItineraryDay = async (id: string) => {
   const [result] = await db
-    .select()
+    .select({
+      ...itineraryDayColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(itineraryDays)
+    .innerJoin(
+      cityItineraries,
+      eq(itineraryDays.cityItineraryId, cityItineraries.id),
+    )
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(itineraryDays.id, id))
     .limit(1)
 
@@ -25,7 +54,7 @@ export const getItineraryDay = async (id: string) => {
 }
 
 export const createItineraryDays = async (
-  newItineraryDays: NewItineraryDay[],
+  newItineraryDays: Array<NewItineraryDay>,
 ) => {
   const result = await db
     .insert(itineraryDays)
@@ -51,7 +80,7 @@ export const updateSingleItineraryDay = async (values: UpdateItineraryDay) => {
 }
 
 export const updateMultipleItineraryDays = async (
-  newItineraryDays: NewItineraryDay[],
+  newItineraryDays: Array<NewItineraryDay>,
 ) => {
   const cityItineraryId = newItineraryDays[0].cityItineraryId
 
@@ -69,7 +98,7 @@ export const updateMultipleItineraryDays = async (
   const daysToRemove = originalDates.filter((d) => !newDateSet.has(d.date))
 
   const result = await db.transaction(async (tx) => {
-    let inserted: ItineraryDay[] = []
+    let inserted: Array<typeof itineraryDays.$inferSelect> = []
 
     if (daysToInsert.length > 0) {
       ;``

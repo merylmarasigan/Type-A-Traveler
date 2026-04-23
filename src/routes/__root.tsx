@@ -6,15 +6,16 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
-import { Header } from '@/components/Header'
-
 import TanStackQueryDevtools from '../components/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { NotFound } from '@/components/not-found'
+import { NavigationBar } from '@/components/util/navigation-bar'
+import { NotFound } from '@/components/util/not-found'
 import { Toaster } from '@/components/ui/sonner'
+import { getThemeServerFn } from '@/lib/theme'
+import { ThemeProvider } from '@/components/util/theme-provider'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -41,21 +42,25 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
-
+  loader: () => getThemeServerFn(),
   shellComponent: RootDocument,
   notFoundComponent: () => <NotFound />,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const theme = Route.useLoaderData()
+
   return (
-    <html lang="en">
+    <html lang="en" className={theme}>
       <head>
         <HeadContent />
       </head>
       <body className="h-full flex flex-col">
-        <Header />
-        <main className="flex-1 min-h-0">{children}</main>
-        <Toaster />
+        <ThemeProvider theme={theme}>
+          <NavigationBar />
+          <main className="flex-1 min-h-0">{children}</main>
+          <Toaster />
+        </ThemeProvider>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

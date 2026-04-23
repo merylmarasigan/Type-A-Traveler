@@ -1,12 +1,16 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   deleteUserMutationOptions,
   singleUserQueryOptions,
   updateUserMutationOptions,
 } from '@/services/backend/users.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useSingleUser = (userId: string) => {
-  const userQuery = useSuspenseQuery(singleUserQueryOptions(userId))
+type UseSingleUserParams = {
+  userId: string
+}
+
+export const useSingleUser = ({ userId }: UseSingleUserParams) => {
+  const userQuery = useSuspenseQuery(singleUserQueryOptions({ userId }))
 
   const updateUserMutation = useMutation(updateUserMutationOptions())
 

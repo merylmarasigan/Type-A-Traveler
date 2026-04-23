@@ -1,13 +1,19 @@
-import { db } from '@/db'
-import { lodging } from '@/db/schema/app'
-import { NewLodging, UpdateLodging } from '@/db/types'
 import { generateId } from 'better-auth'
-import { eq } from 'drizzle-orm'
+import { eq, getTableColumns } from 'drizzle-orm'
+import type { NewLodging, UpdateLodging } from '@/db/types'
+import { db } from '@/db'
+import { itineraryFolders, lodging } from '@/db/schema/app'
+
+const { createdAt, updatedAt, ...lodgingColumns } = getTableColumns(lodging)
 
 export const getItineraryLodging = async (itineraryFolderId: string) => {
   const result = await db
-    .select()
+    .select({
+      ...lodgingColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(lodging)
+    .innerJoin(itineraryFolders, eq(lodging.itineraryId, itineraryFolders.id))
     .where(eq(lodging.itineraryId, itineraryFolderId))
 
   return result
@@ -15,8 +21,12 @@ export const getItineraryLodging = async (itineraryFolderId: string) => {
 
 export const getLodging = async (id: string) => {
   const [result] = await db
-    .select()
+    .select({
+      ...lodgingColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(lodging)
+    .innerJoin(itineraryFolders, eq(lodging.itineraryId, itineraryFolders.id))
     .where(eq(lodging.id, id))
     .limit(1)
 

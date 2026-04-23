@@ -1,13 +1,32 @@
-import { db } from '@/db'
-import { timeSlots } from '@/db/schema/app'
-import { NewTimeSlot, UpdateTimeSlot } from '@/db/types'
 import { generateId } from 'better-auth'
-import { eq } from 'drizzle-orm'
+import { eq, getTableColumns } from 'drizzle-orm'
+import type { NewTimeSlot, UpdateTimeSlot } from '@/db/types'
+import { db } from '@/db'
+import {
+  cityItineraries,
+  itineraryDays,
+  itineraryFolders,
+  timeSlots,
+} from '@/db/schema/app'
+
+const { createdAt, updatedAt, ...timeSlotColumns } = getTableColumns(timeSlots)
 
 export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
   const result = await db
-    .select()
+    .select({
+      ...timeSlotColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(timeSlots)
+    .innerJoin(itineraryDays, eq(timeSlots.itineraryDayId, itineraryDays.id))
+    .innerJoin(
+      cityItineraries,
+      eq(itineraryDays.cityItineraryId, cityItineraries.id),
+    )
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(timeSlots.itineraryDayId, itineraryDayId))
     .orderBy(timeSlots.startTime)
 
@@ -16,8 +35,20 @@ export const getItineraryDayTimeSlots = async (itineraryDayId: string) => {
 
 export const getTimeSlot = async (id: string) => {
   const [result] = await db
-    .select()
+    .select({
+      ...timeSlotColumns,
+      authorId: itineraryFolders.authorId,
+    })
     .from(timeSlots)
+    .innerJoin(itineraryDays, eq(timeSlots.itineraryDayId, itineraryDays.id))
+    .innerJoin(
+      cityItineraries,
+      eq(itineraryDays.cityItineraryId, cityItineraries.id),
+    )
+    .innerJoin(
+      itineraryFolders,
+      eq(cityItineraries.folderId, itineraryFolders.id),
+    )
     .where(eq(timeSlots.id, id))
     .limit(1)
 

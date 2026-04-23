@@ -1,34 +1,61 @@
-import { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
-import {
-  createItineraryFolderFn,
-  getSingleItineraryFolderFn,
-  getMultipleItineraryFoldersFn,
-  getUserItineraryFoldersFn,
-  updateItineraryFolderFn,
-  deleteItineraryFolderFn,
-} from '@/services/backend/itinerary-folders.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import type { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
+import {
+  createItineraryFolderFn,
+  deleteItineraryFolderFn,
+  getMultipleItineraryFoldersFn,
+  getSingleItineraryFolderFn,
+  getUserItineraryFoldersFn,
+  updateItineraryFolderFn,
+} from '@/services/backend/itinerary-folders.api'
 
 const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
 
 const singleItineraryFolderQueryKey = (itineraryFolderId?: string) =>
   ['itinerary_folders', itineraryFolderId] as const
 
-export const multipleItineraryFoldersQueryOptions = (limit?: number) =>
+export const userItineraryFoldersQueryKey = (
+  userId?: string,
+  publicOnly?: boolean,
+) => [
+  'users',
+  userId,
+  ...multipleItineraryFoldersQueryKey(),
+  publicOnly ? 'public' : 'private',
+]
+
+export const multipleItineraryFoldersQueryOptions = ({
+  limit,
+  publicOnly,
+}: {
+  limit?: number
+  publicOnly?: boolean
+}) =>
   queryOptions({
     queryKey: multipleItineraryFoldersQueryKey(),
-    queryFn: () => getMultipleItineraryFoldersFn({ data: { limit } }),
+    queryFn: () =>
+      getMultipleItineraryFoldersFn({ data: { limit, publicOnly } }),
   })
 
-export const userItineraryFoldersQueryOptions = (userId?: string) =>
+export const userItineraryFoldersQueryOptions = ({
+  userId,
+  publicOnly,
+}: {
+  userId?: string
+  publicOnly?: boolean
+}) =>
   queryOptions({
-    queryKey: ['users', userId, ...multipleItineraryFoldersQueryKey()],
-    queryFn: () => getUserItineraryFoldersFn({ data: { userId } }),
+    queryKey: userItineraryFoldersQueryKey(userId, publicOnly),
+    queryFn: () => getUserItineraryFoldersFn({ data: { userId, publicOnly } }),
     enabled: userId !== undefined && userId !== '',
   })
 
-export const singleItineraryFolderQueryOptions = (itineraryFolderId: string) =>
+export const singleItineraryFolderQueryOptions = ({
+  itineraryFolderId,
+}: {
+  itineraryFolderId: string
+}) =>
   queryOptions({
     queryKey: singleItineraryFolderQueryKey(itineraryFolderId),
     queryFn: () => getSingleItineraryFolderFn({ data: { itineraryFolderId } }),
@@ -51,8 +78,14 @@ export const updateItineraryFolderMutationOptions = () =>
     mutationKey: ['updateItineraryFolder'],
     mutationFn: (data: UpdateItineraryFolder) =>
       updateItineraryFolderFn({ data }),
-    onSuccess: async (data, _variables, _result, ctx) => {
-      toast.success(`Updated ${data.title}`)
+    onSuccess: async (data, variables, _result, ctx) => {
+      if (variables.isPublic !== undefined) {
+        toast.success(
+          `Itinerary is now ${data.isPublic ? 'public' : 'private'}`,
+        )
+      } else {
+        toast.success(`Updated ${data.title}`)
+      }
 
       await ctx.client.invalidateQueries({
         queryKey: singleItineraryFolderQueryKey(data.id),

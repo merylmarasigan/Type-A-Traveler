@@ -1,17 +1,52 @@
-import { SavedActivityPreview } from '@/components/saved-activities/saved-activity-preview'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Suspense } from 'react'
+import { Link } from '@tanstack/react-router'
+import { Search, SearchAlertIcon } from 'lucide-react'
+import {
+  SavedActivityCard,
+  SavedActivityCardSkeleton,
+} from '@/components/saved-activities/saved-activity-card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyH3 } from '@/components/ui/typography'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { authClient } from '@/lib/auth-client'
-import { Link } from '@tanstack/react-router'
-import { Search, SearchAlertIcon } from 'lucide-react'
 
 interface UserSavedActivitiesProps {
   city: string
+  lat: string
+  lng: string
 }
 
-export function UserSavedActivities({ city }: UserSavedActivitiesProps) {
+export function UserSavedActivities(props: UserSavedActivitiesProps) {
+  return (
+    <Suspense fallback={<UserSavedActivitiesSkeleton />}>
+      <UserSavedActivitiesContent {...props} />
+    </Suspense>
+  )
+}
+
+function UserSavedActivitiesSkeleton() {
+  return (
+    <div className="flex flex-col gap-2 p-2">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-7 w-44" />
+        <Skeleton className="h-9 w-28" />
+      </div>
+      <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SavedActivityCardSkeleton key={i} />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function UserSavedActivitiesContent({
+  city,
+  lat,
+  lng,
+}: UserSavedActivitiesProps) {
   const { userActivitiesQuery } = useSavedActivities({ city })
   const { data: savedActivities } = userActivitiesQuery
 
@@ -22,8 +57,11 @@ export function UserSavedActivities({ city }: UserSavedActivitiesProps) {
       <div className="flex justify-between items-center">
         <TypographyH3>My saved activities</TypographyH3>
         <Button asChild>
-          {/* TODO: add lat and long - perhaps save in db schema */}
-          <Link to="/activities/$city" params={{ city }}>
+          <Link
+            to="/activities/$city"
+            params={{ city }}
+            search={{ category: 'hotels', lat, lng }}
+          >
             <Search />
             Find more
           </Link>
@@ -40,7 +78,7 @@ export function UserSavedActivities({ city }: UserSavedActivitiesProps) {
       ) : (
         <ul className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
           {savedActivities.map((activity) => (
-            <SavedActivityPreview key={activity.id} id={activity.id} />
+            <SavedActivityCard key={activity.id} id={activity.id} />
           ))}
         </ul>
       )}

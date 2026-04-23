@@ -1,9 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod'
 import {
-  getMockSearchResults,
   MOCK_LOCATION_DETAILS,
   getMockPhoto,
+  getMockSearchResults,
 } from '@/services/tripadvisor/__mocks__/data'
 
 export const LocationCategoryEnum = z.enum([

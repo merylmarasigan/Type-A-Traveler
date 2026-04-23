@@ -1,18 +1,19 @@
 import {
-  cityItineraries,
-  itineraryDays,
-  itineraryFolders,
-  lodging,
-  savedActivities,
-  timeSlots,
-} from '@/db/schema/app'
-import { user } from '@/db/schema/auth'
-import {
   createInsertSchema,
   createSelectSchema,
   createUpdateSchema,
 } from 'drizzle-zod'
 import z from 'zod'
+import {
+  cityItineraries,
+  itineraryDays,
+  itineraryFolders,
+  lodging,
+  savedActivities,
+  timeSlotActivities,
+  timeSlots,
+} from '@/db/schema/app'
+import { user } from '@/db/schema/auth'
 
 // createdAt and updatedAt are for internal use only
 const omittedTimestamps = { createdAt: true, updatedAt: true } as const
@@ -43,8 +44,9 @@ export const insertCityItinerarySchema =
   createInsertSchema(cityItineraries).omit(omittedWithId)
 export type NewCityItinerary = z.infer<typeof insertCityItinerarySchema>
 
-export const selectCityItinerarySchema =
-  createSelectSchema(cityItineraries).omit(omittedTimestamps)
+export const selectCityItinerarySchema = createSelectSchema(cityItineraries)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type CityItinerary = z.infer<typeof selectCityItinerarySchema>
 
 export const updateCityItinerarySchema = createUpdateSchema(cityItineraries, {
@@ -58,8 +60,9 @@ export const insertItineraryDaySchema =
   createInsertSchema(itineraryDays).omit(omittedWithId)
 export type NewItineraryDay = z.infer<typeof insertItineraryDaySchema>
 
-export const selectItineraryDaySchema =
-  createSelectSchema(itineraryDays).omit(omittedTimestamps)
+export const selectItineraryDaySchema = createSelectSchema(itineraryDays)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type ItineraryDay = z.infer<typeof selectItineraryDaySchema>
 
 export const updateItineraryDaySchema = createUpdateSchema(itineraryDays, {
@@ -73,8 +76,9 @@ export const insertTimeSlotSchema =
   createInsertSchema(timeSlots).omit(omittedWithId)
 export type NewTimeSlot = z.infer<typeof insertTimeSlotSchema>
 
-export const selectTimeSlotSchema =
-  createSelectSchema(timeSlots).omit(omittedTimestamps)
+export const selectTimeSlotSchema = createSelectSchema(timeSlots)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type TimeSlot = z.infer<typeof selectTimeSlotSchema>
 
 export const updateTimeSlotSchema = createUpdateSchema(timeSlots, {
@@ -97,14 +101,35 @@ export const updateSavedActivitySchema = createUpdateSchema(savedActivities, {
 }).omit(omittedTimestamps)
 export type UpdateSavedActivity = z.infer<typeof updateSavedActivitySchema>
 
+// ---------- TIME SLOT ACTIVITIES (junction) ----------
+
+export const insertTimeSlotActivitySchema =
+  createInsertSchema(timeSlotActivities).omit(omittedWithId)
+export type NewTimeSlotActivity = z.infer<typeof insertTimeSlotActivitySchema>
+
+export const selectTimeSlotActivitySchema =
+  createSelectSchema(timeSlotActivities).omit(omittedTimestamps)
+export type TimeSlotActivity = z.infer<typeof selectTimeSlotActivitySchema>
+
+export const updateTimeSlotActivitySchema = createUpdateSchema(
+  timeSlotActivities,
+  {
+    id: z.string(), // Makes id required for updates
+  },
+).omit(omittedTimestamps)
+export type UpdateTimeSlotActivity = z.infer<
+  typeof updateTimeSlotActivitySchema
+>
+
 // ---------- LODGING ----------
 
 export const insertLodgingSchema =
   createInsertSchema(lodging).omit(omittedWithId)
 export type NewLodging = z.infer<typeof insertLodgingSchema>
 
-export const selectLodgingSchema =
-  createSelectSchema(lodging).omit(omittedTimestamps)
+export const selectLodgingSchema = createSelectSchema(lodging)
+  .omit(omittedTimestamps)
+  .extend({ authorId: z.string() })
 export type Lodging = z.infer<typeof selectLodgingSchema>
 
 export const updateLodgingSchema = createUpdateSchema(lodging, {

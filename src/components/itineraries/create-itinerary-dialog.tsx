@@ -1,3 +1,9 @@
+import { useRouter } from '@tanstack/react-router'
+import { addDays } from 'date-fns'
+import { Suspense, useState } from 'react'
+import { CalendarCheck2, CalendarPlus, ChevronDown } from 'lucide-react'
+import type { DateRange } from 'react-day-picker'
+import type { ItineraryFolder } from '@/db/types'
 import {
   Dialog,
   DialogContent,
@@ -8,9 +14,8 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
-import { DateRangePicker } from '@/components/date-range-picker'
+import { DateRangePicker } from '@/components/itineraries/date-range-picker'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
-import { authClient } from '@/lib/auth-client'
 import {
   Select,
   SelectContent,
@@ -21,28 +26,42 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
-import { useRouter } from '@tanstack/react-router'
-import { addDays } from 'date-fns'
-import { useState } from 'react'
-import { DateRange } from 'react-day-picker'
 import { Spinner } from '@/components/ui/spinner'
-import { CalendarCheck2, ChevronDown } from 'lucide-react'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
-import { ItineraryFolder } from '@/db/types'
 
 interface CreateItineraryDialogProps {
   city: string
+  lat: string
+  lng: string
 }
 
-export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
-  const { data } = authClient.useSession()
+export function CreateItineraryDialog(props: CreateItineraryDialogProps) {
+  return (
+    <Suspense
+      fallback={
+        <Button disabled>
+          <Spinner />
+          Create new itinerary
+        </Button>
+      }
+    >
+      <CreateItineraryDialogContent {...props} />
+    </Suspense>
+  )
+}
+
+function CreateItineraryDialogContent({
+  city,
+  lat,
+  lng,
+}: CreateItineraryDialogProps) {
   const { userActivitiesQuery } = useSavedActivities({ city })
-  const { userFoldersQuery } = useItineraryFolders(data?.user.id, 50)
-  const { createInitialDays, createIsPending } = useItineraryDays()
+  const { userFoldersQuery } = useItineraryFolders({ limit: 50 })
+  const { createInitialDays, createIsPending } = useItineraryDays({})
   const router = useRouter()
 
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -53,10 +72,11 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
     useState<ItineraryFolder | null>(null)
 
   const handleConfirmDates = async () => {
-    console.log(dateRange)
     const { itineraryFolderId } = await createInitialDays(
       dateRange,
       city,
+      lat,
+      lng,
       selectedItinerary?.id,
     )
 
@@ -67,8 +87,7 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
   }
 
   const handleSelectItinerary = (id: string) => {
-    const folder =
-      userFoldersQuery.data.find((folder) => folder.id === id) ?? null
+    const folder = userFoldersQuery.data.find((f) => f.id === id) ?? null
     setSelectedItinerary(folder)
   }
 
@@ -77,9 +96,14 @@ export function CreateItineraryDialog({ city }: CreateItineraryDialogProps) {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button disabled={noSavedActivities}>Create your itinerary</Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button disabled={noSavedActivities}>
+            Create new itinerary
+            <CalendarPlus />
+          </Button>
+        }
+      />
       <DialogContent className="w-auto sm:max-w-xl p-0">
         <DialogHeader className="px-4 pt-4">
           <DialogTitle>Create your itinerary for {city}</DialogTitle>

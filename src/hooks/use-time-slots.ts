@@ -1,18 +1,26 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   createTimeSlotMutationOptions,
   itineraryDayTimeSlotsQueryOptions,
+  updateTimeSlotMutationOptions,
 } from '@/services/backend/time-slots.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useTimeSlots = (itineraryDayId: string) => {
+type UseTimeSlotsParams = {
+  itineraryDayId: string
+}
+
+export const useTimeSlots = ({ itineraryDayId }: UseTimeSlotsParams) => {
   const timeSlotsQuery = useSuspenseQuery(
-    itineraryDayTimeSlotsQueryOptions(itineraryDayId),
+    itineraryDayTimeSlotsQueryOptions({ itineraryDayId }),
   )
 
   const createTimeSlotMutation = useMutation(createTimeSlotMutationOptions())
 
+  const updateTimeSlotMutation = useMutation(updateTimeSlotMutationOptions())
+
   return {
     timeSlotsQuery,
     createTimeSlotMutation,
+    updateTimeSlotMutation,
   }
 }

@@ -1,8 +1,8 @@
-import { db } from '@/db'
 import { betterAuth } from 'better-auth'
 import { username } from 'better-auth/plugins'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
+import { db } from '@/db'
 import { serverEnv } from '@/config/env'
 
 export const auth = betterAuth({
@@ -26,6 +26,13 @@ export const auth = betterAuth({
       clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
       accessType: 'offline',
       prompt: 'select_account consent',
+      mapProfileToUser: (profile) => {
+        // Map the email from OAuth provider to username
+        return {
+          username: profile.email.split('@')[0], // Normalized username
+          displayUsername: profile.name, // Display version
+        }
+      },
     },
   },
 })

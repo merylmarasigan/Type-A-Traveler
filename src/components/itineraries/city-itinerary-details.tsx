@@ -1,3 +1,9 @@
+import { useRouter } from '@tanstack/react-router'
+import { formatDate } from 'date-fns'
+import { MapPin } from 'lucide-react'
+import { Suspense, useState } from 'react'
+import { Fragment } from 'react/jsx-runtime'
+import type { ItineraryDay } from '@/db/types'
 import { EditItineraryDialog } from '@/components/itineraries/edit-itinerary-dialog'
 import { EditScheduleDialog } from '@/components/itineraries/edit-schedule-dialog'
 import { ItineraryDayPreview } from '@/components/itineraries/itinerary-day-preview'
@@ -14,40 +20,70 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   TypographyBlockquote,
   TypographyH1,
   TypographyH3,
   TypographyLarge,
 } from '@/components/ui/typography'
-import { ItineraryDay } from '@/db/types'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSavedActivities } from '@/hooks/use-saved-activities'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
 import { authClient } from '@/lib/auth-client'
-import { formatDate } from 'date-fns'
-import { MapPin } from 'lucide-react'
-import { useState } from 'react'
-import { Fragment } from 'react/jsx-runtime'
 
 interface CityItineraryDetailsProps {
   id: string
 }
 
-export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
-  const { itineraryQuery, updateItineraryMutation } = useSingleCityItinerary(id)
-  const { folderQuery } = useSingleItineraryFolder(itineraryQuery.data.folderId)
-  const { itineraryDaysQuery } = useItineraryDays(id)
+export function CityItineraryDetails(props: CityItineraryDetailsProps) {
+  return (
+    <Suspense fallback={<CityItineraryDetailsSkeleton />}>
+      <CityItineraryDetailsContent {...props} />
+    </Suspense>
+  )
+}
+
+export function CityItineraryDetailsSkeleton() {
+  return (
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle className="flex gap-2 items-center">
+          <Skeleton className="size-6" />
+          <Skeleton className="h-8 w-48" />
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-6 w-64 mb-4" />
+        <div className="flex items-center gap-2 mb-4">
+          <Skeleton className="h-5 w-16" />
+          <Skeleton className="h-5 w-20" />
+        </div>
+        <div className="flex gap-2 flex-col md:flex-row">
+          <Skeleton className="h-64 w-full md:w-36 shrink-0" />
+          <Skeleton className="h-64 flex-1" />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function CityItineraryDetailsContent({ id }: CityItineraryDetailsProps) {
+  const { itineraryQuery, updateItineraryMutation, deleteItineraryMutation } =
+    useSingleCityItinerary({ cityItineraryId: id })
+  const { folderQuery } = useSingleItineraryFolder({
+    itineraryFolderId: itineraryQuery.data.folderId,
+  })
+  const { itineraryDaysQuery } = useItineraryDays({ cityItineraryId: id })
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: id,
   })
-
+  const router = useRouter()
   const { data } = authClient.useSession()
 
   const start = itineraryDaysQuery.data[0]
   const end = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
-  console.log("city-itinerary-details",start, end)
 
   const [selectedDay, setSelectedDay] = useState<ItineraryDay>(
     itineraryDaysQuery.data[0],
@@ -62,6 +98,19 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
       title: value.title,
       description: value.description,
     })
+  }
+
+  const deleteCityItinerary = async () => {
+    const { remainingCities } = await deleteItineraryMutation.mutateAsync(id)
+
+    if (remainingCities.length >= 1) {
+      await router.navigate({
+        to: '/itineraries/$id',
+        params: { id: folderQuery.data.id },
+      })
+    } else {
+      await router.navigate({ to: '/my-itineraries' })
+    }
   }
 
   const authorIsSessionUser = data?.user.id === folderQuery.data.authorId
@@ -92,6 +141,7 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
               id={id}
               type="City"
               onSubmit={updateTitle}
+              onDelete={deleteCityItinerary}
               className="self-start"
             />
           </CardAction>
@@ -106,14 +156,14 @@ export function CityItineraryDetails({ id }: CityItineraryDetailsProps) {
         <div className="flex items-center gap-2">
           <TypographyLarge>Schedule</TypographyLarge>
           <Badge>
-            {cityActivitiesQuery.data.length ?? 0}{' '}
+            {cityActivitiesQuery.data.length}{' '}
             {cityActivitiesQuery.data.length === 1 ? 'activity' : 'activities'}
           </Badge>
         </div>
 
         <div className="flex gap-2 flex-col md:flex-row flex-1 min-h-0">
           <div className="flex flex-col gap-2 items-center justify">
-            <EditScheduleDialog cityItineraryId={id} />
+            {authorIsSessionUser && <EditScheduleDialog cityItineraryId={id} />}
             <ScrollArea className="w-full md:w-auto md:h-full border rounded-md p-2">
               <div className="grid grid-flow-col md:grid-flow-row gap-2 md:w-36 pb-2 md:pb-0">
                 {itineraryDaysQuery.data.map((day, i) => (

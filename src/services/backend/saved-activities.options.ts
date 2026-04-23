@@ -1,17 +1,33 @@
-import { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
-import {
-  createSavedActivityFn,
-  getSingleSavedActivityFn,
-  getUserSavedActivitiesFn,
-  updateSavedActivityFn,
-  deleteSavedActivityFn,
-  getCityItinerarySavedActivitiesFn,
-} from '@/services/backend/saved-activities.api'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import type { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
+import {
+  createSavedActivityFn,
+  deleteSavedActivityFn,
+  getCityItinerarySavedActivitiesFn,
+  getSingleSavedActivityFn,
+  getTimeSlotActivitiesFn,
+  getTimeSlotActivityFn,
+  getUnlinkedActivitiesForTimeSlotFn,
+  getUserSavedActivitiesFn,
+  linkActivityToTimeSlotFn,
+  unlinkActivityFromTimeSlotFn,
+  updateSavedActivityFn,
+  updateTimeSlotActivityNoteFn,
+} from '@/services/backend/saved-activities.api'
 
-const userSavedActivitiesQueryKey = (userId?: string, city?: string) =>
-  ['users', userId, 'saved_activities', city] as const
+const userSavedActivitiesQueryKey = (
+  userId?: string,
+  city?: string,
+  userShowsSavedActivitiesOnProfile?: boolean,
+) =>
+  [
+    'users',
+    userId,
+    'saved_activities',
+    city,
+    userShowsSavedActivitiesOnProfile ? 'show_on_profile' : 'hide_on_profile',
+  ] as const
 
 const cityItinerarySavedActivitiesQueryKey = (cityItineraryId?: string) =>
   ['city_itineraries', cityItineraryId, 'saved_activities'] as const
@@ -19,19 +35,47 @@ const cityItinerarySavedActivitiesQueryKey = (cityItineraryId?: string) =>
 const singleSavedActivityQueryKey = (savedActivityId: string) =>
   ['saved_activities', savedActivityId] as const
 
-export const userSavedActivitiesQueryOptions = (
-  userId?: string,
-  city?: string,
-) =>
+const timeSlotActivitiesQueryKey = (timeSlotId: string) =>
+  ['time_slots', timeSlotId, 'activities'] as const
+
+const unlinkedActivitiesQueryKey = (
+  timeSlotId: string,
+  userId: string,
+  city: string,
+) => ['time_slots', timeSlotId, 'unlinked_activities', userId, city] as const
+
+const timeSlotActivityQueryKey = (
+  savedActivityId: string,
+  timeSlotId: string,
+) => ['time_slot_activities', savedActivityId, timeSlotId] as const
+
+export const userSavedActivitiesQueryOptions = ({
+  userId,
+  city,
+  userShowsSavedActivitiesOnProfile,
+}: {
+  userId?: string
+  city?: string
+  userShowsSavedActivitiesOnProfile?: boolean
+}) =>
   queryOptions({
-    queryKey: userSavedActivitiesQueryKey(userId, city),
-    queryFn: () => getUserSavedActivitiesFn({ data: { userId, city } }),
+    queryKey: userSavedActivitiesQueryKey(
+      userId,
+      city,
+      userShowsSavedActivitiesOnProfile,
+    ),
+    queryFn: () =>
+      getUserSavedActivitiesFn({
+        data: { userId, city, userShowsSavedActivitiesOnProfile },
+      }),
     enabled: userId !== '',
   })
 
-export const cityItinerarySavedActivitiesQueryOptions = (
-  cityItineraryId?: string,
-) =>
+export const cityItinerarySavedActivitiesQueryOptions = ({
+  cityItineraryId,
+}: {
+  cityItineraryId?: string
+}) =>
   queryOptions({
     queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
     queryFn: () =>
@@ -39,14 +83,51 @@ export const cityItinerarySavedActivitiesQueryOptions = (
     enabled: cityItineraryId !== undefined && cityItineraryId !== '',
   })
 
-export const singleSavedActivityQueryOptions = (savedActivityId: string) =>
+export const singleSavedActivityQueryOptions = ({
+  savedActivityId,
+}: {
+  savedActivityId: string
+}) =>
   queryOptions({
     queryKey: singleSavedActivityQueryKey(savedActivityId),
     queryFn: () => getSingleSavedActivityFn({ data: { savedActivityId } }),
     enabled: savedActivityId !== '',
   })
 
-export const createSavedActivityMutationOptions = (cityItineraryId?: string) =>
+export const timeSlotActivitiesQueryOptions = ({
+  timeSlotId,
+}: {
+  timeSlotId: string
+}) =>
+  queryOptions({
+    queryKey: timeSlotActivitiesQueryKey(timeSlotId),
+    queryFn: () => getTimeSlotActivitiesFn({ data: { timeSlotId } }),
+    enabled: timeSlotId !== '',
+  })
+
+export const unlinkedActivitiesQueryOptions = ({
+  timeSlotId,
+  userId,
+  city,
+}: {
+  timeSlotId: string
+  userId: string
+  city: string
+}) =>
+  queryOptions({
+    queryKey: unlinkedActivitiesQueryKey(timeSlotId, userId, city),
+    queryFn: () =>
+      getUnlinkedActivitiesForTimeSlotFn({
+        data: { timeSlotId, userId, city },
+      }),
+    enabled: timeSlotId !== '' && userId !== '' && city !== '',
+  })
+
+export const createSavedActivityMutationOptions = ({
+  cityItineraryId,
+}: {
+  cityItineraryId?: string
+}) =>
   mutationOptions({
     mutationKey: ['createSavedActivity'],
     mutationFn: (data: NewSavedActivity) => createSavedActivityFn({ data }),
@@ -67,11 +148,15 @@ export const createSavedActivityMutationOptions = (cityItineraryId?: string) =>
     },
   })
 
-export const updateSavedActivityMutationOptions = (
-  cityItineraryId?: string,
-  userId?: string,
-  city?: string,
-) =>
+export const updateSavedActivityMutationOptions = ({
+  cityItineraryId,
+  userId,
+  city,
+}: {
+  cityItineraryId?: string
+  userId?: string
+  city?: string
+}) =>
   mutationOptions({
     mutationKey: ['updateSavedActivity'],
     mutationFn: (data: UpdateSavedActivity) => updateSavedActivityFn({ data }),
@@ -100,6 +185,98 @@ export const deleteSavedActivityMutationOptions = () =>
 
       await ctx.client.invalidateQueries({
         queryKey: userSavedActivitiesQueryKey(data.userId),
+      })
+    },
+  })
+
+export const linkActivityToTimeSlotMutationOptions = ({
+  timeSlotId,
+  cityItineraryId,
+  userId,
+  city,
+}: {
+  timeSlotId: string
+  cityItineraryId: string
+  userId: string
+  city: string
+}) =>
+  mutationOptions({
+    mutationKey: ['linkActivityToTimeSlot'],
+    mutationFn: (savedActivityId: string) =>
+      linkActivityToTimeSlotFn({ data: { savedActivityId, timeSlotId } }),
+    onSuccess: async (_data, _variables, _result, ctx) => {
+      await ctx.client.invalidateQueries({
+        queryKey: timeSlotActivitiesQueryKey(timeSlotId),
+      })
+      await ctx.client.invalidateQueries({
+        queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
+      })
+      await ctx.client.invalidateQueries({
+        queryKey: unlinkedActivitiesQueryKey(timeSlotId, userId, city),
+      })
+    },
+  })
+
+export const unlinkActivityFromTimeSlotMutationOptions = ({
+  timeSlotId,
+  cityItineraryId,
+  userId,
+  city,
+}: {
+  timeSlotId: string
+  cityItineraryId: string
+  userId: string
+  city: string
+}) =>
+  mutationOptions({
+    mutationKey: ['unlinkActivityFromTimeSlot'],
+    mutationFn: (savedActivityId: string) =>
+      unlinkActivityFromTimeSlotFn({ data: { savedActivityId, timeSlotId } }),
+    onSuccess: async (_data, _variables, _result, ctx) => {
+      toast.success(`Removed activity from time slot`)
+
+      await ctx.client.invalidateQueries({
+        queryKey: timeSlotActivitiesQueryKey(timeSlotId),
+      })
+      await ctx.client.invalidateQueries({
+        queryKey: cityItinerarySavedActivitiesQueryKey(cityItineraryId),
+      })
+      await ctx.client.invalidateQueries({
+        queryKey: unlinkedActivitiesQueryKey(timeSlotId, userId, city),
+      })
+    },
+  })
+
+export const timeSlotActivityQueryOptions = ({
+  savedActivityId,
+  timeSlotId,
+}: {
+  savedActivityId: string
+  timeSlotId: string
+}) =>
+  queryOptions({
+    queryKey: timeSlotActivityQueryKey(savedActivityId, timeSlotId),
+    queryFn: () =>
+      getTimeSlotActivityFn({ data: { savedActivityId, timeSlotId } }),
+    enabled: savedActivityId !== '' && timeSlotId !== '',
+  })
+
+export const updateTimeSlotActivityNoteMutationOptions = ({
+  savedActivityId,
+  timeSlotId,
+}: {
+  savedActivityId: string
+  timeSlotId: string
+}) =>
+  mutationOptions({
+    mutationKey: ['updateTimeSlotActivityNote', savedActivityId, timeSlotId],
+    mutationFn: ({ id, note }: { id: string; note: string | null }) =>
+      updateTimeSlotActivityNoteFn({ data: { id, note } }),
+    onSuccess: async (_data, _variables, _result, ctx) => {
+      toast.success('Note saved')
+
+      await ctx.client.invalidateQueries({
+        queryKey: timeSlotActivityQueryKey(savedActivityId, timeSlotId),
       })
     },
   })

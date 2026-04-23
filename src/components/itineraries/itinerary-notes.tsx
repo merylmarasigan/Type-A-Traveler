@@ -1,3 +1,7 @@
+import { useForm } from '@tanstack/react-form'
+import { Edit, Save, SaveOff } from 'lucide-react'
+import { Suspense, useState } from 'react'
+import z from 'zod/v4'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -6,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Field,
   FieldDescription,
@@ -20,10 +25,7 @@ import {
   TypographyMuted,
 } from '@/components/ui/typography'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
-import { useForm } from '@tanstack/react-form'
-import { Edit, Save, SaveOff } from 'lucide-react'
-import { useState } from 'react'
-import z from 'zod/v4'
+import { authClient } from '@/lib/auth-client'
 
 interface ItineraryNotesProps {
   id: string
@@ -33,9 +35,31 @@ const formSchema = z.object({
   notes: z.string(),
 })
 
-export function ItineraryNotes({ id }: ItineraryNotesProps) {
-  const { folderQuery, updateFolderMutation } = useSingleItineraryFolder(id)
+export function ItineraryNotes(props: ItineraryNotesProps) {
+  return (
+    <Suspense fallback={<ItineraryNotesSkeleton />}>
+      <ItineraryNotesContent {...props} />
+    </Suspense>
+  )
+}
+
+function ItineraryNotesSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 w-16" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-20 w-full" />
+      </CardContent>
+    </Card>
+  )
+}
+
+function ItineraryNotesContent({ id }: ItineraryNotesProps) {
+  const { folderQuery, updateFolderMutation } = useSingleItineraryFolder({ itineraryFolderId: id })
   const [isEditing, setIsEditing] = useState(false)
+  const { data } = authClient.useSession()
 
   const form = useForm({
     defaultValues: {
@@ -56,18 +80,22 @@ export function ItineraryNotes({ id }: ItineraryNotesProps) {
     },
   })
 
+  const isOwner = data?.user.id === folderQuery.data.authorId
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Notes</CardTitle>
-        <CardAction>
-          <Button
-            onClick={() => setIsEditing((prev) => !prev)}
-            variant="secondary"
-          >
-            <Edit />
-          </Button>
-        </CardAction>
+        {isOwner && (
+          <CardAction>
+            <Button
+              onClick={() => setIsEditing((prev) => !prev)}
+              variant="secondary"
+            >
+              <Edit />
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       <CardContent>
         {isEditing ? (
@@ -124,7 +152,7 @@ export function ItineraryNotes({ id }: ItineraryNotesProps) {
               </Button>
             </div>
           </form>
-        ) : folderQuery.data.notes === '' ? (
+        ) : !folderQuery.data.notes || folderQuery.data.notes === '' ? (
           <TypographyBlockquote className="text-muted-foreground">
             No notes yet
           </TypographyBlockquote>

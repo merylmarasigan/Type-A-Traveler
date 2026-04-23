@@ -1,12 +1,18 @@
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import {
   deleteTimeSlotMutationOptions,
   singleTimeSlotQueryOptions,
   updateTimeSlotMutationOptions,
 } from '@/services/backend/time-slots.options'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 
-export const useSingleTimeSlot = (timeSlotId: string) => {
-  const timeSlotQuery = useSuspenseQuery(singleTimeSlotQueryOptions(timeSlotId))
+type UseSingleTimeSlotParams = {
+  timeSlotId: string
+}
+
+export const useSingleTimeSlot = ({ timeSlotId }: UseSingleTimeSlotParams) => {
+  const timeSlotQuery = useSuspenseQuery(
+    singleTimeSlotQueryOptions({ timeSlotId }),
+  )
 
   const updateTimeSlotMutation = useMutation(updateTimeSlotMutationOptions())
 

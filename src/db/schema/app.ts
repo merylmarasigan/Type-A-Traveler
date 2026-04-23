@@ -1,5 +1,5 @@
+import { boolean, date, integer, pgTable, text } from 'drizzle-orm/pg-core'
 import { startEndTimestamps, timestamps } from '@/db/schema/columns.helpers'
-import { pgTable, text, integer, date } from 'drizzle-orm/pg-core'
 
 export const itineraryFolders = pgTable('itinerary_folders', {
   id: text().primaryKey(),
@@ -8,15 +8,20 @@ export const itineraryFolders = pgTable('itinerary_folders', {
   description: text(),
   flightNumbers: text().array(),
   notes: text(),
+  isPublic: boolean().notNull().default(false),
   ...timestamps,
 })
 
 export const cityItineraries = pgTable('city_itineraries', {
   id: text().primaryKey(),
-  folderId: text().notNull(),
+  folderId: text()
+    .notNull()
+    .references(() => itineraryFolders.id, { onDelete: 'cascade' }),
   title: text(),
   description: text(),
   city: text().notNull(),
+  lat: text().notNull(),
+  lng: text().notNull(),
   budget: integer(),
   notes: text(),
   ...timestamps,
@@ -31,7 +36,9 @@ export const itineraryDays = pgTable('itinerary_days', {
 
 export const timeSlots = pgTable('time_slots', {
   id: text().primaryKey(),
-  itineraryDayId: text().notNull(),
+  itineraryDayId: text()
+    .notNull()
+    .references(() => itineraryDays.id, { onDelete: 'cascade' }),
   notes: text(),
   ...startEndTimestamps,
   ...timestamps,
@@ -40,9 +47,10 @@ export const timeSlots = pgTable('time_slots', {
 export const savedActivities = pgTable('saved_activities', {
   id: text().primaryKey(),
   userId: text().notNull(),
-  timeSlotId: text(),
   name: text().notNull(),
   city: text().notNull(),
+  lat: text().notNull(),
+  lng: text().notNull(),
   description: text(),
   imageUrl: text(),
   fsq_place_id: text(),
@@ -50,9 +58,23 @@ export const savedActivities = pgTable('saved_activities', {
   ...timestamps,
 })
 
+export const timeSlotActivities = pgTable('time_slot_activities', {
+  id: text().primaryKey(),
+  timeSlotId: text()
+    .notNull()
+    .references(() => timeSlots.id, { onDelete: 'cascade' }),
+  savedActivityId: text()
+    .notNull()
+    .references(() => savedActivities.id, { onDelete: 'cascade' }),
+  note: text(),
+  ...timestamps,
+})
+
 export const lodging = pgTable('lodging', {
   id: text().primaryKey(),
-  itineraryId: text().notNull(),
+  itineraryId: text()
+    .notNull()
+    .references(() => itineraryFolders.id, { onDelete: 'cascade' }),
   name: text().notNull(),
   address: text(),
   ...timestamps,

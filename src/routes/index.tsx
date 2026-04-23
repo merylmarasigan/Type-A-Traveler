@@ -1,6 +1,8 @@
-import { SearchCities } from '@/components/search-cities'
-import { TypographyH1, TypographyH2 } from '@/components/ui/typography'
 import { createFileRoute } from '@tanstack/react-router'
+import { SearchCities } from '@/components/cities-locations/search-cities'
+import { TypographyH1, TypographyH2 } from '@/components/ui/typography'
+import { FeaturedItineraries } from '@/components/itineraries/featured-itineraries'
+import { RecentSearches } from '@/components/cities-locations/recent-searches'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -13,6 +15,8 @@ function App() {
       </TypographyH2>
 
       <SearchCities />
+      <RecentSearches />
+      <FeaturedItineraries />
     </div>
   )
 }

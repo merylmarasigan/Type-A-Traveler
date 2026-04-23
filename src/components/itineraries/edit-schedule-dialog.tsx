@@ -1,4 +1,7 @@
-import { DateRangePicker } from '@/components/date-range-picker'
+import { CalendarCheck2, CalendarCog } from 'lucide-react'
+import { Suspense, useState } from 'react'
+import type { DateRange } from 'react-day-picker'
+import { DateRangePicker } from '@/components/itineraries/date-range-picker'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,20 +14,34 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 import { useItineraryDays } from '@/hooks/use-itinerary-days'
 import { useSingleCityItinerary } from '@/hooks/use-single-city-itinerary'
-import { CalendarCheck2, CalendarCog } from 'lucide-react'
-import { useState } from 'react'
-import { DateRange } from 'react-day-picker'
+import { authClient } from '@/lib/auth-client'
 
 interface EditScheduleDialogProps {
   cityItineraryId: string
 }
 
-export function EditScheduleDialog({
+export function EditScheduleDialog(props: EditScheduleDialogProps) {
+  return (
+    <Suspense
+      fallback={
+        <Button disabled variant="secondary" className="w-full">
+          <Spinner />
+          Adjust dates
+        </Button>
+      }
+    >
+      <EditScheduleDialogContent {...props} />
+    </Suspense>
+  )
+}
+
+function EditScheduleDialogContent({
   cityItineraryId,
 }: EditScheduleDialogProps) {
-  const { itineraryQuery } = useSingleCityItinerary(cityItineraryId)
+  const { itineraryQuery } = useSingleCityItinerary({ cityItineraryId })
   const { itineraryDaysQuery, updateExistingDays, updateIsPending } =
-    useItineraryDays(cityItineraryId)
+    useItineraryDays({ cityItineraryId })
+  const { data } = authClient.useSession()
 
   const [dateRange, setDateRange] = useState<DateRange>({
     from: itineraryDaysQuery.data[0].date,
@@ -37,18 +54,23 @@ export function EditScheduleDialog({
     setOpen(false)
   }
 
+  const isOwner = data?.session.userId === itineraryQuery.data.authorId
+  if (!isOwner) return null
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          className="w-full"
-          onClick={() => setOpen(true)}
-          variant="secondary"
-        >
-          <CalendarCog />
-          Adjust dates
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button
+            className="w-full"
+            onClick={() => setOpen(true)}
+            variant="secondary"
+          >
+            <CalendarCog />
+            Adjust dates
+          </Button>
+        }
+      />
       <DialogContent className="w-auto sm:max-w-xl p-0">
         <DialogHeader className="px-4 pt-4">
           <DialogTitle>Adjust dates for {itineraryQuery.data.city}</DialogTitle>
