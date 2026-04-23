@@ -1,5 +1,5 @@
 import { generateId } from 'better-auth'
-import { and, eq, getTableColumns } from 'drizzle-orm'
+import { and, eq, getTableColumns, sql } from 'drizzle-orm'
 import type { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
 import { db } from '@/db'
 import { cityItineraries, itineraryFolders } from '@/db/schema/app'
@@ -79,4 +79,15 @@ export const deleteItineraryFolder = async (id: string) => {
     await tx.delete(itineraryFolders).where(eq(itineraryFolders.id, id))
     await tx.delete(cityItineraries).where(eq(cityItineraries.folderId, id))
   })
+}
+
+export const searchItineraryFolders = async (query: string) => {
+  const result = await db
+    .select(itineraryFolderColumns)
+    .from(itineraryFolders)
+    .where(
+      sql`${itineraryFolders.search} @@ websearch_to_tsquery('english', ${query})`,
+    )
+
+  return result
 }

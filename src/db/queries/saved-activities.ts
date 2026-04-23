@@ -131,9 +131,16 @@ export const linkActivityToTimeSlot = async (
   savedActivityId: string,
   timeSlotId: string,
 ) => {
+  const savedActivity = await getSavedActivity(savedActivityId)
+
   const [result] = await db
     .insert(timeSlotActivities)
-    .values({ id: generateId(), savedActivityId, timeSlotId })
+    .values({
+      id: generateId(),
+      savedActivityId,
+      timeSlotId,
+      savedActivityName: savedActivity.name,
+    })
     .returning()
 
   return result

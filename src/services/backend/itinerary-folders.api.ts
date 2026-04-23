@@ -6,6 +6,7 @@ import {
   getItineraryFolder,
   getItineraryFolders,
   getUserItineraryFolders,
+  searchItineraryFolders,
   updateItineraryFolder,
 } from '@/db/queries/itinerary-folders'
 import {
@@ -82,4 +83,14 @@ export const deleteItineraryFolderFn = createServerFn({
     await ensureSession()
 
     await deleteItineraryFolder(data.itineraryFolderId)
+  })
+
+export const searchItineraryFoldersFn = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ query: z.string().optional() }))
+  .handler(async ({ data }) => {
+    if (!data.query) return []
+
+    const result = await searchItineraryFolders(data.query)
+
+    return result
   })

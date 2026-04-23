@@ -6,6 +6,7 @@ import {
   deleteCityItineraryFn,
   getFolderCityItinerariesFn,
   getSingleCityItineraryFn,
+  searchCityItinerariesFn,
   updateCityItineraryFn,
 } from '@/services/backend/city-itineraries.api'
 import { userItineraryFoldersQueryKey } from '@/services/backend/itinerary-folders.options'
@@ -91,4 +92,11 @@ export const deleteCityItineraryMutationOptions = ({
         queryKey: userItineraryFoldersQueryKey(userId),
       })
     },
+  })
+
+export const searchCityItinerariesQueryOptions = (query?: string) =>
+  queryOptions({
+    queryKey: ['city_itineraries', 'search', query],
+    queryFn: () => searchCityItinerariesFn({ data: { query } }),
+    enabled: !!query && query !== '',
   })

@@ -19,6 +19,8 @@ import { user } from '@/db/schema/auth'
 const omittedTimestamps = { createdAt: true, updatedAt: true } as const
 // IDs are generated in each table's respective create function
 const omittedWithId = { ...omittedTimestamps, id: true } as const
+// search is for internal use only
+const omittedSearch = { search: true } as const
 
 // ---------- ITINERARY FOLDERS ----------
 
@@ -26,8 +28,9 @@ export const insertItineraryFolderSchema =
   createInsertSchema(itineraryFolders).omit(omittedWithId)
 export type NewItineraryFolder = z.infer<typeof insertItineraryFolderSchema>
 
-export const selectItineraryFolderSchema =
-  createSelectSchema(itineraryFolders).omit(omittedTimestamps)
+export const selectItineraryFolderSchema = createSelectSchema(itineraryFolders)
+  .omit(omittedTimestamps)
+  .omit(omittedSearch)
 export type ItineraryFolder = z.infer<typeof selectItineraryFolderSchema>
 
 export const updateItineraryFolderSchema = createUpdateSchema(
@@ -46,6 +49,7 @@ export type NewCityItinerary = z.infer<typeof insertCityItinerarySchema>
 
 export const selectCityItinerarySchema = createSelectSchema(cityItineraries)
   .omit(omittedTimestamps)
+  .omit(omittedSearch)
   .extend({ authorId: z.string() })
 export type CityItinerary = z.infer<typeof selectCityItinerarySchema>
 
@@ -107,8 +111,11 @@ export const insertTimeSlotActivitySchema =
   createInsertSchema(timeSlotActivities).omit(omittedWithId)
 export type NewTimeSlotActivity = z.infer<typeof insertTimeSlotActivitySchema>
 
-export const selectTimeSlotActivitySchema =
-  createSelectSchema(timeSlotActivities).omit(omittedTimestamps)
+export const selectTimeSlotActivitySchema = createSelectSchema(
+  timeSlotActivities,
+)
+  .omit(omittedTimestamps)
+  .omit(omittedSearch)
 export type TimeSlotActivity = z.infer<typeof selectTimeSlotActivitySchema>
 
 export const updateTimeSlotActivitySchema = createUpdateSchema(

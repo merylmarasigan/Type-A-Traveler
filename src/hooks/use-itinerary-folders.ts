@@ -3,17 +3,20 @@ import { authClient } from '@/lib/auth-client'
 import {
   createItineraryFolderMutationOptions,
   multipleItineraryFoldersQueryOptions,
+  searchItineraryFoldersQueryOptions,
   userItineraryFoldersQueryOptions,
 } from '@/services/backend/itinerary-folders.options'
 
 type UseItineraryFoldersParams = {
   limit?: number
   publicOnly?: boolean
+  searchQuery?: string
 }
 
 export const useItineraryFolders = ({
   limit,
   publicOnly,
+  searchQuery,
 }: UseItineraryFoldersParams = {}) => {
   const { data } = authClient.useSession()
 
@@ -29,9 +32,14 @@ export const useItineraryFolders = ({
     createItineraryFolderMutationOptions(),
   )
 
+  const searchResultsQuery = useSuspenseQuery(
+    searchItineraryFoldersQueryOptions(searchQuery),
+  )
+
   return {
     foldersQuery,
     userFoldersQuery,
     createFolderMutation,
+    searchResultsQuery,
   }
 }

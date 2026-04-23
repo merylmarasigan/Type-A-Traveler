@@ -1,31 +1,72 @@
-import { boolean, date, integer, pgTable, text } from 'drizzle-orm/pg-core'
+import {
+  boolean,
+  customType,
+  date,
+  index,
+  integer,
+  pgTable,
+  text,
+} from 'drizzle-orm/pg-core'
 import { startEndTimestamps, timestamps } from '@/db/schema/columns.helpers'
+import { sql, SQL } from 'drizzle-orm'
 
-export const itineraryFolders = pgTable('itinerary_folders', {
-  id: text().primaryKey(),
-  authorId: text().notNull(),
-  title: text(),
-  description: text(),
-  flightNumbers: text().array(),
-  notes: text(),
-  isPublic: boolean().notNull().default(false),
-  ...timestamps,
+export const tsvector = customType<{
+  data: string
+}>({
+  dataType() {
+    return `tsvector`
+  },
 })
 
-export const cityItineraries = pgTable('city_itineraries', {
-  id: text().primaryKey(),
-  folderId: text()
-    .notNull()
-    .references(() => itineraryFolders.id, { onDelete: 'cascade' }),
-  title: text(),
-  description: text(),
-  city: text().notNull(),
-  lat: text().notNull(),
-  lng: text().notNull(),
-  budget: integer(),
-  notes: text(),
-  ...timestamps,
-})
+export const itineraryFolders = pgTable(
+  'itinerary_folders',
+  {
+    id: text().primaryKey(),
+    authorId: text().notNull(),
+    title: text(),
+    description: text(),
+    flightNumbers: text().array(),
+    notes: text(),
+    isPublic: boolean().notNull().default(false),
+    ...timestamps,
+    search: tsvector()
+      .notNull()
+      .generatedAlwaysAs(
+        (): SQL =>
+          sql`setweight(to_tsvector('english', coalesce(${itineraryFolders.title}, '')), 'A')
+        ||
+        setweight(to_tsvector('english', coalesce(${itineraryFolders.description}, '')), 'B')`,
+      ),
+  },
+  (t) => [index('idx_folder_search').using('gin', t.search)],
+)
+
+export const cityItineraries = pgTable(
+  'city_itineraries',
+  {
+    id: text().primaryKey(),
+    folderId: text()
+      .notNull()
+      .references(() => itineraryFolders.id, { onDelete: 'cascade' }),
+    title: text(),
+    description: text(),
+    city: text().notNull(),
+    lat: text().notNull(),
+    lng: text().notNull(),
+    budget: integer(),
+    notes: text(),
+    ...timestamps,
+    search: tsvector()
+      .notNull()
+      .generatedAlwaysAs(
+        (): SQL =>
+          sql`setweight(to_tsvector('english', coalesce(${cityItineraries.title}, '')), 'A')
+        ||
+        setweight(to_tsvector('english', ${cityItineraries.city}), 'B')`,
+      ),
+  },
+  (t) => [index('idx_city_search').using('gin', t.search)],
+)
 
 export const itineraryDays = pgTable('itinerary_days', {
   id: text().primaryKey(),
@@ -58,17 +99,28 @@ export const savedActivities = pgTable('saved_activities', {
   ...timestamps,
 })
 
-export const timeSlotActivities = pgTable('time_slot_activities', {
-  id: text().primaryKey(),
-  timeSlotId: text()
-    .notNull()
-    .references(() => timeSlots.id, { onDelete: 'cascade' }),
-  savedActivityId: text()
-    .notNull()
-    .references(() => savedActivities.id, { onDelete: 'cascade' }),
-  note: text(),
-  ...timestamps,
-})
+export const timeSlotActivities = pgTable(
+  'time_slot_activities',
+  {
+    id: text().primaryKey(),
+    timeSlotId: text()
+      .notNull()
+      .references(() => timeSlots.id, { onDelete: 'cascade' }),
+    savedActivityId: text()
+      .notNull()
+      .references(() => savedActivities.id, { onDelete: 'cascade' }),
+    savedActivityName: text().notNull(),
+    note: text(),
+    ...timestamps,
+    search: tsvector()
+      .notNull()
+      .generatedAlwaysAs(
+        (): SQL =>
+          sql`to_tsvector('english', ${timeSlotActivities.savedActivityName})`,
+      ),
+  },
+  (t) => [index('idx_activity_search').using('gin', t.search)],
+)
 
 export const lodging = pgTable('lodging', {
   id: text().primaryKey(),

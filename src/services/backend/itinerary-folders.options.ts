@@ -7,6 +7,7 @@ import {
   getMultipleItineraryFoldersFn,
   getSingleItineraryFolderFn,
   getUserItineraryFoldersFn,
+  searchItineraryFoldersFn,
   updateItineraryFolderFn,
 } from '@/services/backend/itinerary-folders.api'
 
@@ -105,4 +106,11 @@ export const deleteItineraryFolderMutationOptions = () =>
         queryKey: multipleItineraryFoldersQueryKey(),
       })
     },
+  })
+
+export const searchItineraryFoldersQueryOptions = (query?: string) =>
+  queryOptions({
+    queryKey: ['itinerary_folders', 'search', query],
+    queryFn: () => searchItineraryFoldersFn({ data: { query } }),
+    enabled: !!query && query !== '',
   })
