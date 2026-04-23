@@ -175,7 +175,11 @@ export const getTimeSlotActivityFn = createServerFn({ method: 'GET' })
 export const updateTimeSlotActivityNoteFn = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ id: z.string(), note: z.string().nullable() }))
   .handler(async ({ data }) => {
-    await ensureSession()
+    const { session } = await ensureSession()
+    const { userId } = await getSavedActivity(data.id)
+    if (session.userId !== userId) {
+      throw new Error('You are not the author of this activity')
+    }
 
     const result = await updateTimeSlotActivityNote(data.id, data.note)
 

@@ -86,29 +86,90 @@ function TimeSlotActivityCardContent({
   const activity = activityQuery.data
   const existingNote = timeSlotActivity?.note ?? null
 
-  function handleEditNote() {
+  const handleEditNote = () => {
     setNoteInput(existingNote ?? '')
     setIsEditingNote(true)
   }
 
-  function handleCancelNote() {
+  const handleCancelNote = () => {
     setIsEditingNote(false)
     setNoteInput('')
   }
 
-  function handleSaveNote() {
+  const handleSaveNote = async () => {
     if (!timeSlotActivity) return
-    noteMutation.mutate(
+
+    await noteMutation.mutateAsync(
       { id: timeSlotActivity.id, note: noteInput.trim() || null },
       { onSuccess: () => setIsEditingNote(false) },
     )
   }
 
-  function handleDeleteNote() {
+  const handleDeleteNote = async () => {
     if (!timeSlotActivity) return
-    noteMutation.mutate(
+
+    await noteMutation.mutateAsync(
       { id: timeSlotActivity.id, note: null },
       { onSuccess: () => setIsEditingNote(false) },
+    )
+  }
+
+  const isOwner = session?.user.id === activityQuery.data?.userId
+  console.log({ isOwner })
+
+  const NoteActions = () => {
+    if (!isOwner) return null
+
+    return isEditingNote ? (
+      <div className="flex flex-col gap-2">
+        <Textarea
+          autoFocus
+          placeholder="Add a note…"
+          value={noteInput}
+          onChange={(e) => setNoteInput(e.target.value)}
+          className="min-h-[72px] resize-none text-sm"
+        />
+        <div className="flex justify-end gap-2">
+          {existingNote && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDeleteNote}
+              disabled={noteMutation.isPending}
+              className="text-destructive hover:text-destructive"
+            >
+              Delete
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCancelNote}
+            disabled={noteMutation.isPending}
+          >
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleSaveNote}
+            disabled={noteMutation.isPending}
+          >
+            Save
+          </Button>
+        </div>
+      </div>
+    ) : (
+      !existingNote && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start text-muted-foreground"
+          onClick={handleEditNote}
+        >
+          <Plus className="h-3.5 w-3.5" />
+          Add a note
+        </Button>
+      )
     )
   }
 
@@ -129,16 +190,18 @@ function TimeSlotActivityCardContent({
         <CardDescription className="line-clamp-2">
           {activity.description}
         </CardDescription>
-        <CardAction>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => unlinkMutation.mutate(id)}
-            disabled={unlinkMutation.isPending}
-          >
-            <MapPinX />
-          </Button>
-        </CardAction>
+        {isOwner && (
+          <CardAction>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => unlinkMutation.mutate(id)}
+              disabled={unlinkMutation.isPending}
+            >
+              <MapPinX />
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
 
       <CardContent className="flex flex-col gap-2 pt-0">
@@ -148,69 +211,21 @@ function TimeSlotActivityCardContent({
             <div className="flex items-start gap-2 rounded-lg rounded-tl-none bg-muted px-3 py-2">
               <MessageSquare className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               <p className="text-sm text-foreground">{existingNote}</p>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="ml-auto -mr-1 h-6 w-6 shrink-0"
-                onClick={handleEditNote}
-              >
-                <Pencil className="h-3 w-3" />
-              </Button>
+              {isOwner && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="ml-auto -mr-1 h-6 w-6 shrink-0"
+                  onClick={handleEditNote}
+                >
+                  <Pencil className="h-3 w-3" />
+                </Button>
+              )}
             </div>
           </div>
         )}
 
-        {isEditingNote ? (
-          <div className="flex flex-col gap-2">
-            <Textarea
-              autoFocus
-              placeholder="Add a note…"
-              value={noteInput}
-              onChange={(e) => setNoteInput(e.target.value)}
-              className="min-h-[72px] resize-none text-sm"
-            />
-            <div className="flex justify-end gap-2">
-              {existingNote && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleDeleteNote}
-                  disabled={noteMutation.isPending}
-                  className="text-destructive hover:text-destructive"
-                >
-                  Delete
-                </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCancelNote}
-                disabled={noteMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleSaveNote}
-                disabled={noteMutation.isPending}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        ) : (
-          !existingNote && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-muted-foreground"
-              onClick={handleEditNote}
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Add a note
-            </Button>
-          )
-        )}
+        <NoteActions />
       </CardContent>
     </Card>
   )
