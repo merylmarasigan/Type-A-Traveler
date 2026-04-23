@@ -115,7 +115,6 @@ function TimeSlotActivityCardContent({
   }
 
   const isOwner = session?.user.id === activityQuery.data?.userId
-  console.log({ isOwner })
 
   const NoteActions = () => {
     if (!isOwner) return null
