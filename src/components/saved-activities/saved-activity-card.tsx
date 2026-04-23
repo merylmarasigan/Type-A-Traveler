@@ -2,12 +2,15 @@ import { Suspense } from 'react'
 import { Image } from '@unpic/react'
 import {
   Card,
+  CardAction,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
+import { Button } from '@/components/ui/button'
+import { MapPinX } from 'lucide-react'
 
 interface SavedActivityCardProps {
   id: string
@@ -45,7 +48,7 @@ function SavedActivityCardContent({
   userId,
   city,
 }: SavedActivityCardProps) {
-  const { activityQuery } = useSingleSavedActivity({
+  const { activityQuery, deleteActivityMutation } = useSingleSavedActivity({
     savedActivityId: id,
     cityItineraryId,
     userId,
@@ -53,6 +56,10 @@ function SavedActivityCardContent({
   })
 
   const activity = activityQuery.data
+
+  const deleteActivity = async () => {
+    await deleteActivityMutation.mutateAsync(id)
+  }
 
   return (
     <Card className="pt-0 max-w-sm">
@@ -71,6 +78,16 @@ function SavedActivityCardContent({
         <CardDescription className="line-clamp-2">
           {activity.description}
         </CardDescription>
+        <CardAction>
+          <Button
+            disabled={deleteActivityMutation.isPending}
+            onClick={deleteActivity}
+            variant="ghost"
+            size="icon"
+          >
+            <MapPinX />
+          </Button>
+        </CardAction>
       </CardHeader>
     </Card>
   )
