@@ -145,29 +145,19 @@ export const linkActivityToTimeSlotFn = createServerFn({ method: 'POST' })
   })
 
 export const unlinkActivityFromTimeSlotFn = createServerFn({ method: 'POST' })
-  .inputValidator(
-    z.object({ savedActivityId: z.string(), timeSlotId: z.string() }),
-  )
+  .inputValidator(z.object({ timeSlotActivityId: z.string() }))
   .handler(async ({ data }) => {
     await ensureSession()
 
-    const result = await unlinkActivityFromTimeSlot(
-      data.savedActivityId,
-      data.timeSlotId,
-    )
+    const result = await unlinkActivityFromTimeSlot(data.timeSlotActivityId)
 
     return result
   })
 
 export const getTimeSlotActivityFn = createServerFn({ method: 'GET' })
-  .inputValidator(
-    z.object({ savedActivityId: z.string(), timeSlotId: z.string() }),
-  )
+  .inputValidator(z.object({ timeSlotActivityId: z.string() }))
   .handler(async ({ data }) => {
-    const result = await getTimeSlotActivity(
-      data.savedActivityId,
-      data.timeSlotId,
-    )
+    const result = await getTimeSlotActivity(data.timeSlotActivityId)
 
     return result
   })
@@ -175,11 +165,7 @@ export const getTimeSlotActivityFn = createServerFn({ method: 'GET' })
 export const updateTimeSlotActivityNoteFn = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ id: z.string(), note: z.string().nullable() }))
   .handler(async ({ data }) => {
-    const { session } = await ensureSession()
-    const { userId } = await getSavedActivity(data.id)
-    if (session.userId !== userId) {
-      throw new Error('You are not the author of this activity')
-    }
+    await ensureSession()
 
     const result = await updateTimeSlotActivityNote(data.id, data.note)
 

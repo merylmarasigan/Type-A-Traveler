@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
-import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
 import {
   timeSlotActivityQueryOptions,
   unlinkActivityFromTimeSlotMutationOptions,
@@ -22,7 +21,11 @@ import {
 import { authClient } from '@/lib/auth-client'
 
 interface TimeSlotActivityCardProps {
-  id: string
+  timeSlotActivityId: string
+  savedActivityId?: string
+  name: string
+  description?: string
+  imageUrl?: string
   timeSlotId: string
   cityItineraryId: string
   city: string
@@ -52,7 +55,10 @@ export function TimeSlotActivityCardSkeleton() {
 }
 
 function TimeSlotActivityCardContent({
-  id,
+  timeSlotActivityId,
+  name,
+  description,
+  imageUrl,
   timeSlotId,
   cityItineraryId,
   city,
@@ -61,10 +67,8 @@ function TimeSlotActivityCardContent({
   const [isEditingNote, setIsEditingNote] = useState(false)
   const [noteInput, setNoteInput] = useState('')
 
-  const { activityQuery } = useSingleSavedActivity({ savedActivityId: id })
-
   const { data: timeSlotActivity } = useSuspenseQuery(
-    timeSlotActivityQueryOptions({ savedActivityId: id, timeSlotId }),
+    timeSlotActivityQueryOptions({ timeSlotActivityId }),
   )
 
   const unlinkMutation = useMutation(
@@ -78,12 +82,10 @@ function TimeSlotActivityCardContent({
 
   const noteMutation = useMutation(
     updateTimeSlotActivityNoteMutationOptions({
-      savedActivityId: id,
-      timeSlotId,
+      timeSlotActivityId,
     }),
   )
 
-  const activity = activityQuery.data
   const existingNote = timeSlotActivity?.note ?? null
 
   const handleEditNote = () => {
@@ -114,7 +116,7 @@ function TimeSlotActivityCardContent({
     )
   }
 
-  const isOwner = session?.user.id === activityQuery.data?.userId
+  const isOwner = !!session?.user.id
 
   const NoteActions = () => {
     if (!isOwner) return null
@@ -174,10 +176,10 @@ function TimeSlotActivityCardContent({
 
   return (
     <Card className="pt-0 max-w-sm">
-      {activity.imageUrl && (
+      {imageUrl && (
         <Image
-          src={activity.imageUrl}
-          alt={activity.name}
+          src={imageUrl}
+          alt={name}
           layout="constrained"
           width={384}
           height={192}
@@ -185,17 +187,17 @@ function TimeSlotActivityCardContent({
         />
       )}
       <CardHeader>
-        <CardTitle>{activity.name}</CardTitle>
+        <CardTitle>{name}</CardTitle>
         <CardDescription className="line-clamp-2">
-          {activity.description}
+          {description}
         </CardDescription>
         {isOwner && (
           <CardAction>
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => unlinkMutation.mutate(id)}
-              disabled={unlinkMutation.isPending}
+              onClick={() => unlinkMutation.mutate(timeSlotActivityId)}
+              disabled={unlinkMutation.isPending || !timeSlotActivityId}
             >
               <MapPinX />
             </Button>

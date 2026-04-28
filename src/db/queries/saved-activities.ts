@@ -1,5 +1,5 @@
 import { generateId } from 'better-auth'
-import { and, eq, getTableColumns, not, exists } from 'drizzle-orm'
+import { and, eq, getTableColumns, not, exists, sql } from 'drizzle-orm'
 import type { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
 import { db } from '@/db'
 import {
@@ -30,30 +30,52 @@ export const getCityItinerarySavedActivities = async (
   cityItineraryId: string,
 ) => {
   const result = await db
-    .select({ savedActivities: savedActivityColumns })
-    .from(savedActivities)
-    .innerJoin(
-      timeSlotActivities,
+    .select({
+      timeSlotActivityId: timeSlotActivities.id,
+      timeSlotId: timeSlotActivities.timeSlotId,
+      savedActivityId: timeSlotActivities.savedActivityId,
+      name: sql<string>`coalesce(${savedActivities.name}, ${timeSlotActivities.savedActivityName})`,
+      description: sql<string | null>`coalesce(${savedActivities.description}, ${timeSlotActivities.savedActivityDescription})`,
+      imageUrl: sql<string | null>`coalesce(${savedActivities.imageUrl}, ${timeSlotActivities.savedActivityImageUrl})`,
+      city: sql<string | null>`coalesce(${savedActivities.city}, ${timeSlotActivities.savedActivityCity})`,
+      lat: sql<string | null>`coalesce(${savedActivities.lat}, ${timeSlotActivities.savedActivityLat})`,
+      lng: sql<string | null>`coalesce(${savedActivities.lng}, ${timeSlotActivities.savedActivityLng})`,
+      note: timeSlotActivities.note,
+    })
+    .from(timeSlotActivities)
+    .leftJoin(
+      savedActivities,
       eq(timeSlotActivities.savedActivityId, savedActivities.id),
     )
     .innerJoin(timeSlots, eq(timeSlots.id, timeSlotActivities.timeSlotId))
     .innerJoin(itineraryDays, eq(itineraryDays.id, timeSlots.itineraryDayId))
     .where(eq(itineraryDays.cityItineraryId, cityItineraryId))
 
-  return result.map((r) => r.savedActivities)
+  return result
 }
 
 export const getActivitiesForTimeSlot = async (timeSlotId: string) => {
   const result = await db
-    .select({ savedActivities: savedActivityColumns })
-    .from(savedActivities)
-    .innerJoin(
-      timeSlotActivities,
+    .select({
+      timeSlotActivityId: timeSlotActivities.id,
+      timeSlotId: timeSlotActivities.timeSlotId,
+      savedActivityId: timeSlotActivities.savedActivityId,
+      name: sql<string>`coalesce(${savedActivities.name}, ${timeSlotActivities.savedActivityName})`,
+      description: sql<string | null>`coalesce(${savedActivities.description}, ${timeSlotActivities.savedActivityDescription})`,
+      imageUrl: sql<string | null>`coalesce(${savedActivities.imageUrl}, ${timeSlotActivities.savedActivityImageUrl})`,
+      city: sql<string | null>`coalesce(${savedActivities.city}, ${timeSlotActivities.savedActivityCity})`,
+      lat: sql<string | null>`coalesce(${savedActivities.lat}, ${timeSlotActivities.savedActivityLat})`,
+      lng: sql<string | null>`coalesce(${savedActivities.lng}, ${timeSlotActivities.savedActivityLng})`,
+      note: timeSlotActivities.note,
+    })
+    .from(timeSlotActivities)
+    .leftJoin(
+      savedActivities,
       eq(timeSlotActivities.savedActivityId, savedActivities.id),
     )
     .where(eq(timeSlotActivities.timeSlotId, timeSlotId))
 
-  return result.map((r) => r.savedActivities)
+  return result
 }
 
 export const getUnlinkedActivitiesForTimeSlot = async (
@@ -140,42 +162,31 @@ export const linkActivityToTimeSlot = async (
       savedActivityId,
       timeSlotId,
       savedActivityName: savedActivity.name,
+      savedActivityDescription: savedActivity.description ?? null,
+      savedActivityImageUrl: savedActivity.imageUrl ?? null,
+      savedActivityCity: savedActivity.city,
+      savedActivityLat: savedActivity.lat,
+      savedActivityLng: savedActivity.lng,
     })
     .returning()
 
   return result
 }
 
-export const unlinkActivityFromTimeSlot = async (
-  savedActivityId: string,
-  timeSlotId: string,
-) => {
+export const unlinkActivityFromTimeSlot = async (timeSlotActivityId: string) => {
   const [result] = await db
     .delete(timeSlotActivities)
-    .where(
-      and(
-        eq(timeSlotActivities.savedActivityId, savedActivityId),
-        eq(timeSlotActivities.timeSlotId, timeSlotId),
-      ),
-    )
+    .where(eq(timeSlotActivities.id, timeSlotActivityId))
     .returning()
 
   return result
 }
 
-export const getTimeSlotActivity = async (
-  savedActivityId: string,
-  timeSlotId: string,
-) => {
+export const getTimeSlotActivity = async (timeSlotActivityId: string) => {
   const [result] = await db
     .select()
     .from(timeSlotActivities)
-    .where(
-      and(
-        eq(timeSlotActivities.savedActivityId, savedActivityId),
-        eq(timeSlotActivities.timeSlotId, timeSlotId),
-      ),
-    )
+    .where(eq(timeSlotActivities.id, timeSlotActivityId))
     .limit(1)
 
   return result

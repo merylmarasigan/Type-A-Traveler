@@ -106,10 +106,15 @@ export const timeSlotActivities = pgTable(
     timeSlotId: text()
       .notNull()
       .references(() => timeSlots.id, { onDelete: 'cascade' }),
-    savedActivityId: text()
-      .notNull()
-      .references(() => savedActivities.id, { onDelete: 'cascade' }),
+    savedActivityId: text().references(() => savedActivities.id, {
+      onDelete: 'set null',
+    }),
     savedActivityName: text().notNull(),
+    savedActivityDescription: text(),
+    savedActivityImageUrl: text(),
+    savedActivityCity: text(),
+    savedActivityLat: text(),
+    savedActivityLng: text(),
     note: text(),
     ...timestamps,
     search: tsvector()
