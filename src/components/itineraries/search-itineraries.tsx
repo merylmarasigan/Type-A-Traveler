@@ -8,22 +8,56 @@ import {
   CommandItem,
   CommandList,
   CommandLoading,
+  CommandSeparator,
 } from '@/components/ui/command'
 import { Kbd } from '@/components/ui/kbd'
+import { CityItinerary, ItineraryFolder } from '@/db/types'
 import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
-import { useRecentCitySearches } from '@/hooks/use-recent-city-searches'
+import { useRecentItinerarySearches } from '@/hooks/use-recent-itinerary-searches'
 import { Link } from '@tanstack/react-router'
-import { Folder, MapPin, Search } from 'lucide-react'
+import { Folder, MapPin, Search, SearchX } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'use-debounce'
+
+function SearchResult({
+  result,
+  onSelect,
+}: {
+  result: ItineraryFolder | CityItinerary
+  onSelect?: () => void
+}) {
+  const icon = () => ('city' in result ? <MapPin /> : <Folder />)
+  const url =
+    'city' in result ? `/itineraries/cities/$cityId` : `/itineraries/$id`
+  const urlParams = 'city' in result ? { cityId: result.id } : { id: result.id }
+
+  return (
+    <Link
+      to={url}
+      params={urlParams}
+      className="flex flex-col mb-2 gap-1 rounded-md p-1 hover:bg-accent"
+      onClick={onSelect ? onSelect : undefined}
+    >
+      <span className="flex items-center gap-2 line-clamp-1 text-ellipsis">
+        {icon()}
+        {result.title ?? 'Untitled Itinerary'}
+      </span>
+      {result.description && (
+        <span className="text-xs text-muted-foreground line-clamp-2 text-ellipsis">
+          {result.description}
+        </span>
+      )}
+    </Link>
+  )
+}
 
 export function SearchItineraries() {
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
 
-  const { recentSearches } = useRecentCitySearches()
-
+  const { recentSearches, recordRecentItinerarySearch, clearSearchHistory } =
+    useRecentItinerarySearches()
   const [debouncedValue] = useDebounce(inputValue, 1000)
   const { searchResultsQuery: folderSearchResults } = useItineraryFolders({
     searchQuery: debouncedValue,
@@ -49,6 +83,18 @@ export function SearchItineraries() {
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
   }, [])
+
+  const handleClick = (
+    result: ItineraryFolder | CityItinerary,
+    recordSearch: boolean = true,
+  ) => {
+    setOpen(false)
+    setInputValue('')
+
+    if (recordSearch) {
+      recordRecentItinerarySearch({ data: result })
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -82,19 +128,12 @@ export function SearchItineraries() {
                       folder.title ?? '',
                       folder.description ?? '',
                     ].filter(Boolean)}
-                    onSelect={() => {
-                      setOpen(false)
-                      setInputValue('')
-                    }}
                     asChild
                   >
-                    <Link to="/itineraries/$id" params={{ id: folder.id }}>
-                      <Folder />
-                      {folder.title ?? 'Untitled folder'}
-                      <span className="text-xs text-muted-foreground">
-                        {folder.description ?? ''}
-                      </span>
-                    </Link>
+                    <SearchResult
+                      result={folder}
+                      onSelect={() => handleClick(folder)}
+                    />
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -111,38 +150,44 @@ export function SearchItineraries() {
                       result.city,
                       result.description ?? '',
                     ].filter(Boolean)}
-                    onSelect={() => {
-                      setOpen(false)
-                      setInputValue('')
-                    }}
                     asChild
                   >
-                    <Link
-                      to="/itineraries/cities/$cityId"
-                      params={{ cityId: result.id }}
-                    >
-                      <MapPin />
-                      {result.title ?? `${result.city} itinerary`}{' '}
-                      <span className="text-xs text-muted-foreground">
-                        {result.description ?? ''}
-                      </span>
-                    </Link>
+                    <SearchResult
+                      result={result}
+                      onSelect={() => handleClick(result)}
+                    />
                   </CommandItem>
                 ))}
               </CommandGroup>
             )}
 
             {recentSearches.length > 0 && (
-              <CommandGroup heading="Suggestions">
+              <CommandGroup heading="Recent Searches">
                 {recentSearches.map((search) => (
                   <CommandItem
-                    key={search.name}
-                    value={`recent:${search.name}`}
+                    key={search.data.id}
+                    value={`recent:${search.data.id}`}
+                    asChild
                   >
-                    {search.name}
+                    <SearchResult
+                      result={search.data}
+                      onSelect={() => handleClick(search.data, false)}
+                    />
                   </CommandItem>
                 ))}
               </CommandGroup>
+            )}
+            {recentSearches.length > 0 && (
+              <>
+                <CommandSeparator />
+                <CommandItem
+                  onSelect={clearSearchHistory}
+                  className="text-xs text-muted-foreground flex items-center gap-2"
+                >
+                  <SearchX />
+                  Clear
+                </CommandItem>
+              </>
             )}
           </CommandList>
         </Command>
