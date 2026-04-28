@@ -1,5 +1,5 @@
-import { CityItinerary, ItineraryFolder } from '@/db/types'
 import { useEffect, useState } from 'react'
+import type { CityItinerary, ItineraryFolder } from '@/db/types'
 
 export type RecentItinerarySearch = {
   data: ItineraryFolder | CityItinerary
@@ -8,7 +8,7 @@ export type RecentItinerarySearch = {
 const STORAGE_KEY = 'type-a-traveler:recent-itinerary-searches'
 const MAX_ITEMS = 10
 
-function parseStored(raw: string | null): RecentItinerarySearch[] {
+function parseStored(raw: string | null): Array<RecentItinerarySearch> {
   if (!raw) return []
   try {
     const parsed = JSON.parse(raw) as unknown
@@ -22,13 +22,15 @@ function parseStored(raw: string | null): RecentItinerarySearch[] {
   }
 }
 
-export function loadRecentItinerarySearches(): RecentItinerarySearch[] {
+export function loadRecentItinerarySearches(): Array<RecentItinerarySearch> {
   if (typeof window === 'undefined') return []
   return parseStored(localStorage.getItem(STORAGE_KEY))
 }
 
 export function useRecentItinerarySearches() {
-  const [recentSearches, setRecentSearches] = useState<RecentItinerarySearch[]>(
+  const [recentSearches, setRecentSearches] = useState<
+    Array<RecentItinerarySearch>
+  >(
     [],
   )
 

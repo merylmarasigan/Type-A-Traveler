@@ -1,8 +1,12 @@
-import { Button } from '@/components/ui/button'
+import { Suspense, useEffect, useState } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { Folder, MapPin, Search, SearchX } from 'lucide-react'
+import { useDebounce } from 'use-debounce'
+
 import {
   Command,
   CommandDialog,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -10,15 +14,13 @@ import {
   CommandLoading,
   CommandSeparator,
 } from '@/components/ui/command'
+import { Button } from '@/components/ui/button'
 import { Kbd } from '@/components/ui/kbd'
-import { CityItinerary, ItineraryFolder } from '@/db/types'
-import { useCityItineraries } from '@/hooks/use-city-itineraries'
-import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
+import type { CityItinerary, ItineraryFolder } from '@/db/types'
 import { useRecentItinerarySearches } from '@/hooks/use-recent-itinerary-searches'
-import { Link } from '@tanstack/react-router'
-import { Folder, MapPin, Search, SearchX } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useDebounce } from 'use-debounce'
+import { searchCityItinerariesQueryOptions } from '@/services/backend/city-itineraries.options'
+import { searchItineraryFoldersQueryOptions } from '@/services/backend/itinerary-folders.options'
+import { Spinner } from '@/components/ui/spinner'
 
 function SearchResult({
   result,
@@ -52,6 +54,81 @@ function SearchResult({
   )
 }
 
+function SearchItinerariesResults({
+  query,
+  onSelectResult,
+}: {
+  query: string
+  onSelectResult: (result: ItineraryFolder | CityItinerary) => void
+}) {
+  const trimmed = query.trim()
+  if (!trimmed) return null
+
+  const folderSearchResults = useSuspenseQuery(
+    searchItineraryFoldersQueryOptions(trimmed),
+  )
+  const citySearchResults = useSuspenseQuery(
+    searchCityItinerariesQueryOptions(trimmed),
+  )
+
+  const showEmpty =
+    folderSearchResults.data.length === 0 && citySearchResults.data.length === 0
+
+  if (showEmpty) {
+    return (
+      <div data-slot="command-empty" className="pt-4 text-center text-sm">
+        No results for "{trimmed}".
+      </div>
+    )
+  }
+
+  return (
+    <>
+      {folderSearchResults.data.length > 0 && (
+        <CommandGroup heading="Folders">
+          {folderSearchResults.data.map((folder) => (
+            <CommandItem
+              key={folder.id}
+              value={`folder:${folder.id}`}
+              keywords={[folder.title ?? '', folder.description ?? ''].filter(
+                Boolean,
+              )}
+              asChild
+            >
+              <SearchResult
+                result={folder}
+                onSelect={() => onSelectResult(folder)}
+              />
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      )}
+
+      {citySearchResults.data.length > 0 && (
+        <CommandGroup heading="Cities">
+          {citySearchResults.data.map((result) => (
+            <CommandItem
+              key={result.id}
+              value={`city:${result.id}`}
+              keywords={[
+                result.title ?? '',
+                result.city,
+                result.description ?? '',
+              ].filter(Boolean)}
+              asChild
+            >
+              <SearchResult
+                result={result}
+                onSelect={() => onSelectResult(result)}
+              />
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      )}
+    </>
+  )
+}
+
 export function SearchItineraries() {
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -59,24 +136,12 @@ export function SearchItineraries() {
   const { recentSearches, recordRecentItinerarySearch, clearSearchHistory } =
     useRecentItinerarySearches()
   const [debouncedValue] = useDebounce(inputValue, 1000)
-  const { searchResultsQuery: folderSearchResults } = useItineraryFolders({
-    searchQuery: debouncedValue,
-  })
-  const { searchResultsQuery: citySearchResults } = useCityItineraries({
-    searchQuery: debouncedValue,
-  })
-
-  const isPending = folderSearchResults.isPending || citySearchResults.isPending
-  const showEmpty =
-    !isPending &&
-    folderSearchResults.data.length === 0 &&
-    citySearchResults.data.length === 0
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        setOpen((open) => !open)
+        setOpen((prevOpen) => !prevOpen)
       }
     }
 
@@ -115,51 +180,21 @@ export function SearchItineraries() {
             placeholder="Search for an itinerary by title, city, activity, etc."
           />
           <CommandList>
-            {showEmpty && <CommandEmpty>No results found.</CommandEmpty>}
-            {isPending && <CommandLoading />}
-
-            {folderSearchResults.data.length > 0 && (
-              <CommandGroup heading="Folders">
-                {folderSearchResults.data.map((folder) => (
-                  <CommandItem
-                    key={folder.id}
-                    value={`folder:${folder.id}`}
-                    keywords={[
-                      folder.title ?? '',
-                      folder.description ?? '',
-                    ].filter(Boolean)}
-                    asChild
-                  >
-                    <SearchResult
-                      result={folder}
-                      onSelect={() => handleClick(folder)}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
-
-            {citySearchResults.data.length > 0 && (
-              <CommandGroup heading="Cities">
-                {citySearchResults.data.map((result) => (
-                  <CommandItem
-                    key={result.id}
-                    value={`city:${result.id}`}
-                    keywords={[
-                      result.title ?? '',
-                      result.city,
-                      result.description ?? '',
-                    ].filter(Boolean)}
-                    asChild
-                  >
-                    <SearchResult
-                      result={result}
-                      onSelect={() => handleClick(result)}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+            <Suspense
+              fallback={
+                <CommandLoading className="p-2">
+                  <div className="flex items-center gap-2">
+                    <Spinner />
+                    Searching…
+                  </div>
+                </CommandLoading>
+              }
+            >
+              <SearchItinerariesResults
+                query={debouncedValue}
+                onSelectResult={(result) => handleClick(result)}
+              />
+            </Suspense>
 
             {recentSearches.length > 0 && (
               <CommandGroup heading="Recent Searches">
