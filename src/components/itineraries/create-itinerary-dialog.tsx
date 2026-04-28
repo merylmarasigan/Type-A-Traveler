@@ -104,7 +104,7 @@ function CreateItineraryDialogContent({
           </Button>
         }
       />
-      <DialogContent className="w-auto sm:max-w-xl p-0">
+      <DialogContent className="w-auto sm:max-w-xl p-0 max-h-[calc(100dvh-2rem)] overflow-hidden">
         <DialogHeader className="px-4 pt-4">
           <DialogTitle>Create your itinerary for {city}</DialogTitle>
           <DialogDescription>
@@ -119,42 +119,44 @@ function CreateItineraryDialogContent({
             disabled={noSavedActivities}
           />
 
-          <Collapsible className="flex flex-col gap-2">
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full">
-                Add to an existing itinerary?
-                <ChevronDown />
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <Select onValueChange={handleSelectItinerary}>
-                <SelectTrigger
-                  disabled={userHasNoItineraries}
-                  className="w-full p-2"
-                >
-                  <SelectValue
-                    placeholder={
-                      userHasNoItineraries
-                        ? 'You have no itineraries yet.'
-                        : 'Select an itinerary'
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {userFoldersQuery.data.length > 0 && (
-                    <SelectGroup>
-                      <SelectLabel>Your existing itineraries</SelectLabel>
-                      {userFoldersQuery.data.map((folder) => (
-                        <SelectItem key={folder.id} value={folder.id}>
-                          {folder.title}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  )}
-                </SelectContent>
-              </Select>
-            </CollapsibleContent>
-          </Collapsible>
+          {!userHasNoItineraries && (
+            <Collapsible className="flex flex-col gap-2">
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" className="w-full">
+                  Add to an existing itinerary?
+                  <ChevronDown />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <Select onValueChange={handleSelectItinerary}>
+                  <SelectTrigger
+                    disabled={userHasNoItineraries}
+                    className="w-full p-2"
+                  >
+                    <SelectValue
+                      placeholder={
+                        userHasNoItineraries
+                          ? 'You have no itineraries yet.'
+                          : 'Select an itinerary'
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {userFoldersQuery.data.length > 0 && (
+                      <SelectGroup>
+                        <SelectLabel>Your existing itineraries</SelectLabel>
+                        {userFoldersQuery.data.map((folder) => (
+                          <SelectItem key={folder.id} value={folder.id}>
+                            {folder.title}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    )}
+                  </SelectContent>
+                </Select>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
 
           <Button disabled={createIsPending} onClick={handleConfirmDates}>
             {createIsPending ? <Spinner /> : <CalendarCheck2 />}

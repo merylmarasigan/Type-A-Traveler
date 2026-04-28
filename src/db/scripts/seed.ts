@@ -9,12 +9,7 @@ import {
   timeSlotActivities,
   timeSlots,
 } from '@/db/schema/app'
-import {
-  account,
-  session,
-  user,
-  verification,
-} from '@/db/schema/auth'
+import { account, session, user, verification } from '@/db/schema/auth'
 import {
   MOCK_LOCATION_DETAILS,
   MOCK_SEARCH_RESULTS,
@@ -97,14 +92,23 @@ function getLocationsForCity(city: string) {
 
 const travelerPersonas = [
   { name: 'Mara Voss', vibe: 'runs on espresso, maps, and mild chaos' },
-  { name: 'Noah Calder', vibe: 'prefers golden-hour walks and one fancy dinner' },
+  {
+    name: 'Noah Calder',
+    vibe: 'prefers golden-hour walks and one fancy dinner',
+  },
   { name: 'Priya Desai', vibe: 'street food maximalist with a museum habit' },
   { name: 'Elliot Park', vibe: 'books window seats and backup plans' },
   { name: 'Sofia Ortega', vibe: 'collects neighborhoods like trading cards' },
-  { name: 'Jamal Rivers', vibe: 'optimizes for comfort, then breaks the rules anyway' },
+  {
+    name: 'Jamal Rivers',
+    vibe: 'optimizes for comfort, then breaks the rules anyway',
+  },
   { name: 'Hannah Kline', vibe: 'chases light, sound, and weird little shops' },
   { name: 'Theo Marin', vibe: 'plans hard, wanders harder' },
-  { name: 'Amara Okonkwo', vibe: 'builds trips around one perfect ritual per day' },
+  {
+    name: 'Amara Okonkwo',
+    vibe: 'builds trips around one perfect ritual per day',
+  },
   { name: 'Leo Hart', vibe: 'treats jet lag like a personality trait' },
 ] as const
 
@@ -230,17 +234,19 @@ async function main() {
       const cities = getAllMockCities()
       if (cities.length === 0) throw new Error('No mock cities found')
 
-      const userRows: Array<(typeof user.$inferInsert)> = []
-      const sessionRows: Array<(typeof session.$inferInsert)> = []
-      const accountRows: Array<(typeof account.$inferInsert)> = []
-      const verificationRows: Array<(typeof verification.$inferInsert)> = []
-      const folderRows: Array<(typeof itineraryFolders.$inferInsert)> = []
-      const lodgingRows: Array<(typeof lodging.$inferInsert)> = []
-      const cityItineraryRows: Array<(typeof cityItineraries.$inferInsert)> = []
-      const dayRows: Array<(typeof itineraryDays.$inferInsert)> = []
-      const timeSlotRows: Array<(typeof timeSlots.$inferInsert)> = []
-      const savedActivityRows: Array<(typeof savedActivities.$inferInsert)> = []
-      const timeSlotActivityRows: Array<(typeof timeSlotActivities.$inferInsert)> = []
+      const userRows: Array<typeof user.$inferInsert> = []
+      const sessionRows: Array<typeof session.$inferInsert> = []
+      const accountRows: Array<typeof account.$inferInsert> = []
+      const verificationRows: Array<typeof verification.$inferInsert> = []
+      const folderRows: Array<typeof itineraryFolders.$inferInsert> = []
+      const lodgingRows: Array<typeof lodging.$inferInsert> = []
+      const cityItineraryRows: Array<typeof cityItineraries.$inferInsert> = []
+      const dayRows: Array<typeof itineraryDays.$inferInsert> = []
+      const timeSlotRows: Array<typeof timeSlots.$inferInsert> = []
+      const savedActivityRows: Array<typeof savedActivities.$inferInsert> = []
+      const timeSlotActivityRows: Array<
+        typeof timeSlotActivities.$inferInsert
+      > = []
 
       const allDetails = Object.values(MOCK_LOCATION_DETAILS)
 
@@ -306,7 +312,7 @@ async function main() {
             id: folderId,
             authorId: userId,
             title: folderTitle,
-            description: rng() > 0.12 ? folderDescription : null,
+            description: folderDescription,
             flightNumbers:
               rng() > 0.55
                 ? pickManyUnique(
@@ -332,7 +338,8 @@ async function main() {
               id: generateId(),
               itineraryId: folderId,
               name: pickOne(rng, lodgingNamePatterns)(stayCity),
-              address: rng() > 0.35 ? `${stayCity} (near the good coffee)` : null,
+              address:
+                rng() > 0.35 ? `${stayCity} (near the good coffee)` : null,
             })
           }
 
@@ -356,14 +363,11 @@ async function main() {
             cityItineraryRows.push({
               id: cityItineraryId,
               folderId,
-              title:
-                rng() > 0.12
-                  ? null
-                  : pickOne(rng, cityItineraryTitlePatterns)(city),
-              description:
-                rng() > 0.18
-                  ? null
-                  : pickOne(rng, cityItineraryDescriptionTemplates)(city),
+              title: pickOne(rng, cityItineraryTitlePatterns)(city),
+              description: pickOne(
+                rng,
+                cityItineraryDescriptionTemplates,
+              )(city),
               city,
               lat: cityCenter.lat,
               lng: cityCenter.lng,
@@ -388,8 +392,7 @@ async function main() {
               for (let t = 0; t < timeSlotCount; t++) {
                 const slotId = generateId()
                 const start = new Date(
-                  new Date(`${dayDate}T08:00:00`).getTime() +
-                    t * 3 * 3600000,
+                  new Date(`${dayDate}T08:00:00`).getTime() + t * 3 * 3600000,
                 )
                 const end = new Date(
                   start.getTime() + randInt(rng, 60, 150) * 60000,
@@ -398,8 +401,7 @@ async function main() {
                 timeSlotRows.push({
                   id: slotId,
                   itineraryDayId: dayId,
-                  notes:
-                    rng() > 0.55 ? pickOne(rng, timeSlotNoteIdeas) : null,
+                  notes: rng() > 0.55 ? pickOne(rng, timeSlotNoteIdeas) : null,
                   startTime: start,
                   endTime: end,
                 })
@@ -411,8 +413,7 @@ async function main() {
                     : []
 
                 for (let a = 0; a < activitiesInSlot; a++) {
-                  const detail =
-                    pickedLocations[a] ?? pickOne(rng, allDetails)
+                  const detail = pickedLocations[a] ?? pickOne(rng, allDetails)
 
                   const trpId = String(detail.location_id)
                   const name = detail.name
@@ -447,11 +448,16 @@ async function main() {
 
       const chunked = <T>(rows: Array<T>, size: number) => {
         const out: Array<Array<T>> = []
-        for (let i = 0; i < rows.length; i += size) out.push(rows.slice(i, i + size))
+        for (let i = 0; i < rows.length; i += size)
+          out.push(rows.slice(i, i + size))
         return out
       }
 
-      const insertAll = async (table: any, rows: Array<any>, chunkSize = 500) => {
+      const insertAll = async (
+        table: any,
+        rows: Array<any>,
+        chunkSize = 500,
+      ) => {
         for (const chunk of chunked(rows, chunkSize)) {
           if (chunk.length === 0) continue
           await tx.insert(table).values(chunk)

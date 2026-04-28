@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { Folder, MapPin, Search, SearchX } from 'lucide-react'
+import { Folder, MapPin, Search } from 'lucide-react'
 import { useDebounce } from 'use-debounce'
 
 import {
@@ -12,7 +12,6 @@ import {
   CommandItem,
   CommandList,
   CommandLoading,
-  CommandSeparator,
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { Kbd } from '@/components/ui/kbd'
@@ -38,7 +37,7 @@ function SearchResult({
     <Link
       to={url}
       params={urlParams}
-      className="flex flex-col mb-2 gap-1 rounded-md p-1 hover:bg-accent"
+      className="flex flex-col mb-2 gap-1 rounded-md p-1 "
       onClick={onSelect ? onSelect : undefined}
     >
       <span className="flex items-center gap-2 line-clamp-1 text-ellipsis">
@@ -46,7 +45,7 @@ function SearchResult({
         {result.title ?? 'Untitled Itinerary'}
       </span>
       {result.description && (
-        <span className="text-xs text-muted-foreground line-clamp-2 text-ellipsis">
+        <span className="text-xs line-clamp-2 text-ellipsis">
           {result.description}
         </span>
       )}
@@ -65,10 +64,10 @@ function SearchItinerariesResults({
   if (!trimmed) return null
 
   const folderSearchResults = useSuspenseQuery(
-    searchItineraryFoldersQueryOptions(trimmed),
+    searchItineraryFoldersQueryOptions(trimmed, true),
   )
   const citySearchResults = useSuspenseQuery(
-    searchCityItinerariesQueryOptions(trimmed),
+    searchCityItinerariesQueryOptions(trimmed, true),
   )
 
   const showEmpty =
@@ -133,7 +132,7 @@ export function SearchItineraries() {
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
 
-  const { recentSearches, recordRecentItinerarySearch, clearSearchHistory } =
+  const { recentSearches, recordRecentItinerarySearch } =
     useRecentItinerarySearches()
   const [debouncedValue] = useDebounce(inputValue, 1000)
 
@@ -211,18 +210,6 @@ export function SearchItineraries() {
                   </CommandItem>
                 ))}
               </CommandGroup>
-            )}
-            {recentSearches.length > 0 && (
-              <>
-                <CommandSeparator />
-                <CommandItem
-                  onSelect={clearSearchHistory}
-                  className="text-xs text-muted-foreground flex items-center gap-2"
-                >
-                  <SearchX />
-                  Clear
-                </CommandItem>
-              </>
             )}
           </CommandList>
         </Command>

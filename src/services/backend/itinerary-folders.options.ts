@@ -120,9 +120,12 @@ export const deleteItineraryFolderMutationOptions = () =>
     },
   })
 
-export const searchItineraryFoldersQueryOptions = (query?: string) =>
+export const searchItineraryFoldersQueryOptions = (
+  query?: string,
+  publicOnly: boolean = false,
+) =>
   queryOptions({
-    queryKey: ['itinerary_folders', 'search', query],
-    queryFn: () => searchItineraryFoldersFn({ data: { query } }),
+    queryKey: ['itinerary_folders', 'search', query, publicOnly ? 'public' : 'all'],
+    queryFn: () => searchItineraryFoldersFn({ data: { query, publicOnly } }),
     enabled: !!query && query !== '',
   })

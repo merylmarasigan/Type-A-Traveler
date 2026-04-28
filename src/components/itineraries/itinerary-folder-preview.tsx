@@ -146,10 +146,10 @@ function ItineraryFolderPreviewContent({
           <div className="h-44 w-full shrink-0 bg-muted sm:h-48" aria-hidden />
         )}
         <CardHeader>
-          <CardTitle className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">{folder.title}</div>
+          <CardTitle className="flex flex-col gap-1 line-clamp-1 text-ellipsis">
+            {folder.title}
           </CardTitle>
-          <CardDescription className="line-clamp-2">
+          <CardDescription className="line-clamp-2 text-ellipsis">
             {folder.description}
           </CardDescription>
           <CardAction className="flex items-center gap-2">

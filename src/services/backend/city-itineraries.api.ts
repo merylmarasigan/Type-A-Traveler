@@ -70,11 +70,19 @@ export const deleteCityItineraryFn = createServerFn({
   })
 
 export const searchCityItinerariesFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ query: z.string().optional() }))
+  .inputValidator(
+    z.object({
+      query: z.string().optional(),
+      publicOnly: z.boolean().optional().default(false),
+    }),
+  )
   .handler(async ({ data }) => {
     if (!data.query) return []
 
-    const result: CityItinerary[] = await searchCityItineraries(data.query)
+    const result: CityItinerary[] = await searchCityItineraries(
+      data.query,
+      data.publicOnly,
+    )
 
     return result
   })

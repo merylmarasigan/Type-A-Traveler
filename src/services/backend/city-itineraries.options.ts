@@ -94,9 +94,12 @@ export const deleteCityItineraryMutationOptions = ({
     },
   })
 
-export const searchCityItinerariesQueryOptions = (query?: string) =>
+export const searchCityItinerariesQueryOptions = (
+  query?: string,
+  publicOnly: boolean = false,
+) =>
   queryOptions({
-    queryKey: ['city_itineraries', 'search', query],
-    queryFn: () => searchCityItinerariesFn({ data: { query } }),
+    queryKey: ['city_itineraries', 'search', query, publicOnly ? 'public' : 'all'],
+    queryFn: () => searchCityItinerariesFn({ data: { query, publicOnly } }),
     enabled: !!query && query !== '',
   })

@@ -119,8 +119,8 @@ function CityItineraryPreviewContent({
         <div className="h-44 w-full shrink-0 bg-muted sm:h-48" aria-hidden />
       )}
       <CardHeader>
-        <CardTitle className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">{cityItinerary.title}</div>
+        <CardTitle className="flex flex-col gap-1 line-clamp-1 text-ellipsis">
+          {cityItinerary.title}
         </CardTitle>
         {uniqueThumbUrls.length > 0 && (
           <CardDescription>{cityItinerary.city}</CardDescription>

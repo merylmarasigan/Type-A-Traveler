@@ -19,7 +19,7 @@ export function DateRangePicker({
   return (
     <>
       <Card>
-        <CardContent>
+        <CardContent className="sm:p-0">
           <Calendar
             disabled={disabled}
             required
@@ -29,6 +29,7 @@ export function DateRangePicker({
             onSelect={setDateRange}
             numberOfMonths={2}
             showOutsideDays={false}
+            className="w-full"
           />
         </CardContent>
       </Card>

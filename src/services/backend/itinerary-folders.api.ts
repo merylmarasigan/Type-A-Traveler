@@ -86,11 +86,16 @@ export const deleteItineraryFolderFn = createServerFn({
   })
 
 export const searchItineraryFoldersFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ query: z.string().optional() }))
+  .inputValidator(
+    z.object({
+      query: z.string().optional(),
+      publicOnly: z.boolean().optional().default(false),
+    }),
+  )
   .handler(async ({ data }) => {
     if (!data.query) return []
 
-    const result = await searchItineraryFolders(data.query)
+    const result = await searchItineraryFolders(data.query, data.publicOnly)
 
     return result
   })
