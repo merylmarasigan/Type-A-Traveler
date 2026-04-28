@@ -96,6 +96,7 @@ export const savedActivities = pgTable('saved_activities', {
   imageUrl: text(),
   fsq_place_id: text(),
   trp_location_id: text(),
+  tripadvisorUrl: text(),
   ...timestamps,
 })
 
@@ -115,6 +116,7 @@ export const timeSlotActivities = pgTable(
     savedActivityCity: text(),
     savedActivityLat: text(),
     savedActivityLng: text(),
+    savedActivityTripadvisorUrl: text(),
     note: text(),
     ...timestamps,
     search: tsvector()

@@ -63,6 +63,7 @@ function SaveActivityButtonContent({
       description: activity.description,
       imageUrl,
       trp_location_id: `${activity.location_id}`,
+      tripadvisorUrl: activity.web_url,
     })
   }
 

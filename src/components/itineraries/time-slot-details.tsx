@@ -121,6 +121,7 @@ function TimeSlotDetailsContent({
                   name={activity.name}
                   description={activity.description ?? undefined}
                   imageUrl={activity.imageUrl ?? undefined}
+                  tripadvisorUrl={activity.tripadvisorUrl ?? undefined}
                   timeSlotId={timeSlot.id}
                   cityItineraryId={cityItineraryId}
                   city={city}

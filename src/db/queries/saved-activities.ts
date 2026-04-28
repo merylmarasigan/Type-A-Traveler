@@ -40,6 +40,7 @@ export const getCityItinerarySavedActivities = async (
       city: sql<string | null>`coalesce(${savedActivities.city}, ${timeSlotActivities.savedActivityCity})`,
       lat: sql<string | null>`coalesce(${savedActivities.lat}, ${timeSlotActivities.savedActivityLat})`,
       lng: sql<string | null>`coalesce(${savedActivities.lng}, ${timeSlotActivities.savedActivityLng})`,
+      tripadvisorUrl: sql<string | null>`coalesce(${savedActivities.tripadvisorUrl}, ${timeSlotActivities.savedActivityTripadvisorUrl})`,
       note: timeSlotActivities.note,
     })
     .from(timeSlotActivities)
@@ -66,6 +67,7 @@ export const getActivitiesForTimeSlot = async (timeSlotId: string) => {
       city: sql<string | null>`coalesce(${savedActivities.city}, ${timeSlotActivities.savedActivityCity})`,
       lat: sql<string | null>`coalesce(${savedActivities.lat}, ${timeSlotActivities.savedActivityLat})`,
       lng: sql<string | null>`coalesce(${savedActivities.lng}, ${timeSlotActivities.savedActivityLng})`,
+      tripadvisorUrl: sql<string | null>`coalesce(${savedActivities.tripadvisorUrl}, ${timeSlotActivities.savedActivityTripadvisorUrl})`,
       note: timeSlotActivities.note,
     })
     .from(timeSlotActivities)
@@ -167,6 +169,7 @@ export const linkActivityToTimeSlot = async (
       savedActivityCity: savedActivity.city,
       savedActivityLat: savedActivity.lat,
       savedActivityLng: savedActivity.lng,
+      savedActivityTripadvisorUrl: savedActivity.tripadvisorUrl ?? null,
     })
     .returning()
 

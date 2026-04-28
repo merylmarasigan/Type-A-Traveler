@@ -1,6 +1,12 @@
 import { Suspense, useState } from 'react'
 import { Image } from '@unpic/react'
-import { MapPinX, MessageSquare, Pencil, Plus } from 'lucide-react'
+import {
+  ExternalLink,
+  MapPinX,
+  MessageSquare,
+  Pencil,
+  Plus,
+} from 'lucide-react'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,6 +32,7 @@ interface TimeSlotActivityCardProps {
   name: string
   description?: string
   imageUrl?: string
+  tripadvisorUrl?: string
   timeSlotId: string
   cityItineraryId: string
   city: string
@@ -59,6 +66,7 @@ function TimeSlotActivityCardContent({
   name,
   description,
   imageUrl,
+  tripadvisorUrl,
   timeSlotId,
   cityItineraryId,
   city,
@@ -193,6 +201,18 @@ function TimeSlotActivityCardContent({
         </CardDescription>
         {isOwner && (
           <CardAction>
+            {tripadvisorUrl && (
+              <Button variant="ghost" size="icon" asChild>
+                <a
+                  href={tripadvisorUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="View on Tripadvisor"
+                >
+                  <ExternalLink />
+                </a>
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
