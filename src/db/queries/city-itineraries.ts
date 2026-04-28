@@ -1,5 +1,5 @@
 import { generateId } from 'better-auth'
-import { eq, getTableColumns, sql } from 'drizzle-orm'
+import { and, eq, getTableColumns, sql } from 'drizzle-orm'
 import type { NewCityItinerary, UpdateCityItinerary } from '@/db/types'
 import { db } from '@/db'
 import {
@@ -13,7 +13,11 @@ import {
 const { createdAt, updatedAt, search, ...cityItineraryColumns } =
   getTableColumns(cityItineraries)
 
-export const getFolderCityItineraries = async (folderId: string) => {
+export const getFolderCityItineraries = async (
+  folderId: string,
+  isPublic?: boolean,
+) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const result = await db
     .select({
       ...cityItineraryColumns,
@@ -24,12 +28,13 @@ export const getFolderCityItineraries = async (folderId: string) => {
       itineraryFolders,
       eq(cityItineraries.folderId, itineraryFolders.id),
     )
-    .where(eq(cityItineraries.folderId, folderId))
+    .where(and(eq(cityItineraries.folderId, folderId), publicOnlyClause))
 
   return result
 }
 
-export const getCityItinerary = async (id: string) => {
+export const getCityItinerary = async (id: string, isPublic?: boolean) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const [result] = await db
     .select({
       ...cityItineraryColumns,
@@ -40,7 +45,7 @@ export const getCityItinerary = async (id: string) => {
       itineraryFolders,
       eq(cityItineraries.folderId, itineraryFolders.id),
     )
-    .where(eq(cityItineraries.id, id))
+    .where(and(eq(cityItineraries.id, id), publicOnlyClause))
     .limit(1)
 
   return result
@@ -87,7 +92,11 @@ export const deleteCityItinerary = async (id: string) => {
   return { deletedCityItinerary, remainingCities }
 }
 
-export const searchCityItinerariesByTitleAndCity = async (query: string) => {
+export const searchCityItinerariesByTitleAndCity = async (
+  query: string,
+  isPublic?: boolean,
+) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const result = await db
     .select({ ...cityItineraryColumns, authorId: itineraryFolders.authorId })
     .from(cityItineraries)
@@ -96,13 +105,20 @@ export const searchCityItinerariesByTitleAndCity = async (query: string) => {
       eq(cityItineraries.folderId, itineraryFolders.id),
     )
     .where(
-      sql`${cityItineraries.search} @@ websearch_to_tsquery('english', ${query})`,
+      and(
+        sql`${cityItineraries.search} @@ websearch_to_tsquery('english', ${query})`,
+        publicOnlyClause,
+      ),
     )
 
   return result
 }
 
-export const searchCityItinerariesByActivities = async (query: string) => {
+export const searchCityItinerariesByActivities = async (
+  query: string,
+  isPublic?: boolean,
+) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const result = await db
     .select({ ...cityItineraryColumns, authorId: itineraryFolders.authorId })
     .from(cityItineraries)
@@ -120,7 +136,10 @@ export const searchCityItinerariesByActivities = async (query: string) => {
       eq(timeSlotActivities.timeSlotId, timeSlots.id),
     )
     .where(
-      sql`${timeSlotActivities.search} @@ websearch_to_tsquery('english', ${query})`,
+      and(
+        sql`${timeSlotActivities.search} @@ websearch_to_tsquery('english', ${query})`,
+        publicOnlyClause,
+      ),
     )
 
   const uniqueById = new Map<string, (typeof result)[number]>()
@@ -129,10 +148,10 @@ export const searchCityItinerariesByActivities = async (query: string) => {
   return [...uniqueById.values()]
 }
 
-export const searchCityItineraries = async (query: string) => {
+export const searchCityItineraries = async (query: string, isPublic?: boolean) => {
   const res = await Promise.all([
-    searchCityItinerariesByTitleAndCity(query),
-    searchCityItinerariesByActivities(query),
+    searchCityItinerariesByTitleAndCity(query, isPublic),
+    searchCityItinerariesByActivities(query, isPublic),
   ])
 
   const uniqueById = new Map<

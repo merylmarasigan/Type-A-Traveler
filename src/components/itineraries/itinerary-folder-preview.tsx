@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import { useQueries } from '@tanstack/react-query'
 import { Folder } from 'lucide-react'
 import { Image } from '@unpic/react'
@@ -21,6 +21,7 @@ import { useCityItineraries } from '@/hooks/use-city-itineraries'
 import { useSingleUser } from '@/hooks/use-single-user'
 import { cn } from '@/lib/utils'
 import { cityItinerarySavedActivitiesQueryOptions } from '@/services/backend/saved-activities.options'
+import { authClient } from '@/lib/auth-client'
 
 interface ItineraryFolderPreviewProps {
   folder: ItineraryFolder
@@ -63,6 +64,8 @@ function ItineraryFolderPreviewContent({
 }: ItineraryFolderPreviewProps) {
   const { itinerariesQuery } = useCityItineraries({ folderId: folder.id })
   const { userQuery } = useSingleUser({ userId: folder.authorId })
+  const { data } = authClient.useSession()
+  const router = useRouter()
 
   const cities = itinerariesQuery.data
   const cityCount = cities.length
@@ -76,7 +79,9 @@ function ItineraryFolderPreviewContent({
     })),
   })
 
-  if (cityCount === 0) return null
+  const isPrivate = !folder.isPublic && data?.session.userId !== folder.authorId
+
+  if (cityCount === 0 || isPrivate) return null
 
   if (cityCount === 1) {
     return (
@@ -157,13 +162,17 @@ function ItineraryFolderPreviewContent({
             <TypographyMuted>
               by{' '}
               {userQuery.data.username ? (
-                <Link
-                  to="/profile/$username"
-                  params={{ username: userQuery.data.username }}
+                <span
+                  onClick={() =>
+                    router.navigate({
+                      to: '/profile/$username',
+                      params: { username: userQuery.data.username! },
+                    })
+                  }
                   className="font-medium text-foreground underline-offset-4 hover:underline"
                 >
                   {userQuery.data.name}
-                </Link>
+                </span>
               ) : (
                 userQuery.data.name
               )}

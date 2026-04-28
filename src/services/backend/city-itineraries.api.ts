@@ -22,17 +22,17 @@ export const getFolderCityItinerariesFn = createServerFn({
   .handler(async ({ data }) => {
     if (!data.folderId) return []
 
-    const folders = await getFolderCityItineraries(data.folderId)
+    const cityItineraries = await getFolderCityItineraries(data.folderId)
 
-    return folders
+    return cityItineraries
   })
 
 export const getSingleCityItineraryFn = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ cityItineraryId: z.string() }))
   .handler(async ({ data }) => {
-    const folder = await getCityItinerary(data.cityItineraryId)
+    const cityItinerary = await getCityItinerary(data.cityItineraryId)
 
-    return folder
+    return cityItinerary
   })
 
 export const createCityItineraryFn = createServerFn({ method: 'POST' })
@@ -50,9 +50,9 @@ export const updateCityItineraryFn = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     await ensureSession()
 
-    const updatedFolder = await updateCityItinerary(data)
+    const updatedCityItinerary = await updateCityItinerary(data)
 
-    return updatedFolder
+    return updatedCityItinerary
   })
 
 export const deleteCityItineraryFn = createServerFn({

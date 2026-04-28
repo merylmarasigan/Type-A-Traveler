@@ -11,7 +11,19 @@ import {
   updateItineraryFolderFn,
 } from '@/services/backend/itinerary-folders.api'
 
-const multipleItineraryFoldersQueryKey = () => ['itinerary_folders'] as const
+const itineraryFoldersQueryKey = () => ['itinerary_folders'] as const
+
+const multipleItineraryFoldersQueryKey = (params?: {
+  limit?: number
+  publicOnly?: boolean
+}) =>
+  [
+    ...itineraryFoldersQueryKey(),
+    {
+      limit: params?.limit ?? null,
+      publicOnly: params?.publicOnly ?? false,
+    },
+  ] as const
 
 const singleItineraryFolderQueryKey = (itineraryFolderId?: string) =>
   ['itinerary_folders', itineraryFolderId] as const
@@ -22,7 +34,7 @@ export const userItineraryFoldersQueryKey = (
 ) => [
   'users',
   userId,
-  ...multipleItineraryFoldersQueryKey(),
+  ...itineraryFoldersQueryKey(),
   publicOnly ? 'public' : 'private',
 ]
 
@@ -34,7 +46,7 @@ export const multipleItineraryFoldersQueryOptions = ({
   publicOnly?: boolean
 }) =>
   queryOptions({
-    queryKey: multipleItineraryFoldersQueryKey(),
+    queryKey: multipleItineraryFoldersQueryKey({ limit, publicOnly }),
     queryFn: () =>
       getMultipleItineraryFoldersFn({ data: { limit, publicOnly } }),
   })
@@ -69,7 +81,7 @@ export const createItineraryFolderMutationOptions = () =>
     mutationFn: (data: NewItineraryFolder) => createItineraryFolderFn({ data }),
     onSuccess: async (_data, _variables, _result, ctx) => {
       await ctx.client.invalidateQueries({
-        queryKey: multipleItineraryFoldersQueryKey(),
+        queryKey: ['itinerary_folders'],
       })
     },
   })
@@ -103,7 +115,7 @@ export const deleteItineraryFolderMutationOptions = () =>
       toast.success('Deleted itinerary folder')
 
       await ctx.client.invalidateQueries({
-        queryKey: multipleItineraryFoldersQueryKey(),
+        queryKey: itineraryFoldersQueryKey(),
       })
     },
   })

@@ -13,11 +13,9 @@ const { createdAt, updatedAt, ...itineraryFolderColumns } =
  */
 export const getItineraryFolders = async (
   limit: number = 10,
-  publicOnly: boolean,
+  isPublic: boolean,
 ) => {
-  const publicOnlyClause = publicOnly
-    ? eq(itineraryFolders.isPublic, true)
-    : undefined
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
 
   const result = await db
     .select(itineraryFolderColumns)
@@ -30,11 +28,9 @@ export const getItineraryFolders = async (
 
 export const getUserItineraryFolders = async (
   userId: string,
-  publicOnly: boolean,
+  isPublic: boolean,
 ) => {
-  const publicOnlyClause = publicOnly
-    ? eq(itineraryFolders.isPublic, true)
-    : undefined
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const result = await db
     .select(itineraryFolderColumns)
     .from(itineraryFolders)
@@ -43,11 +39,12 @@ export const getUserItineraryFolders = async (
   return result
 }
 
-export const getItineraryFolder = async (id: string) => {
+export const getItineraryFolder = async (id: string, isPublic?: boolean) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const [result] = await db
     .select(itineraryFolderColumns)
     .from(itineraryFolders)
-    .where(eq(itineraryFolders.id, id))
+    .where(and(eq(itineraryFolders.id, id), publicOnlyClause))
     .limit(1)
 
   return result
@@ -81,12 +78,16 @@ export const deleteItineraryFolder = async (id: string) => {
   })
 }
 
-export const searchItineraryFolders = async (query: string) => {
+export const searchItineraryFolders = async (query: string, isPublic?: boolean) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const result = await db
     .select(itineraryFolderColumns)
     .from(itineraryFolders)
     .where(
-      sql`${itineraryFolders.search} @@ websearch_to_tsquery('english', ${query})`,
+      and(
+        sql`${itineraryFolders.search} @@ websearch_to_tsquery('english', ${query})`,
+        publicOnlyClause,
+      ),
     )
 
   return result

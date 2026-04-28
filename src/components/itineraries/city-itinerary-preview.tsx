@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
 import { MapPin } from 'lucide-react'
 import { Image } from '@unpic/react'
@@ -68,6 +68,8 @@ function CityItineraryPreviewContent({
   const { cityActivitiesQuery } = useSavedActivities({
     cityItineraryId: cityItinerary.id,
   })
+
+  const router = useRouter()
 
   const first = itineraryDaysQuery.data[0]
   const last = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
@@ -156,13 +158,17 @@ function CityItineraryPreviewContent({
             <TypographyMuted>
               by{' '}
               {authorUsername ? (
-                <Link
-                  to="/profile/$username"
-                  params={{ username: authorUsername }}
+                <span
+                  onClick={() =>
+                    router.navigate({
+                      to: '/profile/$username',
+                      params: { username: authorUsername },
+                    })
+                  }
                   className="font-medium text-foreground underline-offset-4 hover:underline"
                 >
                   {author}
-                </Link>
+                </span>
               ) : (
                 author
               )}
