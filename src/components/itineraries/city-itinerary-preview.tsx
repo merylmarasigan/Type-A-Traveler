@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import { formatDate } from 'date-fns'
 import { MapPin } from 'lucide-react'
 import { Image } from '@unpic/react'
@@ -69,6 +69,8 @@ function CityItineraryPreviewContent({
     cityItineraryId: cityItinerary.id,
   })
 
+  const router = useRouter()
+
   const first = itineraryDaysQuery.data[0]
   const last = itineraryDaysQuery.data[itineraryDaysQuery.data.length - 1]
 
@@ -117,8 +119,8 @@ function CityItineraryPreviewContent({
         <div className="h-44 w-full shrink-0 bg-muted sm:h-48" aria-hidden />
       )}
       <CardHeader>
-        <CardTitle className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">{cityItinerary.title}</div>
+        <CardTitle className="flex flex-col gap-1 line-clamp-1 text-ellipsis">
+          {cityItinerary.title}
         </CardTitle>
         {uniqueThumbUrls.length > 0 && (
           <CardDescription>{cityItinerary.city}</CardDescription>
@@ -156,13 +158,17 @@ function CityItineraryPreviewContent({
             <TypographyMuted>
               by{' '}
               {authorUsername ? (
-                <Link
-                  to="/profile/$username"
-                  params={{ username: authorUsername }}
+                <span
+                  onClick={() =>
+                    router.navigate({
+                      to: '/profile/$username',
+                      params: { username: authorUsername },
+                    })
+                  }
                   className="font-medium text-foreground underline-offset-4 hover:underline"
                 >
                   {author}
-                </Link>
+                </span>
               ) : (
                 author
               )}

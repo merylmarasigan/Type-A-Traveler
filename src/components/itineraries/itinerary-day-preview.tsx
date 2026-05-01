@@ -1,12 +1,12 @@
 import { Suspense } from 'react'
 import { formatDate } from 'date-fns'
-import type { ComponentProps } from 'react';
+import type { ComponentProps } from 'react'
 import type { ItineraryDay } from '@/db/types'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TypographyLarge, TypographySmall } from '@/components/ui/typography'
 import { useTimeSlots } from '@/hooks/use-time-slots'
-import { cn, parseLocalDate  } from '@/lib/utils'
+import { cn, parseLocalDate } from '@/lib/utils'
 
 interface ItineraryDayPreviewProps extends ComponentProps<'div'> {
   itineraryDay: ItineraryDay
@@ -44,14 +44,14 @@ function ItineraryDayPreviewContent({
   return (
     <div
       className={cn(
-        'grid grid-flow-row md:grid-flow-col  gap-2 p-2 rounded-md hover:bg-accent hover:cursor-pointer w-24 md:w-full',
-        selected && 'bg-accent',
+        'grid grid-flow-row md:grid-flow-col  gap-2 p-2 rounded-md hover:bg-primary hover:cursor-pointer w-24 md:w-full',
+        selected && 'bg-primary',
         className,
       )}
       {...props}
     >
       {timeSlotsQuery.data.length > 0 ? (
-        <Badge className="place-self-center">
+        <Badge variant="secondary" className="place-self-center">
           {timeSlotsQuery.data.length}
         </Badge>
       ) : (
@@ -61,7 +61,7 @@ function ItineraryDayPreviewContent({
         <TypographyLarge className="text-center md:text-end">
           {formatDate(parseLocalDate(itineraryDay.date), 'MMM d')}
         </TypographyLarge>
-        <TypographySmall className="text-muted-foreground text-center md:text-end">
+        <TypographySmall className="text-center md:text-end">
           {formatDate(parseLocalDate(itineraryDay.date), 'EEEE')}
         </TypographySmall>
       </div>

@@ -1,5 +1,5 @@
 import { generateId } from 'better-auth'
-import { and, eq, getTableColumns } from 'drizzle-orm'
+import { and, eq, getTableColumns, sql } from 'drizzle-orm'
 import type { NewItineraryFolder, UpdateItineraryFolder } from '@/db/types'
 import { db } from '@/db'
 import { cityItineraries, itineraryFolders } from '@/db/schema/app'
@@ -13,11 +13,9 @@ const { createdAt, updatedAt, ...itineraryFolderColumns } =
  */
 export const getItineraryFolders = async (
   limit: number = 10,
-  publicOnly: boolean,
+  isPublic: boolean,
 ) => {
-  const publicOnlyClause = publicOnly
-    ? eq(itineraryFolders.isPublic, true)
-    : undefined
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
 
   const result = await db
     .select(itineraryFolderColumns)
@@ -30,11 +28,9 @@ export const getItineraryFolders = async (
 
 export const getUserItineraryFolders = async (
   userId: string,
-  publicOnly: boolean,
+  isPublic: boolean,
 ) => {
-  const publicOnlyClause = publicOnly
-    ? eq(itineraryFolders.isPublic, true)
-    : undefined
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const result = await db
     .select(itineraryFolderColumns)
     .from(itineraryFolders)
@@ -43,11 +39,12 @@ export const getUserItineraryFolders = async (
   return result
 }
 
-export const getItineraryFolder = async (id: string) => {
+export const getItineraryFolder = async (id: string, isPublic?: boolean) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
   const [result] = await db
     .select(itineraryFolderColumns)
     .from(itineraryFolders)
-    .where(eq(itineraryFolders.id, id))
+    .where(and(eq(itineraryFolders.id, id), publicOnlyClause))
     .limit(1)
 
   return result
@@ -79,4 +76,19 @@ export const deleteItineraryFolder = async (id: string) => {
     await tx.delete(itineraryFolders).where(eq(itineraryFolders.id, id))
     await tx.delete(cityItineraries).where(eq(cityItineraries.folderId, id))
   })
+}
+
+export const searchItineraryFolders = async (query: string, isPublic?: boolean) => {
+  const publicOnlyClause = isPublic ? eq(itineraryFolders.isPublic, true) : undefined
+  const result = await db
+    .select(itineraryFolderColumns)
+    .from(itineraryFolders)
+    .where(
+      and(
+        sql`${itineraryFolders.search} @@ websearch_to_tsquery('english', ${query})`,
+        publicOnlyClause,
+      ),
+    )
+
+  return result
 }

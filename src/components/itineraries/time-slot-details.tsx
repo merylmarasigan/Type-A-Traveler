@@ -115,8 +115,13 @@ function TimeSlotDetailsContent({
             <div className="flex flex-wrap gap-2">
               {activities.map((activity) => (
                 <TimeSlotActivityCard
-                  key={activity.id}
-                  id={activity.id}
+                  key={activity.timeSlotActivityId}
+                  timeSlotActivityId={activity.timeSlotActivityId}
+                  savedActivityId={activity.savedActivityId ?? undefined}
+                  name={activity.name}
+                  description={activity.description ?? undefined}
+                  imageUrl={activity.imageUrl ?? undefined}
+                  tripadvisorUrl={activity.tripadvisorUrl ?? undefined}
                   timeSlotId={timeSlot.id}
                   cityItineraryId={cityItineraryId}
                   city={city}

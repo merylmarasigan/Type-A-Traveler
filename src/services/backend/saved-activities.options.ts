@@ -44,10 +44,8 @@ const unlinkedActivitiesQueryKey = (
   city: string,
 ) => ['time_slots', timeSlotId, 'unlinked_activities', userId, city] as const
 
-const timeSlotActivityQueryKey = (
-  savedActivityId: string,
-  timeSlotId: string,
-) => ['time_slot_activities', savedActivityId, timeSlotId] as const
+const timeSlotActivityQueryKey = (timeSlotActivityId: string) =>
+  ['time_slot_activities', timeSlotActivityId] as const
 
 export const userSavedActivitiesQueryOptions = ({
   userId,
@@ -230,8 +228,8 @@ export const unlinkActivityFromTimeSlotMutationOptions = ({
 }) =>
   mutationOptions({
     mutationKey: ['unlinkActivityFromTimeSlot'],
-    mutationFn: (savedActivityId: string) =>
-      unlinkActivityFromTimeSlotFn({ data: { savedActivityId, timeSlotId } }),
+    mutationFn: (timeSlotActivityId: string) =>
+      unlinkActivityFromTimeSlotFn({ data: { timeSlotActivityId } }),
     onSuccess: async (_data, _variables, _result, ctx) => {
       toast.success(`Removed activity from time slot`)
 
@@ -248,35 +246,31 @@ export const unlinkActivityFromTimeSlotMutationOptions = ({
   })
 
 export const timeSlotActivityQueryOptions = ({
-  savedActivityId,
-  timeSlotId,
+  timeSlotActivityId,
 }: {
-  savedActivityId: string
-  timeSlotId: string
+  timeSlotActivityId: string
 }) =>
   queryOptions({
-    queryKey: timeSlotActivityQueryKey(savedActivityId, timeSlotId),
+    queryKey: timeSlotActivityQueryKey(timeSlotActivityId),
     queryFn: () =>
-      getTimeSlotActivityFn({ data: { savedActivityId, timeSlotId } }),
-    enabled: savedActivityId !== '' && timeSlotId !== '',
+      getTimeSlotActivityFn({ data: { timeSlotActivityId } }),
+    enabled: timeSlotActivityId !== '',
   })
 
 export const updateTimeSlotActivityNoteMutationOptions = ({
-  savedActivityId,
-  timeSlotId,
+  timeSlotActivityId,
 }: {
-  savedActivityId: string
-  timeSlotId: string
+  timeSlotActivityId: string
 }) =>
   mutationOptions({
-    mutationKey: ['updateTimeSlotActivityNote', savedActivityId, timeSlotId],
+    mutationKey: ['updateTimeSlotActivityNote', timeSlotActivityId],
     mutationFn: ({ id, note }: { id: string; note: string | null }) =>
       updateTimeSlotActivityNoteFn({ data: { id, note } }),
     onSuccess: async (_data, _variables, _result, ctx) => {
       toast.success('Note saved')
 
       await ctx.client.invalidateQueries({
-        queryKey: timeSlotActivityQueryKey(savedActivityId, timeSlotId),
+        queryKey: timeSlotActivityQueryKey(timeSlotActivityId),
       })
     },
   })

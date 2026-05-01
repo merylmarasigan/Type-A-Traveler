@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
-import { Moon, Sun, Building2, CalendarPlus, MoreVertical } from 'lucide-react'
+import { Building2, CalendarPlus, MoreVertical } from 'lucide-react'
 import { Suspense } from 'react'
 import {
   NavigationMenu,
@@ -17,10 +17,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { AuthHeader } from '@/components/auth/header-user'
 import { ThemeToggle } from '@/components/util/theme-toggle'
-import { useTheme } from '@/components/util/theme-provider'
 import { Button } from '@/components/ui/button'
 import { QuickCreateItineraryDialog } from '@/components/itineraries/quick-create-itinerary-dialog'
 import { authClient } from '@/lib/auth-client'
+import { SearchItineraries } from '@/components/itineraries/search-itineraries'
 
 function QuickCreateNavButton() {
   const { data: session } = authClient.useSession()
@@ -40,12 +40,6 @@ function QuickCreateNavButton() {
 }
 
 function MobileNavMenu() {
-  const { theme, setTheme } = useTheme()
-
-  function toggleTheme() {
-    setTheme(theme === 'light' ? 'dark' : 'light')
-  }
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -60,9 +54,8 @@ function MobileNavMenu() {
             Community
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={toggleTheme}>
-          {theme === 'dark' ? <Moon /> : <Sun />}
-          Toggle theme
+        <DropdownMenuItem asChild>
+          <ThemeToggle />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -101,9 +94,12 @@ export function NavigationBar() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
+
           <Suspense fallback={null}>
             <QuickCreateNavButton />
           </Suspense>
+          <SearchItineraries />
+
           <NavigationMenu className="order-1 md:order-2 max-w-none flex-none">
             <NavigationMenuList>
               <NavigationMenuItem>

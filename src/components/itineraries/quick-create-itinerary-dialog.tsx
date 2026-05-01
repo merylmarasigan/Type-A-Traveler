@@ -7,6 +7,7 @@ import {
   CalendarCheck2,
   CalendarPlus,
   ChevronDown,
+  InfoIcon,
   MapPin,
 } from 'lucide-react'
 import type { DateRange } from 'react-day-picker'
@@ -149,8 +150,8 @@ function QuickCreateItineraryDialogContent({
   return (
     <Dialog>
       <DialogTrigger render={trigger ?? defaultTrigger} />
-      <DialogContent className="w-auto sm:max-w-xl p-0">
-        <DialogHeader className="px-4 pt-4">
+      <DialogContent className="w-[calc(100vw-2rem)] sm:w-full sm:max-w-xl max-h-[calc(100dvh-2rem)] overflow-hidden p-0">
+        <DialogHeader className="px-4 pt-4 shrink-0">
           <DialogTitle>
             {defaultCity
               ? `Create itinerary for ${defaultCity}`
@@ -164,31 +165,41 @@ function QuickCreateItineraryDialogContent({
           )}
         </DialogHeader>
 
-        <div className="flex flex-col gap-2 px-4 pb-4">
-          <Select
-            value={selectedCity}
-            onValueChange={setSelectedCity}
-            disabled={noCities}
-          >
-            <SelectTrigger className="w-full">
-              <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
-              <SelectValue
-                placeholder={
-                  noCities ? 'No saved activities yet' : 'Select a city'
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Cities with saved activities</SelectLabel>
-                {cities.map((city) => (
-                  <SelectItem key={city} value={city}>
-                    {city}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col gap-2 px-4 pb-4 overflow-y-auto overscroll-contain max-h-[calc(100dvh-10rem)]">
+          {noCities ? (
+            <Alert variant="warning">
+              <InfoIcon />
+              <AlertTitle>No activities yet</AlertTitle>
+              <AlertDescription>
+                Get started by searching for a city and saving activities.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <Select
+              value={selectedCity}
+              onValueChange={setSelectedCity}
+              disabled={noCities}
+            >
+              <SelectTrigger className="w-full">
+                <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <SelectValue
+                  placeholder={
+                    noCities ? 'No saved activities yet' : 'Select a city'
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Cities with saved activities</SelectLabel>
+                  {cities.map((city) => (
+                    <SelectItem key={city} value={city}>
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
 
           <DateRangePicker
             dateRange={dateRange}
@@ -196,71 +207,73 @@ function QuickCreateItineraryDialogContent({
             disabled={noCities}
           />
 
-          <Collapsible className="flex flex-col gap-2">
-            <CollapsibleTrigger asChild>
-              <Button disabled={noCities} variant="ghost" className="w-full">
-                Add to an existing itinerary?
-                <ChevronDown />
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-2">
-              <Select
-                onValueChange={handleSelectItinerary}
-                onOpenChange={(open) => {
-                  if (!open && !selectedItinerary) setSelectedItinerary(null)
-                }}
-              >
-                <SelectTrigger
-                  disabled={userHasNoItineraries}
-                  className="w-full p-2"
+          {!userHasNoItineraries && (
+            <Collapsible className="flex flex-col gap-2">
+              <CollapsibleTrigger asChild>
+                <Button disabled={noCities} variant="ghost" className="w-full">
+                  Add to an existing itinerary?
+                  <ChevronDown />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="flex flex-col gap-2">
+                <Select
+                  onValueChange={handleSelectItinerary}
+                  onOpenChange={(open) => {
+                    if (!open && !selectedItinerary) setSelectedItinerary(null)
+                  }}
                 >
-                  <SelectValue
-                    placeholder={
-                      userHasNoItineraries
-                        ? 'You have no itineraries yet.'
-                        : 'Select an itinerary'
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {userFoldersQuery.data.length > 0 && (
-                    <SelectGroup>
-                      <SelectLabel>Your existing itineraries</SelectLabel>
-                      {userFoldersQuery.data.map((folder) => (
-                        <SelectItem key={folder.id} value={folder.id}>
-                          {folder.title}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  )}
-                </SelectContent>
-              </Select>
+                  <SelectTrigger
+                    disabled={userHasNoItineraries}
+                    className="w-full p-2"
+                  >
+                    <SelectValue
+                      placeholder={
+                        userHasNoItineraries
+                          ? 'You have no itineraries yet.'
+                          : 'Select an itinerary'
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {userFoldersQuery.data.length > 0 && (
+                      <SelectGroup>
+                        <SelectLabel>Your existing itineraries</SelectLabel>
+                        {userFoldersQuery.data.map((folder) => (
+                          <SelectItem key={folder.id} value={folder.id}>
+                            {folder.title}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    )}
+                  </SelectContent>
+                </Select>
 
-              {conflictingCityItinerary && (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>City already in this itinerary</AlertTitle>
-                  <AlertDescription className="flex flex-col gap-2">
-                    <span>
-                      <strong>{selectedItinerary?.title}</strong> already has an
-                      itinerary for {selectedCity}. You can go to the existing
-                      one, add a new one anyway, or choose a different
-                      itinerary.
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="self-start"
-                      onClick={handleGoToExisting}
-                    >
-                      Go to existing
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Button>
-                  </AlertDescription>
-                </Alert>
-              )}
-            </CollapsibleContent>
-          </Collapsible>
+                {conflictingCityItinerary && (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>City already in this itinerary</AlertTitle>
+                    <AlertDescription className="flex flex-col gap-2">
+                      <span>
+                        <strong>{selectedItinerary?.title}</strong> already has
+                        an itinerary for {selectedCity}. You can go to the
+                        existing one, add a new one anyway, or choose a
+                        different itinerary.
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="self-start"
+                        onClick={handleGoToExisting}
+                      >
+                        Go to existing
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </CollapsibleContent>
+            </Collapsible>
+          )}
 
           <div className="flex gap-2">
             {conflictingCityItinerary && (
@@ -286,7 +299,7 @@ function QuickCreateItineraryDialogContent({
                   ? 'Add anyway'
                   : selectedItinerary
                     ? `Add to ${selectedItinerary.title}`
-                    : 'Confirm'}
+                    : `Confirm for ${initialCity}`}
             </Button>
           </div>
         </div>
