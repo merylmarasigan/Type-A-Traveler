@@ -26,6 +26,9 @@ const config = defineConfig({
     viteReact(),
     netlify(),
   ],
+  ssr: {
+    noExternal: ['sonner', 'react-error-boundary', '@tanstack/react-query'],
+  },
 })
 
 export default config
