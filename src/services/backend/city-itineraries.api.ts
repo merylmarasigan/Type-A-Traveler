@@ -1,5 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import z from 'zod/v4'
+import type {
+  CityItinerary} from '@/db/types';
 import {
   createCityItinerary,
   deleteCityItinerary,
@@ -9,7 +11,6 @@ import {
   updateCityItinerary,
 } from '@/db/queries/city-itineraries'
 import {
-  CityItinerary,
   insertCityItinerarySchema,
   updateCityItinerarySchema,
 } from '@/db/types'
@@ -79,7 +80,7 @@ export const searchCityItinerariesFn = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     if (!data.query) return []
 
-    const result: CityItinerary[] = await searchCityItineraries(
+    const result: Array<CityItinerary> = await searchCityItineraries(
       data.query,
       data.publicOnly,
     )

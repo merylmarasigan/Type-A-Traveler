@@ -1,6 +1,6 @@
+import { Eye, EyeOff } from 'lucide-react'
 import { Toggle } from '@/components/ui/toggle'
 import { useSingleItineraryFolder } from '@/hooks/use-single-itinerary-folder'
-import { Eye, EyeOff } from 'lucide-react'
 
 interface ItineraryPrivacyToggleProps {
   isPublic: boolean

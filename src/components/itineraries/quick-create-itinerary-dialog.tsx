@@ -10,6 +10,7 @@ import {
   InfoIcon,
   MapPin,
 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import type { DateRange } from 'react-day-picker'
 import type { ItineraryFolder } from '@/db/types'
 import {
@@ -41,7 +42,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
-import { useQuery } from '@tanstack/react-query'
 import { folderCityItinerariesQueryOptions } from '@/services/backend/city-itineraries.options'
 
 interface QuickCreateItineraryDialogProps {

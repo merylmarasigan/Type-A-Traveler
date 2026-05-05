@@ -1,8 +1,8 @@
 import { useRouter } from '@tanstack/react-router'
+import type { MouseEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Field, FieldSeparator } from '@/components/ui/field'
 import { authClient } from '@/lib/auth-client'
-import { MouseEvent } from 'react'
 
 export function OAuthSignIn() {
   const router = useRouter()

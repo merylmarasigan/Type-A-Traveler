@@ -1,4 +1,3 @@
-import { useTheme } from '@/components/util/theme-provider'
 import {
   CircleCheckIcon,
   InfoIcon,
@@ -8,6 +7,7 @@ import {
 } from 'lucide-react'
 import { Toaster as Sonner } from 'sonner'
 import type { ToasterProps } from 'sonner'
+import { useTheme } from '@/components/util/theme-provider'
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme } = useTheme()

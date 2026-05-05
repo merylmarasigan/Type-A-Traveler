@@ -7,6 +7,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import TanStackQueryDevtools from '../components/tanstack-query/devtools'
+import { Provider as ReactQueryProvider } from '../components/tanstack-query/root-provider'
 
 import appCss from '../styles.css?url'
 
@@ -49,6 +50,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const theme = Route.useLoaderData()
+  const { queryClient } = Route.useRouteContext()
 
   return (
     <html lang="en" className={theme}>
@@ -56,11 +58,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="h-full flex flex-col">
-        <ThemeProvider theme={theme}>
-          <NavigationBar />
-          <main className="flex-1 min-h-0">{children}</main>
-          <Toaster />
-        </ThemeProvider>
+        <ReactQueryProvider queryClient={queryClient}>
+          <ThemeProvider theme={theme}>
+            <NavigationBar />
+            <main className="flex-1 min-h-0">{children}</main>
+            <Toaster />
+          </ThemeProvider>
+        </ReactQueryProvider>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

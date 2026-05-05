@@ -94,7 +94,7 @@ function ItineraryFolderPreviewContent({
     )
   }
 
-  const thumbUrls = activitiesQueries.reduce<string[]>((urls, q) => {
+  const thumbUrls = activitiesQueries.reduce<Array<string>>((urls, q) => {
     for (const activity of q.data ?? []) {
       if (activity.imageUrl && urls.length < 4) urls.push(activity.imageUrl)
     }

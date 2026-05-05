@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router'
 import { Folder, MapPin, Search } from 'lucide-react'
 import { useDebounce } from 'use-debounce'
 
+import type { CityItinerary, ItineraryFolder } from '@/db/types'
 import {
   Command,
   CommandDialog,
@@ -15,7 +16,6 @@ import {
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { Kbd } from '@/components/ui/kbd'
-import type { CityItinerary, ItineraryFolder } from '@/db/types'
 import { useRecentItinerarySearches } from '@/hooks/use-recent-itinerary-searches'
 import { searchCityItinerariesQueryOptions } from '@/services/backend/city-itineraries.options'
 import { searchItineraryFoldersQueryOptions } from '@/services/backend/itinerary-folders.options'

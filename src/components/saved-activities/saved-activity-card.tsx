@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { Image } from '@unpic/react'
+import { MapPinX } from 'lucide-react'
 import {
   Card,
   CardAction,
@@ -10,7 +11,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
 import { Button } from '@/components/ui/button'
-import { MapPinX } from 'lucide-react'
 
 interface SavedActivityCardProps {
   id: string

@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { Image } from '@unpic/react'
 import { Plus } from 'lucide-react'
+import { useMutation } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -11,7 +12,6 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSingleSavedActivity } from '@/hooks/use-single-saved-activity'
-import { useMutation } from '@tanstack/react-query'
 import { linkActivityToTimeSlotMutationOptions } from '@/services/backend/saved-activities.options'
 import { authClient } from '@/lib/auth-client'
 

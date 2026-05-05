@@ -1,5 +1,5 @@
 import { generateId } from 'better-auth'
-import { and, eq, getTableColumns, not, exists, sql } from 'drizzle-orm'
+import { and, eq, exists, getTableColumns, not, sql } from 'drizzle-orm'
 import type { NewSavedActivity, UpdateSavedActivity } from '@/db/types'
 import { db } from '@/db'
 import {

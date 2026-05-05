@@ -1,9 +1,10 @@
+import { CalendarPlus, FolderPlus, MapPin } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { useSavedActivities } from '@/hooks/use-saved-activities' // hook that fetches the activities from the database
 import { SavedActivityCard } from '@/components/saved-activities/saved-activity-card'
 import { TypographyH3 } from '@/components/ui/typography'
 import { QuickCreateItineraryDialog } from '@/components/itineraries/quick-create-itinerary-dialog'
 import { Button } from '@/components/ui/button'
-import { CalendarPlus, FolderPlus, MapPin } from 'lucide-react'
 import {
   Empty,
   EmptyContent,
@@ -12,7 +13,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { Link } from '@tanstack/react-router'
 import { authClient } from '@/lib/auth-client'
 
 interface ActivitiesByCityProps {

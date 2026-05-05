@@ -1,7 +1,7 @@
-import { useRecentCitySearches } from '@/hooks/use-recent-city-searches'
-import { TypographyH3 } from '@/components/ui/typography'
 import { Link } from '@tanstack/react-router'
 import { Search, SearchX } from 'lucide-react'
+import { useRecentCitySearches } from '@/hooks/use-recent-city-searches'
+import { TypographyH3 } from '@/components/ui/typography'
 import { Button } from '@/components/ui/button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 

@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import {
   ItineraryFolderPreview,
   ItineraryFolderPreviewSkeleton,
@@ -5,7 +6,6 @@ import {
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { TypographyH3 } from '@/components/ui/typography'
 import { useItineraryFolders } from '@/hooks/use-itinerary-folders'
-import { Suspense } from 'react'
 
 export function FeaturedItineraries() {
   return (

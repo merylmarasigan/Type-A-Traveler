@@ -1,8 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
-import { getDefaultLocationFn } from './api'
-import type {
-  LocationCategory,
-} from '@/services/tripadvisor'
+import type { LocationCategory } from '@/services/tripadvisor'
+import { getDefaultLocationFn } from '@/services/tripadvisor/api'
 import {
   getLocationsFn,
   getSingleLocationFn,

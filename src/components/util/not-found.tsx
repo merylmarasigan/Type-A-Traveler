@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { CircleUserRound, EyeOff } from 'lucide-react'
 import {
   Empty,
   EmptyContent,
@@ -7,7 +8,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { CircleUserRound, EyeOff } from 'lucide-react'
 
 interface NotFoundProps {
   type?: 'user' | 'page' | 'private-itinerary'

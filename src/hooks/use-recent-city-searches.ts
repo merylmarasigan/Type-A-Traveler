@@ -9,7 +9,7 @@ export type RecentCitySearch = {
 const STORAGE_KEY = 'type-a-traveler:recent-city-searches'
 const MAX_ITEMS = 10
 
-function parseStored(raw: string | null): RecentCitySearch[] {
+function parseStored(raw: string | null): Array<RecentCitySearch> {
   if (!raw) return []
   try {
     const parsed = JSON.parse(raw) as unknown
@@ -30,7 +30,7 @@ function parseStored(raw: string | null): RecentCitySearch[] {
   }
 }
 
-export function loadRecentCitySearches(): RecentCitySearch[] {
+export function loadRecentCitySearches(): Array<RecentCitySearch> {
   if (typeof window === 'undefined') return []
   return parseStored(localStorage.getItem(STORAGE_KEY))
 }
@@ -44,7 +44,7 @@ export function recordRecentCitySearch(entry: RecentCitySearch) {
 }
 
 export function useRecentCitySearches() {
-  const [recentSearches, setRecentSearches] = useState<RecentCitySearch[]>([])
+  const [recentSearches, setRecentSearches] = useState<Array<RecentCitySearch>>([])
 
   const clearSearchHistory = () => {
     localStorage.removeItem(STORAGE_KEY)

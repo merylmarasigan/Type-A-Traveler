@@ -8,11 +8,16 @@ import netlify from '@netlify/vite-plugin-tanstack-start'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
 
-const config = defineConfig({
+const config = defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+  },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(
+      mode === 'development' ? 'development' : 'production',
+    ),
   },
   plugins: [
     devtools(),
@@ -29,6 +34,6 @@ const config = defineConfig({
   ssr: {
     noExternal: ['sonner', 'react-error-boundary', '@tanstack/react-query'],
   },
-})
+}))
 
 export default config

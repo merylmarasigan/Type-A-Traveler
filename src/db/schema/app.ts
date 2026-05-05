@@ -7,8 +7,9 @@ import {
   pgTable,
   text,
 } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import type { SQL } from 'drizzle-orm';
 import { startEndTimestamps, timestamps } from '@/db/schema/columns.helpers'
-import { sql, SQL } from 'drizzle-orm'
 
 export const tsvector = customType<{
   data: string
