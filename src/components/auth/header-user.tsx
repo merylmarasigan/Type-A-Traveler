@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Bookmark, Folders, LogOutIcon } from 'lucide-react'
+import { Bookmark, Folders, LogIn, LogOutIcon } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import {
   NavigationMenuLink,
@@ -82,9 +82,16 @@ export function AuthHeader() {
 
   return (
     <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-      <Link to="/login" className={navigationMenuTriggerStyle()}>
-        Sign up
-      </Link>
+      <Button
+        asChild
+        variant="outline"
+        className="flex flex-row items-center gap-2"
+      >
+        <Link to="/login">
+          <LogIn className="text-inherit" />
+          <span className="hidden sm:inline">Sign up</span>
+        </Link>
+      </Button>
     </NavigationMenuLink>
   )
 }

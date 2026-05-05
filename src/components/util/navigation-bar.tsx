@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
-import { Building2, CalendarPlus, MoreVertical } from 'lucide-react'
+import { CalendarPlus, HelpCircle, MoreVertical, Users } from 'lucide-react'
 import { Suspense } from 'react'
 import {
   NavigationMenu,
@@ -43,16 +43,26 @@ function MobileNavMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="More navigation">
-          <MoreVertical />
+        <Button variant="outline" size="icon" aria-label="More navigation">
+          <MoreVertical className="text-inherit" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <Link to="/community" className="cursor-pointer">
-            <Building2 />
+            <Users className="text-inherit" />
             Community
           </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <a
+            href="https://streethonda.github.io/tat/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <HelpCircle className="text-inherit" />
+            Help
+          </a>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <ThemeToggle />
@@ -82,15 +92,44 @@ export function NavigationBar() {
           <NavigationMenu className="hidden md:block md:order-1">
             <NavigationMenuList>
               <NavigationMenuItem>
+                <ThemeToggle variant="outline" />
+              </NavigationMenuItem>
+              <NavigationMenuItem>
                 <NavigationMenuLink
                   asChild
                   className={navigationMenuTriggerStyle()}
                 >
-                  <Link to="/community">Community</Link>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <Link to="/community">
+                      <Users className="text-inherit" />
+                      Community
+                    </Link>
+                  </Button>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <ThemeToggle />
+                <NavigationMenuLink
+                  asChild
+                  className={navigationMenuTriggerStyle()}
+                >
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <a
+                      href="https://streethonda.github.io/tat/"
+                      target="_blank"
+                    >
+                      <HelpCircle className="text-inherit" />
+                      Help
+                    </a>
+                  </Button>
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>

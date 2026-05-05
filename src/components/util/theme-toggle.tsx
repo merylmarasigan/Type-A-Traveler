@@ -2,7 +2,11 @@ import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/components/util/theme-provider'
 import { Button } from '@/components/ui/button'
 
-export function ThemeToggle() {
+export function ThemeToggle({
+  variant = 'ghost',
+}: {
+  variant?: 'outline' | 'ghost'
+}) {
   const { theme, setTheme } = useTheme()
 
   function toggleTheme() {
@@ -11,7 +15,7 @@ export function ThemeToggle() {
 
   return (
     <Button
-      variant="ghost"
+      variant={variant}
       onClick={toggleTheme}
       aria-label="Toggle theme"
       className="font-normal"
