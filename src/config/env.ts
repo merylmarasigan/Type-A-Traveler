@@ -7,7 +7,7 @@ const envSchema = z.object({
   DATABASE_URL: z.url(),
   BETTER_AUTH_URL: z.url(),
   BETTER_AUTH_SECRET: z.string(),
-  NODE_ENV: z.enum(['development', 'production', 'test']),
+  NODE_ENV: z.enum(['development', 'production', 'test']).optional(),
 
   GEONAMES_USERNAME: z.string(),
   FOURSQUARE_API_KEY: z.string(),
