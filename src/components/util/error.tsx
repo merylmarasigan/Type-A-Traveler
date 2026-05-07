@@ -11,12 +11,14 @@ export function ErrorComponent({
   description,
 }: CustomErrorComponentProps) {
   return (
-    <Alert variant="destructive" className="max-w-md">
-      <AlertCircleIcon />
-      <AlertTitle>{error.name}</AlertTitle>
-      <AlertDescription>
-        {description} ({error.message})
-      </AlertDescription>
-    </Alert>
+    <div className="flex-1 self-center flex flex-col items-center justify-center p-4">
+      <Alert variant="destructive" className="max-w-md">
+        <AlertCircleIcon />
+        <AlertTitle>{error.name}</AlertTitle>
+        <AlertDescription>
+          {description} ({error.message})
+        </AlertDescription>
+      </Alert>
+    </div>
   )
 }

@@ -57,11 +57,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="h-full flex flex-col">
+      <body className="min-h-dvh flex flex-col">
         <ReactQueryProvider queryClient={queryClient}>
           <ThemeProvider theme={theme}>
             <NavigationBar />
-            <main className="flex-1 min-h-0">{children}</main>
+            <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
+              {children}
+            </main>
             <Toaster />
           </ThemeProvider>
         </ReactQueryProvider>

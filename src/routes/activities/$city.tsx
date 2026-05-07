@@ -100,9 +100,10 @@ function RouteContent({
   )
 
   const { data: defaultCityPhoto } = useSuspenseQuery(
-    singleLocationPhotoQueryOptions(
-      { city, locationId: defaultLocationQuery.data.location_id },
-    ),
+    singleLocationPhotoQueryOptions({
+      city,
+      locationId: defaultLocationQuery.data.location_id,
+    }),
   )
 
   const updateCategory = (newCategory: LocationCategory) => {
