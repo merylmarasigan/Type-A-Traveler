@@ -7,6 +7,10 @@ import type {
 } from '@/services/tripadvisor/schema'
 import { serverEnv } from '@/config/env'
 import {
+  LocationCategoryEnum,
+  type LocationCategory,
+} from '@/services/tripadvisor/categories'
+import {
   fetchErrorMiddleware,
   fetchOrThrow,
 } from '@/services/tripadvisor/middleware'
@@ -14,13 +18,8 @@ import {
 const TRIPADVISOR_API_URL =
   'https://api.content.tripadvisor.com/api/v1' as const
 
-export const locationCategories = [
-  'hotels',
-  'attractions',
-  'restaurants',
-] as const
-export const LocationCategoryEnum = z.enum(locationCategories)
-export type LocationCategory = z.infer<typeof LocationCategoryEnum>
+export { LocationCategoryEnum, type LocationCategory }
+export { locationCategories } from '@/services/tripadvisor/categories'
 
 export const getLocationsFn = createServerFn({ method: 'GET' })
   .middleware([fetchErrorMiddleware])

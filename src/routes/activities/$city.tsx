@@ -4,7 +4,7 @@ import z from 'zod/v4'
 import { ChevronDown, SearchAlertIcon } from 'lucide-react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Suspense } from 'react'
-import type { LocationCategory } from '@/services/tripadvisor/api'
+import type { LocationCategory } from '@/services/tripadvisor'
 import { ErrorComponent } from '@/components/util/error'
 import { TypographyH2 } from '@/components/ui/typography'
 import {
@@ -12,7 +12,7 @@ import {
   locationsQueryOptions,
   singleLocationPhotoQueryOptions,
 } from '@/services/tripadvisor/query-options'
-import { LocationCategoryEnum } from '@/services/tripadvisor/api'
+import { LocationCategoryEnum } from '@/services/tripadvisor'
 import { CreateItineraryDialog } from '@/components/itineraries/create-itinerary-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {

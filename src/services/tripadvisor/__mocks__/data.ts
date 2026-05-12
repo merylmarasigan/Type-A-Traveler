@@ -3,7 +3,7 @@ import type {
   Photo,
   SearchResponse,
 } from '@/services/tripadvisor/schema'
-import type { LocationCategory } from '@/services/tripadvisor/api'
+import type { LocationCategory } from '@/services/tripadvisor/categories'
 
 // ---------------------------------------------------------------------------
 // Internal helpers

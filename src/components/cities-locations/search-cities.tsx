@@ -4,7 +4,7 @@ import { GlobeIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useDebounce } from 'use-debounce'
 import type { CityData } from '@/services/cities/schema'
-import type { LocationCategory } from '@/services/tripadvisor/api'
+import type { LocationCategory } from '@/services/tripadvisor'
 import { FilterButtons } from '@/components/cities-locations/filter-buttons'
 import {
   Combobox,

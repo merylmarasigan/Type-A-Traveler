@@ -1,4 +1,4 @@
-import type { LocationCategory } from '@/services/tripadvisor/api'
+import type { LocationCategory } from '@/services/tripadvisor'
 import {
   Field,
   FieldContent,
@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   LocationCategoryEnum,
   locationCategories,
-} from '@/services/tripadvisor/api'
+} from '@/services/tripadvisor'
 
 type Props = {
   currentCategory: LocationCategory
